@@ -5,21 +5,27 @@ import java.util.ArrayList;
 
 public class Menu extends JDialog {
     int[] PLAY_CO = {145, 400};
-    int[] LEADER_CO = {145, 490};
-    int[] STAT_CO = {145, 580};
-    int[] QUIT_CO = {145, 670};
-    int[] SETTINGS_CO = {1668, 970};
+    int[] INS_CO = {145, 490};
+    int[] LEADER_CO = {145, 580};
+    int[] STAT_CO = {145, 670};
+    int[] QUIT_CO = {145, 760};
+    int[] SETTINGS_CO = {1645, 870};
+    int[] PROFILE_CO = {1380, 940};
 
     JLabel bg = new JLabel(new ImageIcon("Images/Battleship-Menu.png"));
     JLabel playButton = new JLabel(new ImageIcon("Images/Play_Button.png"));
+    JLabel instrucButton = new JLabel(new ImageIcon("Images/Instructions_Button.png"));
     JLabel leaderButton = new JLabel(new ImageIcon("Images/Leaderboard_Button.png"));
     JLabel statButton = new JLabel(new ImageIcon("Images/Stats_Button.png"));
     JLabel quitButton = new JLabel(new ImageIcon("Images/Quit_Button.png"));
+    JLabel settings = new JLabel(new ImageIcon("Images/Settings_Button.png"));
     JLabel playSel = new JLabel(new ImageIcon("Images/Play_Highlight.png"));
+    JLabel instrucSel = new JLabel(new ImageIcon("Images/Leaderboard_Highlight.png"));
     JLabel leaderSel = new JLabel(new ImageIcon("Images/Leaderboard_Highlight.png"));
     JLabel statSel = new JLabel(new ImageIcon("Images/Stats_Highlight.png"));
     JLabel quitSel = new JLabel(new ImageIcon("Images/Quit_Highlight.png"));
-    JLabel settings = new JLabel(new ImageIcon("Images/Settings_Button.png"));
+    JLabel settingSel = new JLabel(new ImageIcon("Images/Settings_Highlight.png"));
+    JLabel profile = new JLabel(new ImageIcon("Images/Profile.png"));
 
     ArrayList<JLabel> menuButtons = new ArrayList<>();
     ArrayList<JLabel> buttonEffects = new ArrayList<>();
@@ -70,7 +76,18 @@ public class Menu extends JDialog {
         playSel.setLocation(PLAY_CO[0] - 15, PLAY_CO[1] - 13);
         playSel.setSize(playSel.getPreferredSize());
         playSel.setVisible(false);
-        playSel.addMouseListener(menuListener);
+
+        //instructions button settings
+        add(instrucButton);
+        add(instrucSel);
+        menuButtons.add(instrucButton);
+        buttonEffects.add(instrucSel);
+        instrucButton.setLocation(INS_CO[0], INS_CO[1]);
+        instrucButton.setSize(instrucButton.getPreferredSize());
+        instrucButton.addMouseListener(menuListener);
+        instrucSel.setLocation(INS_CO[0] - 15, INS_CO[1] - 13);
+        instrucSel.setSize(instrucSel.getPreferredSize());
+        instrucSel.setVisible(false);
 
         //leaderboard button settings
         add(leaderButton);
@@ -83,7 +100,6 @@ public class Menu extends JDialog {
         leaderSel.setLocation(LEADER_CO[0] - 15, LEADER_CO[1] - 13);
         leaderSel.setSize(leaderSel.getPreferredSize());
         leaderSel.setVisible(false);
-        leaderSel.addMouseListener(menuListener);
 
         //stat button settings
         add(statButton);
@@ -96,7 +112,6 @@ public class Menu extends JDialog {
         statSel.setLocation(STAT_CO[0] - 15, STAT_CO[1] - 13);
         statSel.setSize(statSel.getPreferredSize());
         statSel.setVisible(false);
-        statSel.addMouseListener(menuListener);
 
         //quit button settings
         add(quitButton);
@@ -109,14 +124,23 @@ public class Menu extends JDialog {
         quitSel.setLocation(QUIT_CO[0] - 15, QUIT_CO[1] - 13);
         quitSel.setSize(quitSel.getPreferredSize());
         quitSel.setVisible(false);
-        quitSel.addMouseListener(menuListener);
 
         //settings button
         add(settings);
+        add(settingSel);
+        menuButtons.add(settings);
+        buttonEffects.add(settingSel);
         settings.setLocation(SETTINGS_CO[0], SETTINGS_CO[1]);
         settings.setSize(settings.getPreferredSize());
         settings.addMouseListener(menuListener);
-        menuButtons.add(settings);
+        settingSel.setLocation(SETTINGS_CO[0] - 5, SETTINGS_CO[1] - 5);
+        settingSel.setSize(settingSel.getPreferredSize());
+        settingSel.setVisible(false);
+
+        //profile settings
+        add(profile);
+        profile.setLocation(PROFILE_CO[0], PROFILE_CO[1]);
+        profile.setSize(profile.getPreferredSize());
 
         //background settings
         add(bg);
