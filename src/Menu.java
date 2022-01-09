@@ -8,7 +8,7 @@ public class Menu extends JDialog {
     int[] LEADER_CO = {145, 490};
     int[] STAT_CO = {145, 580};
     int[] QUIT_CO = {145, 670};
-    int[] SETTINGS_CO = {1835, 970};
+    int[] SETTINGS_CO = {1668, 970};
 
     JLabel bg = new JLabel(new ImageIcon("Images/Battleship-Menu.png"));
     JLabel playButton = new JLabel(new ImageIcon("Images/Play_Button.png"));
@@ -26,7 +26,7 @@ public class Menu extends JDialog {
 
     public Menu() {
         //dialogue settings
-        setSize(1920, 1080);
+        setSize(1750, 1080);
         setName("Battleship");
         getContentPane().setLayout(null);
 
