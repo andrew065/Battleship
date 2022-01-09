@@ -4,13 +4,13 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 public class Menu extends JDialog {
-    int[] PLAY_CO = {145, 400};
-    int[] INS_CO = {145, 490};
-    int[] LEADER_CO = {145, 580};
-    int[] STAT_CO = {145, 670};
-    int[] QUIT_CO = {145, 760};
-    int[] SETTINGS_CO = {1645, 870};
-    int[] PROFILE_CO = {1380, 940};
+    int[] PLAY_CO = {145, 260};
+    int[] INS_CO = {145, 350};
+    int[] LEADER_CO = {145, 440};
+    int[] STAT_CO = {145, 530};
+    int[] QUIT_CO = {145, 620};
+    int[] SETTINGS_CO = {1323, 640};
+    int[] PROFILE_CO = {1110, 690};
 
     JLabel bg = new JLabel(new ImageIcon("Images/Battleship-Menu.png"));
     JLabel playButton = new JLabel(new ImageIcon("Images/Play_Button.png"));
@@ -32,7 +32,7 @@ public class Menu extends JDialog {
 
     public Menu() {
         //dialogue settings
-        setSize(1750, 1080);
+        setSize(1400, 800);
         setName("Battleship");
         getContentPane().setLayout(null);
 
@@ -133,7 +133,7 @@ public class Menu extends JDialog {
         settings.setLocation(SETTINGS_CO[0], SETTINGS_CO[1]);
         settings.setSize(settings.getPreferredSize());
         settings.addMouseListener(menuListener);
-        settingSel.setLocation(SETTINGS_CO[0] - 5, SETTINGS_CO[1] - 5);
+        settingSel.setLocation(SETTINGS_CO[0] - 3, SETTINGS_CO[1] - 3);
         settingSel.setSize(settingSel.getPreferredSize());
         settingSel.setVisible(false);
 
@@ -145,7 +145,7 @@ public class Menu extends JDialog {
         //background settings
         add(bg);
         bg.setLocation(0, 0);
-        bg.setSize(1920, 1080);
+        bg.setSize(bg.getPreferredSize());
 
         //JDialog settings
         setResizable(false);
