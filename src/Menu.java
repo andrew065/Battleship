@@ -12,20 +12,20 @@ public class Menu extends JDialog {
     int[] SETTINGS_CO = {1323, 640};
     int[] PROFILE_CO = {1110, 690};
 
-    JLabel bg = new JLabel(new ImageIcon("Images/Battleship-Menu.png"));
-    JLabel playButton = new JLabel(new ImageIcon("Images/Play_Button.png"));
-    JLabel instrucButton = new JLabel(new ImageIcon("Images/Instructions_Button.png"));
-    JLabel leaderButton = new JLabel(new ImageIcon("Images/Leaderboard_Button.png"));
-    JLabel statButton = new JLabel(new ImageIcon("Images/Stats_Button.png"));
-    JLabel quitButton = new JLabel(new ImageIcon("Images/Quit_Button.png"));
-    JLabel settings = new JLabel(new ImageIcon("Images/Settings_Button.png"));
-    JLabel playSel = new JLabel(new ImageIcon("Images/Play_Highlight.png"));
-    JLabel instrucSel = new JLabel(new ImageIcon("Images/Leaderboard_Highlight.png"));
-    JLabel leaderSel = new JLabel(new ImageIcon("Images/Leaderboard_Highlight.png"));
-    JLabel statSel = new JLabel(new ImageIcon("Images/Stats_Highlight.png"));
-    JLabel quitSel = new JLabel(new ImageIcon("Images/Quit_Highlight.png"));
-    JLabel settingSel = new JLabel(new ImageIcon("Images/Settings_Highlight.png"));
-    JLabel profile = new JLabel(new ImageIcon("Images/Profile.png"));
+    JLabel bg = new JLabel(new ImageIcon("Images/Menu/Battleship-Menu.png"));
+    JLabel playButton = new JLabel(new ImageIcon("Images/Menu/Play_Button.png"));
+    JLabel instrucButton = new JLabel(new ImageIcon("Images/Menu/Instructions_Button.png"));
+    JLabel leaderButton = new JLabel(new ImageIcon("Images/Menu/Leaderboard_Button.png"));
+    JLabel statButton = new JLabel(new ImageIcon("Images/Menu/Stats_Button.png"));
+    JLabel quitButton = new JLabel(new ImageIcon("Images/Menu/Quit_Button.png"));
+    JLabel settings = new JLabel(new ImageIcon("Images/Menu/Settings_Button.png"));
+    JLabel playSel = new JLabel(new ImageIcon("Images/Menu/Play_Highlight.png"));
+    JLabel instrucSel = new JLabel(new ImageIcon("Images/Menu/Leaderboard_Highlight.png"));
+    JLabel leaderSel = new JLabel(new ImageIcon("Images/Menu/Leaderboard_Highlight.png"));
+    JLabel statSel = new JLabel(new ImageIcon("Images/Menu/Stats_Highlight.png"));
+    JLabel quitSel = new JLabel(new ImageIcon("Images/Menu/Quit_Highlight.png"));
+    JLabel settingSel = new JLabel(new ImageIcon("Images/Menu/Settings_Highlight.png"));
+    JLabel profile = new JLabel(new ImageIcon("Images/Menu/Profile.png"));
 
     ArrayList<JLabel> menuButtons = new ArrayList<>();
     ArrayList<JLabel> buttonEffects = new ArrayList<>();
@@ -42,6 +42,7 @@ public class Menu extends JDialog {
             public void mouseClicked(MouseEvent e) {
                 try {
                     int index = menuButtons.indexOf((JLabel) e.getComponent());
+                    if (index == 4) System.exit(0);
 
                 } catch (Exception ignored) {}
             }
