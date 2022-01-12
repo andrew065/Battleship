@@ -48,6 +48,7 @@ public class Menu extends JDialog implements MouseListener {
     JPanel vF;
 
     JLabel vIndicator; //text for volume indicator
+    JLabel nameDisplay; //label to display the name of the user
 
     String username; //name of current user
 
@@ -142,6 +143,16 @@ public class Menu extends JDialog implements MouseListener {
         settingSel.setSize(settingSel.getPreferredSize());
         settingSel.setVisible(false);
 
+        //username display
+        nameDisplay = new JLabel(username);
+        menu.add(nameDisplay);
+        nameDisplay.setSize(username.length() * 25, 35);
+        nameDisplay.setFont(new Font("Copperplate", Font.PLAIN, 35));
+        nameDisplay.setForeground(Color.WHITE);
+        nameDisplay.setLocation(menu.getWidth() - 80 - nameDisplay.getWidth(), 700);
+        nameDisplay.setHorizontalAlignment(JLabel.CENTER);
+        nameDisplay.setVerticalAlignment(JLabel.CENTER);
+
         //profile settings
         menu.add(profile);
         profile.setLocation(PROFILE_CO[0], PROFILE_CO[1]);
@@ -204,8 +215,6 @@ public class Menu extends JDialog implements MouseListener {
         vOff.setLocation(173, 15);
         vOff.setVisible(false);
         vOff.addMouseListener(this);
-
-        System.out.println(volumeButtons.size());
 
         //volume frame background
         vF.add(vBg);
