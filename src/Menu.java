@@ -29,6 +29,10 @@ public class Menu extends JDialog implements MouseListener {
     JLabel quitSel = new JLabel(new ImageIcon("Images/Menu/Quit_Highlight.png"));
     JLabel settingSel = new JLabel(new ImageIcon("Images/Menu/Settings_Highlight.png"));
     JLabel profile = new JLabel(new ImageIcon("Images/Menu/Profile.png"));
+    JLabel instrucPage = new JLabel(new ImageIcon("Images/Menu/Instructions_Page.png"));
+    JLabel leaderPage = new JLabel(new ImageIcon("Images/Menu/Leaderboard_Page.png"));
+    JLabel statPage = new JLabel(new ImageIcon("Images/Menu/Stats_Page.png"));
+    JLabel goBack = new JLabel(new ImageIcon("Images/Menu/Back_Button.png"));
 
     //volume buttons
     JLabel vUp = new JLabel(new ImageIcon("Images/Volume/Increase_Volume.png"));
@@ -42,13 +46,19 @@ public class Menu extends JDialog implements MouseListener {
     ArrayList<JLabel> buttonEffects = new ArrayList<>();
     ArrayList<JLabel> volumeButtons = new ArrayList<>();
 
-    JLayeredPane frame = getLayeredPane();
+    JLayeredPane frame;
 
     JPanel menu;
+    JPanel instructions;
+    JPanel leaderboard;
+    JPanel stats;
     JPanel vF;
+    JPanel back;
 
     JLabel vIndicator; //text for volume indicator
     JLabel nameDisplay; //label to display the name of the user
+
+    JComponent curOpen;
 
     String username; //name of current user
 
@@ -56,6 +66,8 @@ public class Menu extends JDialog implements MouseListener {
 
     public Menu(String username) {
         this.username = username;
+
+        frame = getLayeredPane();
 
         //dialogue settings
         setSize(1400, 800);
@@ -66,81 +78,66 @@ public class Menu extends JDialog implements MouseListener {
         frame.setSize(1400, 800);
         frame.setLocation(0, 0);
 
+        //initializing layered panels
+        initializeBg();
+        initializeInstructions();
+        initializeLeaderboard();
+        initializeStats();
+        initializeVolume();
+        initializeBack();
+
+        //JDialog settings
+        setResizable(false);
+        setVisible(true);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    }
+
+    public void initializeBg() {
         //menu panel settings
         menu = new JPanel();
         menu.setSize(1400, 800);
         menu.setLayout(null);
 
         //play button settings
-        menu.add(playButton);
-        menu.add(playSel);
         menuButtons.add(playButton);
         buttonEffects.add(playSel);
-        playButton.setLocation(PLAY_CO[0], PLAY_CO[1]);
-        playButton.setSize(playButton.getPreferredSize());
-        playButton.addMouseListener(this);
-        playSel.setLocation(PLAY_CO[0] - 15, PLAY_CO[1] - 13);
-        playSel.setSize(playSel.getPreferredSize());
+        addElement(menu, playButton, PLAY_CO[0], PLAY_CO[1], this);
+        addElement(menu, playSel, PLAY_CO[0] - 15, PLAY_CO[1] - 13, this);
         playSel.setVisible(false);
 
         //instructions button settings
-        menu.add(instrucButton);
-        menu.add(instrucSel);
         menuButtons.add(instrucButton);
         buttonEffects.add(instrucSel);
-        instrucButton.setLocation(INS_CO[0], INS_CO[1]);
-        instrucButton.setSize(instrucButton.getPreferredSize());
-        instrucButton.addMouseListener(this);
-        instrucSel.setLocation(INS_CO[0] - 15, INS_CO[1] - 13);
-        instrucSel.setSize(instrucSel.getPreferredSize());
+        addElement(menu, instrucButton, INS_CO[0], INS_CO[1], this);
+        addElement(menu, instrucSel, INS_CO[0] - 15, INS_CO[1] - 13, this);
         instrucSel.setVisible(false);
 
         //leaderboard button settings
-        menu.add(leaderButton);
-        menu.add(leaderSel);
         menuButtons.add(leaderButton);
         buttonEffects.add(leaderSel);
-        leaderButton.setLocation(LEADER_CO[0], LEADER_CO[1]);
-        leaderButton.setSize(leaderButton.getPreferredSize());
-        leaderButton.addMouseListener(this);
-        leaderSel.setLocation(LEADER_CO[0] - 15, LEADER_CO[1] - 13);
-        leaderSel.setSize(leaderSel.getPreferredSize());
+        addElement(menu, leaderButton, LEADER_CO[0], LEADER_CO[1], this);
+        addElement(menu, leaderSel, LEADER_CO[0] - 15, LEADER_CO[1] - 13, this);
         leaderSel.setVisible(false);
 
         //stat button settings
-        menu.add(statButton);
-        menu.add(statSel);
         menuButtons.add(statButton);
         buttonEffects.add(statSel);
-        statButton.setLocation(STAT_CO[0], STAT_CO[1]);
-        statButton.setSize(statButton.getPreferredSize());
-        statButton.addMouseListener(this);
-        statSel.setLocation(STAT_CO[0] - 15, STAT_CO[1] - 13);
-        statSel.setSize(statSel.getPreferredSize());
+        addElement(menu, statButton, STAT_CO[0], STAT_CO[1], this);
+        addElement(menu, statSel, STAT_CO[0] - 15, STAT_CO[1] - 13, this);
         statSel.setVisible(false);
 
         //quit button settings
-        menu.add(quitButton);
-        menu.add(quitSel);
         menuButtons.add(quitButton);
         buttonEffects.add(quitSel);
-        quitButton.setLocation(QUIT_CO[0], QUIT_CO[1]);
-        quitButton.setSize(quitButton.getPreferredSize());
-        quitButton.addMouseListener(this);
-        quitSel.setLocation(QUIT_CO[0] - 15, QUIT_CO[1] - 13);
-        quitSel.setSize(quitSel.getPreferredSize());
+        addElement(menu, quitButton, QUIT_CO[0], QUIT_CO[1], this);
+        addElement(menu, quitSel, QUIT_CO[0] - 15, QUIT_CO[1] - 13, this);
         quitSel.setVisible(false);
 
         //settings button
-        menu.add(settings);
-        menu.add(settingSel);
         menuButtons.add(settings);
         buttonEffects.add(settingSel);
-        settings.setLocation(SETTINGS_CO[0], SETTINGS_CO[1]);
-        settings.setSize(settings.getPreferredSize());
-        settings.addMouseListener(this);
-        settingSel.setLocation(SETTINGS_CO[0] - 3, SETTINGS_CO[1] - 3);
-        settingSel.setSize(settingSel.getPreferredSize());
+        addElement(menu, settings, SETTINGS_CO[0], SETTINGS_CO[1], this);
+        addElement(menu, settingSel, SETTINGS_CO[0] - 3, SETTINGS_CO[1] - 3, this);
         settingSel.setVisible(false);
 
         //username display
@@ -155,22 +152,53 @@ public class Menu extends JDialog implements MouseListener {
 
         //profile settings
         menu.add(profile);
-        profile.setLocation(PROFILE_CO[0], PROFILE_CO[1]);
-        profile.setSize(profile.getPreferredSize());
+        addElement(menu, profile, PROFILE_CO[0], PROFILE_CO[1]);
 
         //background settings
         menu.add(bg);
-        bg.setLocation(0, 0);
-        bg.setSize(bg.getPreferredSize());
+        addElement(menu, bg, 0, 0);
 
         //adding components to current frame
         frame.add(menu, new Integer(1));
-        initializeVolume();
+    }
 
-        //JDialog settings
-        setResizable(false);
-        setVisible(true);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    public void initializeInstructions() {
+        instructions = new JPanel();
+        instructions.setSize(1400, 800);
+        instructions.setLayout(null);
+        instructions.setOpaque(false);
+
+        addElement(instructions, instrucPage, 0, 0);
+
+        frame.add(instructions, new Integer(2));
+        instructions.setLocation(0, 0);
+        instructions.setVisible(false);
+    }
+
+    public void initializeLeaderboard() {
+        leaderboard = new JPanel();
+        leaderboard.setSize(1400, 800);
+        leaderboard.setLayout(null);
+        leaderboard.setOpaque(false);
+
+        addElement(leaderboard, leaderPage, 0, 0);
+
+        frame.add(leaderboard, new Integer(3));
+        leaderboard.setLocation(0, 0);
+        leaderboard.setVisible(false);
+    }
+
+    public void initializeStats() {
+        stats = new JPanel();
+        stats.setSize(1400, 800);
+        stats.setLayout(null);
+        stats.setOpaque(false);
+
+        addElement(stats, statPage, 0, 0);
+
+        frame.add(stats, new Integer(4));
+        stats.setLocation(0, 0);
+        stats.setVisible(false);
     }
 
     public void initializeVolume() {
@@ -189,80 +217,110 @@ public class Menu extends JDialog implements MouseListener {
         vIndicator.setForeground(Color.WHITE);
 
         //volume down button
-        vF.add(vDown);
         volumeButtons.add(vDown);
-        vDown.setSize(vDown.getPreferredSize());
-        vDown.setLocation(10, 8);
-        vDown.addMouseListener(this);
+        addElement(vF, vDown, 10, 8, this);
 
         //volume up button
-        vF.add(vUp);
         volumeButtons.add(vUp);
-        vUp.setSize(vDown.getPreferredSize());
-        vUp.setLocation(100, 7);
-        vUp.addMouseListener(this);
+        addElement(vF, vUp, 100, 7, this);
 
         //volume on/off button
-        vF.add(vOn);
-        vF.add(vOff);
         volumeButtons.add(vOn);
         volumeButtons.add(vOff);
-        vOn.setSize(vOn.getPreferredSize());
-        vOn.setLocation(170, 12);
-        vOn.addMouseListener(this);
-        vOff.setSize(vOff.getPreferredSize());
-        vOff.setLocation(173, 15);
+        addElement(vF, vOn, 170, 12, this);
+        addElement(vF, vOff, 173, 15, this);
         vOff.setVisible(false);
-        vOff.addMouseListener(this);
 
         //volume frame background
         vF.add(vBg);
-        vBg.setSize(vBg.getPreferredSize());
-        vBg.setLocation(0, 0);
+        addElement(vF, vBg, 0, 0);
 
-        frame.add(vF, new Integer(2));
+        frame.add(vF, new Integer(5));
         vF.setLocation(1100, 635);
         vF.setVisible(false);
+    }
+
+    public void initializeBack() {
+        back = new JPanel();
+        back.setSize(75, 50);
+        back.setLayout(null);
+        back.setOpaque(false);
+
+        back.add(goBack);
+        goBack.setSize(goBack.getPreferredSize());
+        goBack.setLocation(0, 0);
+        goBack.addMouseListener(this);
+
+        frame.add(goBack, new Integer(6));
+        goBack.setLocation(40, 40);
+        goBack.setVisible(false);
+    }
+
+    public void addElement(JPanel panel, JLabel object, int x, int y) {
+        panel.add(object);
+        object.setLocation(x, y);
+        object.setSize(object.getPreferredSize());
+    }
+
+    public void addElement(JPanel panel, JLabel object, int x, int y, MouseListener listener) {
+        panel.add(object);
+        object.setLocation(x, y);
+        object.setSize(object.getPreferredSize());
+        object.addMouseListener(listener);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         try {
-            int index = menuButtons.indexOf((JLabel) e.getComponent());
-            if (index == 0) ;//play
-            else if (index == 1) ; //instructions
-            else if (index == 2) ; //leaderboard
-            else if (index == 3) ; //stats
-            else if (index == 4) {
-                MusicSound.stopMusic(); //stop music
-                System.exit(0); //exit system
-            } else if (index == 5) vF.setVisible(!vF.isVisible()); //open or close volume settings
+            if (!goBack.isVisible()) {
+                int index = menuButtons.indexOf((JLabel) e.getComponent());
+                if (index == 0) ;//play
+                else if (index == 1) {
+                    instructions.setVisible(true);
+                    goBack.setVisible(true);
+                    curOpen = instructions;
+                } else if (index == 2) {
+                    leaderboard.setVisible(true);
+                    goBack.setVisible(true);
+                    curOpen = leaderboard;
+                } else if (index == 3) {
+                    stats.setVisible(true);
+                    goBack.setVisible(true);
+                    curOpen = stats;
+                } else if (index == 4) {
+                    MusicSound.stopMusic(); //stop music
+                    System.exit(0); //exit system
+                } else if (index == 5) vF.setVisible(!vF.isVisible()); //open or close volume settings
 
-            if (vF.isVisible()) {
-                int i = volumeButtons.indexOf((JLabel) e.getComponent());
-                if (i == 0) {
-                    if (volume > 1) {
-                        MusicSound.decreaseMusic();
-                        volume--;
-                        vIndicator.setText(String.valueOf(volume));
+                if (vF.isVisible()) {
+                    int i = volumeButtons.indexOf((JLabel) e.getComponent());
+                    if (i == 0) {
+                        if (volume > 1) {
+                            MusicSound.decreaseMusic();
+                            volume--;
+                            vIndicator.setText(String.valueOf(volume));
+                        }
+                    } else if (i == 1) {
+                        if (volume < 9) {
+                            MusicSound.increaseMusic();
+                            volume++;
+                            vIndicator.setText(String.valueOf(volume));
+                        }
+                    } else if (i == 2) {
+                        MusicSound.stopMusic();
+                        vOn.setVisible(false);
+                        vOff.setVisible(true);
+                    } else if (i == 3) {
+                        MusicSound.playMusic();
+                        vOn.setVisible(true);
+                        vOff.setVisible(false);
                     }
                 }
-                else if (i == 1) {
-                    if (volume < 9) {
-                        MusicSound.increaseMusic();
-                        volume++;
-                        vIndicator.setText(String.valueOf(volume));
-                    }
-                }
-                else if (i == 2) {
-                    MusicSound.stopMusic();
-                    vOn.setVisible(false);
-                    vOff.setVisible(true);
-                }
-                else if (i == 3) {
-                    MusicSound.playMusic();
-                    vOn.setVisible(true);
-                    vOff.setVisible(false);
+            }
+            if (goBack.isVisible()) {
+                if (e.getComponent() == goBack) {
+                    goBack.setVisible(false);
+                    curOpen.setVisible(false);
                 }
             }
         } catch (Exception ignored) {}
@@ -270,15 +328,19 @@ public class Menu extends JDialog implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         try {
-            int index = menuButtons.indexOf((JLabel) e.getComponent());
-            buttonEffects.get(index).setVisible(true);
+            if (!goBack.isVisible()) {
+                int index = menuButtons.indexOf((JLabel) e.getComponent());
+                buttonEffects.get(index).setVisible(true);
+            }
         } catch (Exception ignored) {}
     }
     @Override
     public void mouseExited(MouseEvent e) {
         try {
-            int index = menuButtons.indexOf((JLabel) e.getComponent());
-            buttonEffects.get(index).setVisible(false);
+            if (!goBack.isVisible()) {
+                int index = menuButtons.indexOf((JLabel) e.getComponent());
+                buttonEffects.get(index).setVisible(false);
+            }
         } catch (Exception ignored) {}
     }
     @Override
