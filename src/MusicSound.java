@@ -18,7 +18,7 @@ public class MusicSound {
      * The procedure type method continuously plays background music.
      */
     public static void playBackgroundMusic() throws Exception {
-        File music = new File("Music/BackgroundMusic.wav");
+        File music = new File("MusicSounds/BackgroundMusic.wav");
         clip = AudioSystem.getClip();
         // getAudioInputStream() also accepts a File or InputStream
         AudioInputStream myAudioInputStream = AudioSystem.getAudioInputStream(music);
