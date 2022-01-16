@@ -188,7 +188,6 @@ public class Menu extends JDialog implements MouseListener {
         vIndicator.setFont(new Font("Copperplate", Font.PLAIN, 50));
         vIndicator.setForeground(Color.WHITE);
 
-
         //volume down button
         vF.add(vDown);
         volumeButtons.add(vDown);
@@ -224,7 +223,6 @@ public class Menu extends JDialog implements MouseListener {
         frame.add(vF, new Integer(2));
         vF.setLocation(1100, 635);
         vF.setVisible(false);
-
     }
 
     @Override
@@ -267,7 +265,6 @@ public class Menu extends JDialog implements MouseListener {
                     vOff.setVisible(false);
                 }
             }
-
         } catch (Exception ignored) {}
     }
     @Override
