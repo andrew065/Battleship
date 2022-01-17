@@ -60,6 +60,7 @@ public class Game {
      * Determines the length of a ship given its type in String.
      * Does NOT account for how the coordinates are formatted (as they are formatted in 1D arrays.)
      * @param shipType the type of ship in String format.
+     * @return the length of the ship.
      * 
      * NOTE: if you wish to use this method outside this class, you are welcome to change the keyword.
      */
@@ -86,7 +87,7 @@ public class Game {
      * Method takes coordinates of a given ship & places it under the correct class variable.
      * @param shipType the type of ship in String format.
      * @param newShipCoords the array of coordinates the ship comprises.
-     * return false if the ship placement has failed &/or is invalid.
+     * @return false if the ship placement has failed &/or is invalid.
      */
     public static boolean userPlaceShip(String shipType, int[] newShipCoords) {
         // check if the ship is valid length (conditions to try again)
@@ -151,7 +152,7 @@ public class Game {
      * Takes the starting coordinates & the ending coordinates of a ship & places it under the correct class variable.
      * @param shipType the type of ship in String format.
      * @param newShipCoords the array of coordinates the ship comprises.
-     * return false if the ship placement has failed &/or is invalid.
+     * @return false if the ship placement has failed &/or is invalid.
      */
     public static boolean aiPlaceShip(String shipType, int[] newShipCoords) {
         // check if the ship is valid length (conditions to try again)
@@ -414,7 +415,7 @@ public class Game {
      /**
       * Determines if the ship object given is sunk.
       * @param shipCoords the coordinates of the ship.
-      * return true if the ship is sunk.
+      * @return true if the ship is sunk.
       */
     private static boolean isSunk(int[] shipCoords) {
         for (int coordinate : shipCoords) {
