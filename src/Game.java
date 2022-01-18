@@ -223,7 +223,7 @@ public class Game {
     public static void userFire(int coordsX, int coordsY) {
         //make sure that it is not already either a hit or miss
         if (userToAiBoardHits[coordsX][coordsY] == 1 || userToAiBoardHits[coordsX][coordsY] == 2) {
-            System.out.println("fuck you");
+            System.out.println("fuck you dumbass bitch, you tried to hit a spot that was already hit.");
             System.exit(0);
         }
         
