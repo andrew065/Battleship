@@ -4,9 +4,10 @@
  * @author Derrick Ha, Eric Cao
  */
 public class Game {
-    // create thing
-    public static int hits = 0;
-    public static int wins = 0;
+    /**
+     * The total amount of hits from a player over the course of a game.
+     */
+    public static int userHits = 0;
     
     /**
      * 2D grid of all the spots the user has hit the AI.
@@ -108,9 +109,9 @@ public class Game {
             int coordX = newShipCoords[i];
             int coordY = newShipCoords[i + 1];
             
-            if (isVerticallyPlaced == true) {
+            if (isVerticallyPlaced) {
                 if (coordX != startX) return false;
-            } else if (isVerticallyPlaced == false) {
+            } else {
                 if (coordY != startY) return false;
             }
         }
@@ -158,28 +159,28 @@ public class Game {
         // check if the ship is valid length (conditions to try again)
         int shipLength = findShipLength(shipType);
         if (newShipCoords.length != shipLength * 2) return false;
-        
+
         // check if coordinate placement is correct (condition to try again)
         int startX = newShipCoords[0]; int startY = newShipCoords[1]; // the row/column of the start-coordinate
         int endX = newShipCoords[newShipCoords.length - 2]; int endY = newShipCoords[newShipCoords.length - 1]; // the row/column of the end-coordinate
-        
+
         boolean isVerticallyPlaced; // true if it is vertical; false if it is horizontal
         if (startX == endX) isVerticallyPlaced = true;
-        else if (startY == endY) isVerticallyPlaced = false; 
+        else if (startY == endY) isVerticallyPlaced = false;
         else return false;
-        
-        
+
+
         for (int i = 0; i < shipLength; i += 2) {
             int coordX = newShipCoords[i];
             int coordY = newShipCoords[i + 1];
-            
-            if (isVerticallyPlaced == true) {
+
+            if (isVerticallyPlaced) {
                 if (coordX != startX) return false;
-            } else if (isVerticallyPlaced == false) {
+            } else {
                 if (coordY != startY) return false;
             }
         }
-        
+
         // which ship is it? place coords in the correct ship
         switch(shipType) {
             case "Carrier":
@@ -208,7 +209,7 @@ public class Game {
                 }
                 break;
         }
-        
+
         return true; // ship has been placed
     }
     
@@ -220,7 +221,7 @@ public class Game {
      * 
      * NOTE: you are in charge of making sure the coordinates are within boundaries & checking if the spot is hit multiple times.
      */
-    public static void userFire(int coordsX, int coordsY) {
+    public static boolean userFire(int coordsX, int coordsY) {
         //make sure that it is not already either a hit or miss
         if (userToAiBoardHits[coordsX][coordsY] == 1 || userToAiBoardHits[coordsX][coordsY] == 2) {
             System.out.println("fuck you");
@@ -290,6 +291,9 @@ public class Game {
         if (!isHit) {
             userToAiBoardHits[coordsX][coordsY] = 2;
         }
+
+        userHits++;
+        return isHit;
     }
     
     
@@ -299,7 +303,7 @@ public class Game {
      * @param coordsX the x-coordinate of the marker.
      * @param coordsY the y-coordinate of the marker.
      */
-     public static void aiFire(int coordsX, int coordsY) {
+     public static boolean aiFire(int coordsX, int coordsY) {
          // check if spot is not already fired at
          if (aiToUserBoardHits[coordsX][coordsY] != 0) {
              System.out.println("Fuck the AI");
@@ -369,6 +373,8 @@ public class Game {
         if (!isHit) {
             aiToUserBoardHits[coordsX][coordsY] = 2;
         }
+
+        return isHit;
      }
      
      /**
@@ -424,6 +430,28 @@ public class Game {
             }
         }
         return true;
+    }
+
+    /**
+     * Resets all the objects to their default values.
+     */
+    public static void resetGame() {
+        aiDestroyer = new int[2*2];
+        aiSubmarine = new int[3*2];
+        aiCruiser = new int[3*2];
+        aiBattleship = new int[4*2];
+        aiCarrier = new int[5*2];
+
+        uDestroyer = new int[2*2];
+        uSubmarine = new int[3*2];
+        uCruiser = new int[3*2];
+        uBattleship = new int[4*2];
+        uCarrier = new int[5*2];
+
+        isAiShipSunk = new boolean[5];
+        isUserShipSunk = new boolean[5];
+
+        userHits = 0;
     }
 }
 
