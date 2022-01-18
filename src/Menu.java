@@ -92,6 +92,9 @@ public class Menu extends JDialog implements MouseListener {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
+    /**
+     * This method initializes the background for the menu frame
+     */
     public void initializeBg() {
         //menu panel settings
         menu = new JPanel();
@@ -101,43 +104,43 @@ public class Menu extends JDialog implements MouseListener {
         //play button settings
         menuButtons.add(playButton);
         buttonEffects.add(playSel);
-        addElement(menu, playButton, PLAY_CO[0], PLAY_CO[1], this);
-        addElement(menu, playSel, PLAY_CO[0] - 15, PLAY_CO[1] - 13, this);
+        GameSystem.addElement(menu, playButton, PLAY_CO[0], PLAY_CO[1], this);
+        GameSystem.addElement(menu, playSel, PLAY_CO[0] - 15, PLAY_CO[1] - 13, this);
         playSel.setVisible(false);
 
         //instructions button settings
         menuButtons.add(instrucButton);
         buttonEffects.add(instrucSel);
-        addElement(menu, instrucButton, INS_CO[0], INS_CO[1], this);
-        addElement(menu, instrucSel, INS_CO[0] - 15, INS_CO[1] - 13, this);
+        GameSystem.addElement(menu, instrucButton, INS_CO[0], INS_CO[1], this);
+        GameSystem.addElement(menu, instrucSel, INS_CO[0] - 15, INS_CO[1] - 13, this);
         instrucSel.setVisible(false);
 
         //leaderboard button settings
         menuButtons.add(leaderButton);
         buttonEffects.add(leaderSel);
-        addElement(menu, leaderButton, LEADER_CO[0], LEADER_CO[1], this);
-        addElement(menu, leaderSel, LEADER_CO[0] - 15, LEADER_CO[1] - 13, this);
+        GameSystem.addElement(menu, leaderButton, LEADER_CO[0], LEADER_CO[1], this);
+        GameSystem.addElement(menu, leaderSel, LEADER_CO[0] - 15, LEADER_CO[1] - 13, this);
         leaderSel.setVisible(false);
 
         //stat button settings
         menuButtons.add(statButton);
         buttonEffects.add(statSel);
-        addElement(menu, statButton, STAT_CO[0], STAT_CO[1], this);
-        addElement(menu, statSel, STAT_CO[0] - 15, STAT_CO[1] - 13, this);
+        GameSystem.addElement(menu, statButton, STAT_CO[0], STAT_CO[1], this);
+        GameSystem.addElement(menu, statSel, STAT_CO[0] - 15, STAT_CO[1] - 13, this);
         statSel.setVisible(false);
 
         //quit button settings
         menuButtons.add(quitButton);
         buttonEffects.add(quitSel);
-        addElement(menu, quitButton, QUIT_CO[0], QUIT_CO[1], this);
-        addElement(menu, quitSel, QUIT_CO[0] - 15, QUIT_CO[1] - 13, this);
+        GameSystem.addElement(menu, quitButton, QUIT_CO[0], QUIT_CO[1], this);
+        GameSystem.addElement(menu, quitSel, QUIT_CO[0] - 15, QUIT_CO[1] - 13, this);
         quitSel.setVisible(false);
 
         //settings button
         menuButtons.add(settings);
         buttonEffects.add(settingSel);
-        addElement(menu, settings, SETTINGS_CO[0], SETTINGS_CO[1], this);
-        addElement(menu, settingSel, SETTINGS_CO[0] - 3, SETTINGS_CO[1] - 3, this);
+        GameSystem.addElement(menu, settings, SETTINGS_CO[0], SETTINGS_CO[1], this);
+        GameSystem.addElement(menu, settingSel, SETTINGS_CO[0] - 3, SETTINGS_CO[1] - 3, this);
         settingSel.setVisible(false);
 
         //username display
@@ -151,56 +154,66 @@ public class Menu extends JDialog implements MouseListener {
         nameDisplay.setVerticalAlignment(JLabel.CENTER);
 
         //profile settings
-        menu.add(profile);
-        addElement(menu, profile, PROFILE_CO[0], PROFILE_CO[1]);
+        GameSystem.addElement(menu, profile, PROFILE_CO[0], PROFILE_CO[1]);
 
         //background settings
-        menu.add(bg);
-        addElement(menu, bg, 0, 0);
+        GameSystem.addElement(menu, bg, 0, 0);
 
         //adding components to current frame
         frame.add(menu, new Integer(1));
     }
 
+    /**
+     * This method initializes the instructions page on a separate JPanel
+     */
     public void initializeInstructions() {
         instructions = new JPanel();
         instructions.setSize(1400, 800);
         instructions.setLayout(null);
         instructions.setOpaque(false);
 
-        addElement(instructions, instrucPage, 0, 0);
+        GameSystem.addElement(instructions, instrucPage, 0, 0);
 
         frame.add(instructions, new Integer(2));
         instructions.setLocation(0, 0);
         instructions.setVisible(false);
     }
 
+    /**
+     * This method initializes the leaderboard page on a separate JPanel
+     */
     public void initializeLeaderboard() {
         leaderboard = new JPanel();
         leaderboard.setSize(1400, 800);
         leaderboard.setLayout(null);
         leaderboard.setOpaque(false);
 
-        addElement(leaderboard, leaderPage, 0, 0);
+        GameSystem.addElement(leaderboard, leaderPage, 0, 0);
 
         frame.add(leaderboard, new Integer(3));
         leaderboard.setLocation(0, 0);
         leaderboard.setVisible(false);
     }
 
+    /**
+     * This method initializes the stats page on a separate JPanel
+     */
     public void initializeStats() {
         stats = new JPanel();
         stats.setSize(1400, 800);
         stats.setLayout(null);
         stats.setOpaque(false);
 
-        addElement(stats, statPage, 0, 0);
+        GameSystem.addElement(stats, statPage, 0, 0);
 
         frame.add(stats, new Integer(4));
         stats.setLocation(0, 0);
         stats.setVisible(false);
     }
 
+    /**
+     * This method initializes the volume settings on the menu frame
+     */
     public void initializeVolume() {
         //panel settings
         vF = new JPanel();
@@ -218,28 +231,31 @@ public class Menu extends JDialog implements MouseListener {
 
         //volume down button
         volumeButtons.add(vDown);
-        addElement(vF, vDown, 10, 8, this);
+        GameSystem.addElement(vF, vDown, 10, 8, this);
 
         //volume up button
         volumeButtons.add(vUp);
-        addElement(vF, vUp, 100, 7, this);
+        GameSystem.addElement(vF, vUp, 100, 7, this);
 
         //volume on/off button
         volumeButtons.add(vOn);
         volumeButtons.add(vOff);
-        addElement(vF, vOn, 170, 12, this);
-        addElement(vF, vOff, 173, 15, this);
+        GameSystem.addElement(vF, vOn, 170, 12, this);
+        GameSystem.addElement(vF, vOff, 173, 15, this);
         vOff.setVisible(false);
 
         //volume frame background
         vF.add(vBg);
-        addElement(vF, vBg, 0, 0);
+        GameSystem.addElement(vF, vBg, 0, 0);
 
         frame.add(vF, new Integer(5));
         vF.setLocation(1100, 635);
         vF.setVisible(false);
     }
 
+    /**
+     * This method initializes a back button to be used for the menu
+     */
     public void initializeBack() {
         back = new JPanel();
         back.setSize(75, 50);
@@ -256,88 +272,103 @@ public class Menu extends JDialog implements MouseListener {
         goBack.setVisible(false);
     }
 
-    public void addElement(JPanel panel, JLabel object, int x, int y) {
-        panel.add(object);
-        object.setLocation(x, y);
-        object.setSize(object.getPreferredSize());
+    /**
+     * This method will initialize the game page to start a game of battleship
+     */
+    public void openGame() {
+        GamePage game = new GamePage();
+        hideMenu();
     }
 
-    public void addElement(JPanel panel, JLabel object, int x, int y, MouseListener listener) {
-        panel.add(object);
-        object.setLocation(x, y);
-        object.setSize(object.getPreferredSize());
-        object.addMouseListener(listener);
+    /**
+     * This method hides the current frame
+     */
+    public void hideMenu() {
+        setVisible(false);
+    }
+
+    /**
+     * This method shows the current frame
+     */
+    public void showMenu() {
+        setVisible(true);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        try {
-            if (!goBack.isVisible()) {
-                int index = menuButtons.indexOf((JLabel) e.getComponent());
-                if (index == 0) ;//play
-                else if (index == 1) {
-                    instructions.setVisible(true);
-                    goBack.setVisible(true);
-                    curOpen = instructions;
-                } else if (index == 2) {
-                    leaderboard.setVisible(true);
-                    goBack.setVisible(true);
-                    curOpen = leaderboard;
-                } else if (index == 3) {
-                    stats.setVisible(true);
-                    goBack.setVisible(true);
-                    curOpen = stats;
-                } else if (index == 4) {
-                    MusicSound.stopMusic(); //stop music
-                    System.exit(0); //exit system
-                } else if (index == 5) vF.setVisible(!vF.isVisible()); //open or close volume settings
+        if (isVisible()) {
+            try {
+                if (!goBack.isVisible()) {
+                    int index = menuButtons.indexOf((JLabel) e.getComponent());
+                    if (index == 0) openGame();
+                    else if (index == 1) {
+                        buttonEffects.get(index).setVisible(false);
+                        instructions.setVisible(true);
+                        goBack.setVisible(true);
+                        curOpen = instructions;
+                    } else if (index == 2) {
+                        buttonEffects.get(index).setVisible(false);
+                        leaderboard.setVisible(true);
+                        goBack.setVisible(true);
+                        curOpen = leaderboard;
+                    } else if (index == 3) {
+                        buttonEffects.get(index).setVisible(false);
+                        stats.setVisible(true);
+                        goBack.setVisible(true);
+                        curOpen = stats;
+                    } else if (index == 4) {
+                        MusicSound.stopMusic(); //stop music
+                        System.exit(0); //exit system
+                    } else if (index == 5) vF.setVisible(!vF.isVisible()); //open or close volume settings
 
-                if (vF.isVisible()) {
-                    int i = volumeButtons.indexOf((JLabel) e.getComponent());
-                    if (i == 0) {
-                        if (volume > 1) {
-                            MusicSound.decreaseMusic();
-                            volume--;
-                            vIndicator.setText(String.valueOf(volume));
+                    if (vF.isVisible()) {
+                        int i = volumeButtons.indexOf((JLabel) e.getComponent());
+                        if (i == 0) {
+                            if (volume > 1) {
+                                MusicSound.decreaseMusic();
+                                volume--;
+                                vIndicator.setText(String.valueOf(volume));
+                            }
+                        } else if (i == 1) {
+                            if (volume < 9) {
+                                MusicSound.increaseMusic();
+                                volume++;
+                                vIndicator.setText(String.valueOf(volume));
+                            }
+                        } else if (i == 2) {
+                            MusicSound.stopMusic();
+                            vOn.setVisible(false);
+                            vOff.setVisible(true);
+                        } else if (i == 3) {
+                            MusicSound.playMusic();
+                            vOn.setVisible(true);
+                            vOff.setVisible(false);
                         }
-                    } else if (i == 1) {
-                        if (volume < 9) {
-                            MusicSound.increaseMusic();
-                            volume++;
-                            vIndicator.setText(String.valueOf(volume));
-                        }
-                    } else if (i == 2) {
-                        MusicSound.stopMusic();
-                        vOn.setVisible(false);
-                        vOff.setVisible(true);
-                    } else if (i == 3) {
-                        MusicSound.playMusic();
-                        vOn.setVisible(true);
-                        vOff.setVisible(false);
                     }
                 }
-            }
-            if (goBack.isVisible()) {
-                if (e.getComponent() == goBack) {
-                    goBack.setVisible(false);
-                    curOpen.setVisible(false);
+                if (goBack.isVisible()) {
+                    if (e.getComponent() == goBack) {
+                        goBack.setVisible(false);
+                        curOpen.setVisible(false);
+                    }
                 }
-            }
-        } catch (Exception ignored) {}
+            } catch (Exception ignored) {}
+        }
     }
     @Override
     public void mouseEntered(MouseEvent e) {
         try {
-            if (!goBack.isVisible()) {
+            if (!goBack.isVisible() && isVisible()) {
                 int index = menuButtons.indexOf((JLabel) e.getComponent());
                 buttonEffects.get(index).setVisible(true);
             }
         } catch (Exception ignored) {}
+
     }
     @Override
     public void mouseExited(MouseEvent e) {
         try {
-            if (!goBack.isVisible()) {
+            if (!goBack.isVisible() && isVisible()) {
                 int index = menuButtons.indexOf((JLabel) e.getComponent());
                 buttonEffects.get(index).setVisible(false);
             }
