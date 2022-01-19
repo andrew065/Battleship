@@ -5,16 +5,19 @@ import java.util.Scanner;
 
 public class User {
     public File user;
+    public String username;
 
     public boolean newUser = true;
     public int[] data = new int[4]; // #games - #sunk - #win - #losses
 
     public User(String username) {
-         user = new File("Players/" + username + ".txt");
+        this.username = username;
+        user = new File("Players/" + username + ".txt");
 
         if (user.exists()) {
             newUser = false;
         }
+
     }
 
     /**

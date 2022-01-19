@@ -73,6 +73,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         setVisible(true);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addKeyListener(this);
+        addMouseListener(this);
     }
 
     /**
@@ -173,30 +174,35 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) { //move the ship left
                 allShips[curShip].move(1);
-            } else if (e.getKeyCode() == KeyEvent.VK_DOWN) { //move the ship down
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_DOWN) { //move the ship down
                 allShips[curShip].move(2);
-            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //move the ship right
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //move the ship right
                 allShips[curShip].move(3);
-            } else if (e.getKeyCode() == KeyEvent.VK_SPACE) { //rotate the ship
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_SPACE) { //rotate the ship
                 allShips[curShip].rotate();
             }
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_ENTER) { //try placing the ship
-            if (curShip >= 4) { //start the game if all ships have been placed
-                shipsPlaced++;
-                curShip++;
-                System.out.println("confirm placement");
-                getAIDifficulty();
-            }
-            else if (positionValid(allShips[curShip])) { //if the position is valid, add the next ship to be placed
-                shipsPlaced++;
-                curShip++;
-                addShip();
-            }
-            else {
-                System.out.println("invalid placement"); //display error message if position is invalid
+            else if (e.getKeyCode() == KeyEvent.VK_ENTER) { //try placing the ship
+                if (positionValid(allShips[curShip])) { //if the position is valid, add the next ship to be placed
+                    shipsPlaced++;
+                    curShip++;
+                    addShip();
+                }
+                else {
+                    System.out.println("invalid placement"); //display error message if position is invalid
+                }
             }
         }
+        else {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) { //start the game if all ships have been placed
+                    shipsPlaced++;
+                    curShip++;
+                    System.out.println("confirm placement");
+                    getAIDifficulty();
+                }
+            }
     }
     @Override
     public void keyReleased(KeyEvent e) {}
@@ -207,6 +213,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     //MouseListener methods
     @Override
     public void mouseClicked(MouseEvent e) {
+        System.out.println(e.getX() + " " + e.getY());
         try {
             int index = buttons.indexOf((JLabel) e.getComponent());
             difficulty.setVisible(false);
@@ -231,5 +238,4 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     public void mouseReleased(MouseEvent e) {}
     @Override
     public void mousePressed(MouseEvent e) {}
-
 }
