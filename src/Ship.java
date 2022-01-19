@@ -1,39 +1,35 @@
 import javax.swing.*;
 import java.util.Arrays;
 
-public class Ship {
-    public int x;
-    public int y;
+public class Ship extends GameObject {
     public int length;
     public boolean horizontal = true;
-    int[][] position;
+    private int[][] position;
 
     private final JLabel VERTICAL;
     private final JLabel HORIZONTAL;
-    private final JPanel layer;
     private JLabel current;
 
     public Ship(JPanel layer, JLabel horizontal, JLabel vertical, int x, int y, int length) {
+        super(layer, x, y);
         VERTICAL = vertical;
         HORIZONTAL = horizontal;
 
-        this.x = x;
-        this.y = y;
         this.length = length;
-        this.layer = layer;
 
         position = new int[length][2];
         current = HORIZONTAL;
 
-        this.layer.add(current);
-        refreshSprite();
+        layer.add(current);
+        refresh();
     }
 
     /**
      * This method refreshes the sprite in the JPanel by updating its position and size
      */
-    public void refreshSprite() {
-        current.setLocation(this.x, this.y);
+    @Override
+    public void refresh() {
+        current.setLocation(x, y);
         current.setSize(current.getPreferredSize());
         layer.repaint();
     }
@@ -53,7 +49,7 @@ public class Ship {
             if (horizontal && x <= 55 + 61 * (9 - length)) x += 61;
             else if (!horizontal && x <= 604) x += 61;
         }
-        refreshSprite();
+        refresh();
     }
 
     /**
@@ -80,7 +76,7 @@ public class Ship {
         //update system and GUI
         horizontal = !horizontal;
         layer.add(current);
-        refreshSprite();
+        refresh();
     }
 
     /**
@@ -92,14 +88,14 @@ public class Ship {
         int y1 = (int) Math.round((y - 170) / 61.0); //find topmost y coordinate and convert to 1-10
 
         if (horizontal) { //gets the horizontal position
-            for (int i = 0; i < position.length; i++) Arrays.fill(position[i], y1);
+            for (int[] coords : position) Arrays.fill(coords, y1);
             for (int i = 0; i < position.length; i++) {
                 position[i][0] = x1;
                 x1++;
             }
         }
         else { //gets the vertical position
-            for (int i = 0; i < position.length; i++) Arrays.fill(position[i], x1);
+            for (int[] coords : position) Arrays.fill(coords, x1);
             for (int i = 0; i < position.length; i++) {
                 position[i][1] = y1;
                 y1++;

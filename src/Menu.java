@@ -89,7 +89,7 @@ public class Menu extends JDialog implements MouseListener {
         //JDialog settings
         setResizable(false);
         setVisible(true);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
     /**

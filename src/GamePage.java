@@ -1,15 +1,31 @@
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.List;
 
-public class GamePage extends JDialog implements KeyListener {
+public class GamePage extends JDialog implements KeyListener, MouseListener {
     JLayeredPane frame; //layered pane of game page frame
 
     //JPanels for different displays
     JPanel background;
     JPanel shipsPage;
+    JPanel difficulty;
     JPanel markers;
+
+    //initializing ai difficulty sprites
+    JLabel easy = new JLabel(new ImageIcon("Images/Game/1_Easy.png"));
+    JLabel med = new JLabel(new ImageIcon("Images/Game/2_Medium.png"));
+    JLabel hard = new JLabel(new ImageIcon("Images/Game/3_Hard.png"));
+    JLabel diffSel1 = new JLabel(new ImageIcon("Images/Game/AI_Selection.png"));
+    JLabel diffSel2 = new JLabel(new ImageIcon("Images/Game/AI_Selection.png"));
+    JLabel diffSel3 = new JLabel(new ImageIcon("Images/Game/AI_Selection.png"));
+    JLabel aiDiffBg = new JLabel(new ImageIcon("Images/Game/AI_Difficulty_Bg.png"));
+
+    List<JLabel> buttons = Arrays.asList(easy, med, hard);
+    List<JLabel> selection = Arrays.asList(diffSel1, diffSel2, diffSel3);
 
     //initializing background/game icons & sprites
     JLabel bg = new JLabel(new ImageIcon("Images/Game/Game_Page.png"));
@@ -116,6 +132,28 @@ public class GamePage extends JDialog implements KeyListener {
     }
 
     /**
+     * This method creates buttons and displays it on the current frame to get the users desired AI difficulty
+     */
+    public void getAIDifficulty() {
+        difficulty = new JPanel();
+        difficulty.setSize(1459, 821);
+        difficulty.setLayout(null);
+        difficulty.setOpaque(false);
+
+        int xPos = 590;
+        for (int i = 0; i < 3; i++) {
+            GameSystem.addElement(difficulty, buttons.get(i), xPos, 450, this);
+            GameSystem.addElement(difficulty, selection.get(i), xPos - 10, 440, this);
+            selection.get(i).setVisible(false);
+
+            xPos += 100;
+        }
+        GameSystem.addElement(difficulty, aiDiffBg, 454, 218);
+
+        frame.add(difficulty, new Integer(3));
+    }
+
+    /**
      * Adds a marker to the player or enemy side of the board
      * @param x - x coordinate of coordinate
      * @param y - y coordinate of coordinate
@@ -126,27 +164,29 @@ public class GamePage extends JDialog implements KeyListener {
 
     }
 
+    //KeyListener methods
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_UP) { //move the ship up
-            allShips[curShip].move(0);
-        }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) { //move the ship left
-            allShips[curShip].move(1);
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN) { //move the ship down
-            allShips[curShip].move(2);
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //move the ship right
-            allShips[curShip].move(3);
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_SPACE) { //rotate the ship
-            allShips[curShip].rotate();
+        if (curShip < 4) {
+            if (e.getKeyCode() == KeyEvent.VK_UP) { //move the ship up
+                allShips[curShip].move(0);
+            }
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) { //move the ship left
+                allShips[curShip].move(1);
+            } else if (e.getKeyCode() == KeyEvent.VK_DOWN) { //move the ship down
+                allShips[curShip].move(2);
+            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //move the ship right
+                allShips[curShip].move(3);
+            } else if (e.getKeyCode() == KeyEvent.VK_SPACE) { //rotate the ship
+                allShips[curShip].rotate();
+            }
         }
         else if (e.getKeyCode() == KeyEvent.VK_ENTER) { //try placing the ship
-            if (curShip == 4) { //start the game if all ships have been placed
+            if (curShip >= 4) { //start the game if all ships have been placed
+                shipsPlaced++;
+                curShip++;
                 System.out.println("confirm placement");
-                //start game
+                getAIDifficulty();
             }
             else if (positionValid(allShips[curShip])) { //if the position is valid, add the next ship to be placed
                 shipsPlaced++;
@@ -162,4 +202,34 @@ public class GamePage extends JDialog implements KeyListener {
     public void keyReleased(KeyEvent e) {}
     @Override
     public void keyTyped(KeyEvent e) {}
+
+
+    //MouseListener methods
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        try {
+            int index = buttons.indexOf((JLabel) e.getComponent());
+            difficulty.setVisible(false);
+            GameSystem.signalStart();
+        } catch (Exception ignored) {}
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        try {
+            int index = buttons.indexOf((JLabel) e.getComponent());
+            selection.get(index).setVisible(true);
+        } catch (Exception ignored) {}
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+        try {
+            int index = buttons.indexOf((JLabel) e.getComponent());
+            selection.get(index).setVisible(false);
+        } catch (Exception ignored) {}
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
 }
