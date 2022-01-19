@@ -7,7 +7,7 @@ public class User {
     public File user;
 
     public boolean newUser = true;
-    public int[] data = new int[4];
+    public int[] data = new int[4]; // #games - #sunk - #win - #losses
 
     public User(String username) {
          user = new File("Players/" + username + ".txt");
@@ -17,6 +17,10 @@ public class User {
         }
     }
 
+    /**
+     * This method loads the data from the user's file and stores it in an array
+     * @throws FileNotFoundException - file could not exist
+     */
     public void loadData() throws FileNotFoundException {
         if (!newUser) {
             Scanner scan = new Scanner(user);
@@ -27,8 +31,13 @@ public class User {
         }
     }
 
+    /**
+     * This method updates the array containing the user's data with the specified parameters
+     * @param sunk - the number of ships sunk in a game
+     * @param win - win/lose
+     */
     public void updateData(int sunk, boolean win) {
-        data[0]++; //increment # of games by 1
+        data[0]++;
         data[1] += sunk;
 
         if (win) data[2]++;
@@ -37,6 +46,10 @@ public class User {
         newUser = false;
     }
 
+    /**
+     * This method saves the current users data by rewriting its file with new data
+     * @throws FileNotFoundException - file could not exist
+     */
     public void saveData() throws FileNotFoundException {
         PrintWriter writer = new PrintWriter(user);
         for (int i : data) writer.println(i);
