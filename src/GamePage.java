@@ -53,6 +53,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     int[] shipLengthList = {5, 4, 3, 3, 2};
     int shipsPlaced = 0;
     int curShip = 0;
+    boolean allPlaced = false;
 
     public GamePage() {
         frame = getLayeredPane(); //initialize frame
@@ -168,7 +169,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     //KeyListener methods
     @Override
     public void keyPressed(KeyEvent e) {
-        if (curShip < 4) {
+        if (!allPlaced) {
             if (e.getKeyCode() == KeyEvent.VK_UP) { //move the ship up
                 allShips[curShip].move(0);
             }
@@ -188,21 +189,18 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
                 if (positionValid(allShips[curShip])) { //if the position is valid, add the next ship to be placed
                     shipsPlaced++;
                     curShip++;
-                    addShip();
+                    if (curShip < 5) addShip();
+                    else {
+                        allPlaced = false;
+                        System.out.println("confirm placement");
+                        getAIDifficulty();
+                    }
                 }
                 else {
                     System.out.println("invalid placement"); //display error message if position is invalid
                 }
             }
         }
-        else {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) { //start the game if all ships have been placed
-                    shipsPlaced++;
-                    curShip++;
-                    System.out.println("confirm placement");
-                    getAIDifficulty();
-                }
-            }
     }
     @Override
     public void keyReleased(KeyEvent e) {}
