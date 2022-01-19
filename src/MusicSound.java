@@ -157,7 +157,7 @@ public class MusicSound {
 
             // volume
             FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue() + 5.0f);
+            control.setValue(gainControl.getValue());
 
             clip.start();
 

@@ -79,7 +79,7 @@ public class Game {
             default:
                 return -1;
         }
-        
+
         
     }
     
@@ -144,7 +144,9 @@ public class Game {
                 }
                 break;
         }
-        
+
+        MusicSound.playClick();
+
         return true; // ship has been placed
     }
     
@@ -224,8 +226,7 @@ public class Game {
     public static boolean userFire(int coordsX, int coordsY) {
         //make sure that it is not already either a hit or miss
         if (userToAiBoardHits[coordsX][coordsY] == 1 || userToAiBoardHits[coordsX][coordsY] == 2) {
-            System.out.println("fuck you");
-            System.exit(0);
+            return false;
         }
         
         //check each ship to see if it was hit.
@@ -233,7 +234,6 @@ public class Game {
         
         for(int i = 0; i < aiDestroyer.length; i += 2) {
             if(coordsX == aiDestroyer[i] && coordsY == aiDestroyer[i + 1]) {
-                userToAiBoardHits[coordsX][coordsY] = 1;
                 aiDestroyer[i] = -1;
                 aiDestroyer[i + 1] = -1;
                 isHit = true;
@@ -244,7 +244,6 @@ public class Game {
         }
         for(int i = 0; i < aiSubmarine.length; i += 2) {
             if(coordsX == aiSubmarine[i] && coordsY == aiSubmarine[i + 1]) {
-                userToAiBoardHits[coordsX][coordsY] = 1;
                 aiSubmarine[i] = -1;
                 aiSubmarine[i + 1] = -1;
                 isHit = true;
@@ -255,7 +254,6 @@ public class Game {
         }
         for(int i = 0; i < aiCruiser.length; i += 2) {
             if(coordsX == aiCruiser[i] && coordsY == aiCruiser[i + 1]) {
-                userToAiBoardHits[coordsX][coordsY] = 1;
                 aiCruiser[i] = -1;
                 aiCruiser[i + 1] = -1;
                 isHit = true;
@@ -266,7 +264,6 @@ public class Game {
         }
         for(int i = 0; i < aiBattleship.length; i += 2) {
             if(coordsX == aiBattleship[i] && coordsY == aiBattleship[i + 1]) {
-                userToAiBoardHits[coordsX][coordsY] = 1;
                 aiBattleship[i] = -1;
                 aiBattleship[i + 1] = -1;
                 isHit = true;
@@ -277,7 +274,6 @@ public class Game {
         }
         for(int i = 0; i < aiCarrier.length; i += 2) {
             if(coordsX == aiCarrier[i] && coordsY == aiCarrier[i + 1]) {
-                userToAiBoardHits[coordsX][coordsY] = 1;
                 aiCarrier[i] = -1;
                 aiCarrier[i + 1] = -1;
                 isHit = true;
@@ -289,7 +285,11 @@ public class Game {
         
         // if it hasn't been hit then set the board location to 2
         if (!isHit) {
+            MusicSound.playFire(1);
             userToAiBoardHits[coordsX][coordsY] = 2;
+        } else {
+            MusicSound.playFire(2);
+            userToAiBoardHits[coordsX][coordsY] = 1;
         }
 
         userHits++;
@@ -306,8 +306,7 @@ public class Game {
      public static boolean aiFire(int coordsX, int coordsY) {
          // check if spot is not already fired at
          if (aiToUserBoardHits[coordsX][coordsY] != 0) {
-             System.out.println("Fuck the AI");
-             System.exit(0);
+             return false;
          }
          
          //check each ship to see if it was hit.
@@ -315,7 +314,6 @@ public class Game {
          
          for(int i = 0; i < uDestroyer.length; i += 2) {
             if(coordsX == uDestroyer[i] && coordsY == uDestroyer[i + 1]) {
-                aiToUserBoardHits[coordsX][coordsY] = 1;
                 uDestroyer[i] = -1;
                 uDestroyer[i + 1] = -1;
                 isHit = true;
@@ -326,7 +324,6 @@ public class Game {
         }
         for(int i = 0; i < uSubmarine.length; i += 2) {
             if(coordsX == aiSubmarine[i] && coordsY == uSubmarine[i + 1]) {
-                aiToUserBoardHits[coordsX][coordsY] = 1;
                 uSubmarine[i] = -1;
                 uSubmarine[i + 1] = -1;
                 isHit = true;
@@ -337,7 +334,6 @@ public class Game {
         }
         for(int i = 0; i < uCruiser.length; i += 2) {
             if(coordsX == uCruiser[i] && coordsY == uCruiser[i + 1]) {
-                aiToUserBoardHits[coordsX][coordsY] = 1;
                 uCruiser[i] = -1;
                 uCruiser[i + 1] = -1;
                 isHit = true;
@@ -348,7 +344,6 @@ public class Game {
         }
         for(int i = 0; i < uBattleship.length; i += 2) {
             if(coordsX == uBattleship[i] && coordsY == uBattleship[i + 1]) {
-                aiToUserBoardHits[coordsX][coordsY] = 1;
                 uBattleship[i] = -1;
                 uBattleship[i + 1] = -1;
                 isHit = true;
@@ -359,7 +354,6 @@ public class Game {
         }
         for(int i = 0; i < uCarrier.length; i += 2) {
             if(coordsX == uCarrier[i] && coordsY == uCarrier[i + 1]) {
-                aiToUserBoardHits[coordsX][coordsY] = 1;
                 uCarrier[i] = -1;
                 uCarrier[i + 1] = -1;
                 isHit = true;
@@ -371,7 +365,11 @@ public class Game {
         
         // if it hasn't been hit then set the board location to 2
         if (!isHit) {
+            MusicSound.playFire(1);
             aiToUserBoardHits[coordsX][coordsY] = 2;
+        } else {
+            MusicSound.playFire(2);
+            aiToUserBoardHits[coordsX][coordsY] = 1;
         }
 
         return isHit;
@@ -429,6 +427,8 @@ public class Game {
                 return false; // return false if any coordinate is not -1
             }
         }
+
+        MusicSound.playSunk();
         return true;
     }
 

@@ -72,8 +72,9 @@ public class GameSystem {
     public static void signalStart() {
         Thread thread = new Thread(() -> {
             JFrame frame = createStartSignal();
+            MusicSound.playHorn();
             try {
-                Thread.sleep(1500);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
