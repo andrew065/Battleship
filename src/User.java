@@ -28,6 +28,7 @@ public class User {
     }
 
     public void updateData(int sunk, boolean win) {
+        data[0]++; //increment # of games by 1
         data[1] += sunk;
 
         if (win) data[2]++;
