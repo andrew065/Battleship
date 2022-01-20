@@ -67,13 +67,13 @@ public class GameSystem {
     }
 
     /**
-     * This method creates a start signal for the game and keeps it open for 1.5 seconds before closing it
+     * This method creates a start signal for the game and keeps it open for 1 second before closing it
      */
     public static void signalStart() {
         Thread thread = new Thread(() -> {
             JFrame frame = createStartSignal();
             try {
-                Thread.sleep(1500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

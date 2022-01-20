@@ -20,7 +20,7 @@ public class Ship extends GameObject {
         position = new int[length][2];
         current = HORIZONTAL;
 
-        layer.add(current);
+        this.layer.add(current);
         refresh();
     }
 

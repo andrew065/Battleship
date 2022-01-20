@@ -155,15 +155,14 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         frame.add(difficulty, new Integer(3));
     }
 
-    /**
-     * Adds a marker to the player or enemy side of the board
-     * @param x - x coordinate of coordinate
-     * @param y - y coordinate of coordinate
-     * @param type - player/enemy side of board
-     * @param hit - hit/miss
-     */
-    public void addMarker(int x, int y, int type, boolean hit) {
+    public void startGame() {
+        markers = new JPanel();
+        markers.setSize(1459, 821);
+        markers.setLayout(null);
+        markers.setOpaque(false);
 
+        frame.add(markers, new Integer(4));
+        Battleship battleship = new Battleship(markers);
     }
 
     //KeyListener methods
@@ -191,7 +190,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
                     curShip++;
                     if (curShip < 5) addShip();
                     else {
-                        allPlaced = false;
+                        allPlaced = true;
                         System.out.println("confirm placement");
                         getAIDifficulty();
                     }
@@ -211,11 +210,11 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     //MouseListener methods
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println(e.getX() + " " + e.getY());
         try {
-            int index = buttons.indexOf((JLabel) e.getComponent());
+            int index = buttons.indexOf((JLabel) e.getComponent()); //get ai difficulty
             difficulty.setVisible(false);
             GameSystem.signalStart();
+            startGame();
         } catch (Exception ignored) {}
     }
     @Override
