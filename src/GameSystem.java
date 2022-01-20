@@ -63,7 +63,7 @@ public class GameSystem {
             }
             formattedTime += (timeInfo[i] + ":");
         }
-        return formattedTime.substring(0, formattedTime.length() - 1);// returnt the answer
+        return formattedTime.substring(0, formattedTime.length() - 1);// return the answer
     }
 
     /**

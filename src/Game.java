@@ -56,7 +56,28 @@ public class Game {
     private static int[] uCruiser = new int[3*2];
     private static int[] uBattleship = new int[4*2];
     private static int[] uCarrier = new int[5*2];
-    
+
+    /**
+     * HaHaYT Orz dijkstra moment
+     * Will run after every turn to check if the user or AI has won.
+     * @return if the user or AI has won using an int (1 = user, 2 = AI, -1 = neither)
+     */
+    public static int hasUserOrAIWon () {
+        int numUser = 0;
+        for(boolean sunk : isAiShipSunk) {
+            if(sunk) numUser++;
+        }
+        if(numUser == 5) return 1;
+
+        numUser = 0;
+        for(boolean sunk : isUserShipSunk) {
+            if(sunk) numUser++;
+        }
+        if(numUser == 5) return 2;
+
+        return -1;
+    }
+
     /**
      * Determines the length of a ship given its type in String.
      * Does NOT account for how the coordinates are formatted (as they are formatted in 1D arrays.)
@@ -108,7 +129,7 @@ public class Game {
         for (int i = 0; i < shipLength; i += 2) {
             int coordX = newShipCoords[i];
             int coordY = newShipCoords[i + 1];
-            
+
             if (isVerticallyPlaced) {
                 if (coordX != startX) return false;
             } else {
@@ -118,16 +139,19 @@ public class Game {
         
         // which ship is it? place coords given in correct ship coords
         switch(shipType) {
+            // sets coordinates for carrier ship
             case "Carrier":
                 for (int i = 0; i < newShipCoords.length; i++) {
                     uCarrier[i] = newShipCoords[i];
                 }
                 break;
+            // sets coordinates for carrier ship
             case "Battleship":
                 for (int i = 0; i < newShipCoords.length; i++) {
                     uBattleship[i] = newShipCoords[i];
                 }
                 break;
+            // sets coordinates for carrier ship
             case "Cruiser":
                 for (int i = 0; i < newShipCoords.length; i++) {
                     uCruiser[i] = newShipCoords[i];
