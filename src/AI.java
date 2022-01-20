@@ -3,6 +3,8 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class AI {
+    boolean lastShotHit = false;
+
     public static int[] getCoords() {
         int[] coordinate = new int[2];
 
@@ -21,5 +23,12 @@ public class AI {
         return hitCoor;
     }
     public void medium() {}
-    public void hard() {}
+    public void hard() {
+        if(lastShotHit) {
+
+        }
+    }
+    public void hunt() {
+
+    }
 }
