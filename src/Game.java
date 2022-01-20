@@ -108,7 +108,7 @@ public class Game {
         for (int i = 0; i < shipLength; i += 2) {
             int coordX = newShipCoords[i];
             int coordY = newShipCoords[i + 1];
-            
+
             if (isVerticallyPlaced) {
                 if (coordX != startX) return false;
             } else {
@@ -118,16 +118,19 @@ public class Game {
         
         // which ship is it? place coords given in correct ship coords
         switch(shipType) {
+            // sets coordinates for carrier ship
             case "Carrier":
                 for (int i = 0; i < newShipCoords.length; i++) {
                     uCarrier[i] = newShipCoords[i];
                 }
                 break;
+            // sets coordinates for carrier ship
             case "Battleship":
                 for (int i = 0; i < newShipCoords.length; i++) {
                     uBattleship[i] = newShipCoords[i];
                 }
                 break;
+            // sets coordinates for carrier ship
             case "Cruiser":
                 for (int i = 0; i < newShipCoords.length; i++) {
                     uCruiser[i] = newShipCoords[i];
