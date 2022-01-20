@@ -3,12 +3,21 @@ import java.util.Arrays;
 
 public class Ship extends GameObject {
     public int length;
+    public boolean sunk = false;
     public boolean horizontal = true;
     private int[][] position;
 
-    private final JLabel VERTICAL;
-    private final JLabel HORIZONTAL;
+    private JLabel VERTICAL = new JLabel();
+    private JLabel HORIZONTAL = new JLabel();
     private JLabel current;
+
+    public Ship(JPanel layer, JLabel current, int x, int y, int length) {
+        super(layer, x * 61, y);
+
+        this.current = current;
+        this.length = length;
+        refresh();
+    }
 
     public Ship(JPanel layer, JLabel horizontal, JLabel vertical, int x, int y, int length) {
         super(layer, x, y);
@@ -35,6 +44,14 @@ public class Ship extends GameObject {
     }
 
     /**
+     * This method sets sprite to visible, and also indicates that the current object is sunk
+     */
+    public void sunk() {
+        current.setVisible(true);
+        sunk = true;
+    }
+
+    /**
      * This method takes in a direction and moves the ship in that direction by 1 square on the grid
      * @param dir - the direction (0-3) - up, down, left, right
      */
@@ -58,7 +75,7 @@ public class Ship extends GameObject {
     public void rotate() {
         layer.remove(current);
 
-        //error correction to ensure the ship stays within the grid
+        //error correction to ensure the ship stays within each grid
         if (!horizontal && x > 55 + 61 * (10 - length)) x = 60 + 61 * (10 - length);
         else if (horizontal && y > 170 + 61 * (10 - length)) y = 170 + 61 * (10 - length);
 
