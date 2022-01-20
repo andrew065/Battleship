@@ -40,11 +40,11 @@ public class User {
      * @param win - win/lose
      */
     public void updateData(int sunk, boolean win) {
-        data[0]++;
-        data[1] += sunk;
+        data[0]++; //games
+        data[1] += sunk; //sunk
 
-        if (win) data[2]++;
-        else data[3]++;
+        if (win) data[2]++; //win
+        else data[3]++; //loss
 
         newUser = false;
     }
