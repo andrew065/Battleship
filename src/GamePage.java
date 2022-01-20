@@ -88,7 +88,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
 
         GameSystem.addElement(background, bg, 0, 0);
 
-        frame.add(background, new Integer(1));
+        frame.add(background, Integer.valueOf(1));
     }
 
     /**
@@ -100,7 +100,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         shipsPage.setLayout(null);
         shipsPage.setOpaque(false);
 
-        frame.add(shipsPage, new Integer(2));
+        frame.add(shipsPage, Integer.valueOf(2));
     }
 
     /**
@@ -152,7 +152,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         }
         GameSystem.addElement(difficulty, aiDiffBg, 454, 218);
 
-        frame.add(difficulty, new Integer(3));
+        frame.add(difficulty, Integer.valueOf(3));
     }
 
     public void startGame() {
