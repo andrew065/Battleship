@@ -56,7 +56,28 @@ public class Game {
     private static int[] uCruiser = new int[3*2];
     private static int[] uBattleship = new int[4*2];
     private static int[] uCarrier = new int[5*2];
-    
+
+    /**
+     * HaHaYT Orz dijkstra moment
+     * Will run after every turn to check if the user or AI has won.
+     * @return if the user or AI has won using an int (1 = user, 2 = AI, -1 = neither)
+     */
+    public static int hasUserOrAIWon () {
+        int numUser = 0;
+        for(boolean sunk : isAiShipSunk) {
+            if(sunk) numUser++;
+        }
+        if(numUser == 5) return 1;
+
+        numUser = 0;
+        for(boolean sunk : isUserShipSunk) {
+            if(sunk) numUser++;
+        }
+        if(numUser == 5) return 2;
+
+        return -1;
+    }
+
     /**
      * Determines the length of a ship given its type in String.
      * Does NOT account for how the coordinates are formatted (as they are formatted in 1D arrays.)

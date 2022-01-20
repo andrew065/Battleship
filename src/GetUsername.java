@@ -11,7 +11,7 @@ public class GetUsername extends JDialog implements ActionListener {
     private Boolean firstClick = true; // first click boolean for hiding instructions
 
     private JLabel bgi = new JLabel(new ImageIcon("Images/Login/BattleshipLogin.png")); // background image of login interface
-    static JTextField loginText = new JTextField("Please enter a username"); // textfield for input of username
+    static JTextField loginText = new JTextField("Please enter a username"); // text-field for input of username
     JButton okButton = new JButton(); // OK button to confirm username login
     public JFrame login = new JFrame();
 
