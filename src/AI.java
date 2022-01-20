@@ -23,8 +23,6 @@ public class AI {
         }
         return hitCoor;
     }
-
-
     public void medium() {}
     public void hard() {
         if(lastShotHit) {
