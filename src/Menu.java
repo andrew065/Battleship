@@ -160,7 +160,7 @@ public class Menu extends JDialog implements MouseListener {
         GameSystem.addElement(menu, bg, 0, 0);
 
         //adding components to current frame
-        frame.add(menu, new Integer(1));
+        frame.add(menu, Integer.valueOf(1));
     }
 
     /**
@@ -174,7 +174,7 @@ public class Menu extends JDialog implements MouseListener {
 
         GameSystem.addElement(instructions, instrucPage, 0, 0);
 
-        frame.add(instructions, new Integer(2));
+        frame.add(instructions, Integer.valueOf(2));
         instructions.setLocation(0, 0);
         instructions.setVisible(false);
     }
@@ -190,7 +190,7 @@ public class Menu extends JDialog implements MouseListener {
 
         GameSystem.addElement(leaderboard, leaderPage, 0, 0);
 
-        frame.add(leaderboard, new Integer(3));
+        frame.add(leaderboard, Integer.valueOf(3));
         leaderboard.setLocation(0, 0);
         leaderboard.setVisible(false);
     }
@@ -206,7 +206,7 @@ public class Menu extends JDialog implements MouseListener {
 
         GameSystem.addElement(stats, statPage, 0, 0);
 
-        frame.add(stats, new Integer(4));
+        frame.add(stats, Integer.valueOf(4));
         stats.setLocation(0, 0);
         stats.setVisible(false);
     }
@@ -248,7 +248,7 @@ public class Menu extends JDialog implements MouseListener {
         vF.add(vBg);
         GameSystem.addElement(vF, vBg, 0, 0);
 
-        frame.add(vF, new Integer(5));
+        frame.add(vF, Integer.valueOf(5));
         vF.setLocation(1100, 635);
         vF.setVisible(false);
     }
@@ -267,7 +267,7 @@ public class Menu extends JDialog implements MouseListener {
         goBack.setLocation(0, 0);
         goBack.addMouseListener(this);
 
-        frame.add(goBack, new Integer(6));
+        frame.add(goBack, Integer.valueOf(6));
         goBack.setLocation(40, 40);
         goBack.setVisible(false);
     }
@@ -352,6 +352,7 @@ public class Menu extends JDialog implements MouseListener {
                         curOpen.setVisible(false);
                     }
                 }
+                MusicSound.playClick();
             } catch (Exception ignored) {}
         }
     }
@@ -361,6 +362,7 @@ public class Menu extends JDialog implements MouseListener {
             if (!goBack.isVisible() && isVisible()) {
                 int index = menuButtons.indexOf((JLabel) e.getComponent());
                 buttonEffects.get(index).setVisible(true);
+                MusicSound.playTick();
             }
         } catch (Exception ignored) {}
 

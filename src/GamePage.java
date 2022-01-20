@@ -53,6 +53,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     int[] shipLengthList = {5, 4, 3, 3, 2};
     int shipsPlaced = 0;
     int curShip = 0;
+    boolean allPlaced = false;
 
     public GamePage() {
         frame = getLayeredPane(); //initialize frame
@@ -73,6 +74,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         setVisible(true);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addKeyListener(this);
+        addMouseListener(this);
     }
 
     /**
@@ -86,7 +88,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
 
         GameSystem.addElement(background, bg, 0, 0);
 
-        frame.add(background, new Integer(1));
+        frame.add(background, Integer.valueOf(1));
     }
 
     /**
@@ -98,7 +100,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         shipsPage.setLayout(null);
         shipsPage.setOpaque(false);
 
-        frame.add(shipsPage, new Integer(2));
+        frame.add(shipsPage, Integer.valueOf(2));
     }
 
     /**
@@ -150,51 +152,52 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         }
         GameSystem.addElement(difficulty, aiDiffBg, 454, 218);
 
-        frame.add(difficulty, new Integer(3));
+        frame.add(difficulty, Integer.valueOf(3));
     }
 
-    /**
-     * Adds a marker to the player or enemy side of the board
-     * @param x - x coordinate of coordinate
-     * @param y - y coordinate of coordinate
-     * @param type - player/enemy side of board
-     * @param hit - hit/miss
-     */
-    public void addMarker(int x, int y, int type, boolean hit) {
+    public void startGame() {
+        markers = new JPanel();
+        markers.setSize(1459, 821);
+        markers.setLayout(null);
+        markers.setOpaque(false);
 
+        frame.add(markers, new Integer(4));
+        Battleship battleship = new Battleship(markers);
     }
 
     //KeyListener methods
     @Override
     public void keyPressed(KeyEvent e) {
-        if (curShip < 4) {
+        if (!allPlaced) {
             if (e.getKeyCode() == KeyEvent.VK_UP) { //move the ship up
                 allShips[curShip].move(0);
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) { //move the ship left
                 allShips[curShip].move(1);
-            } else if (e.getKeyCode() == KeyEvent.VK_DOWN) { //move the ship down
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_DOWN) { //move the ship down
                 allShips[curShip].move(2);
-            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //move the ship right
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //move the ship right
                 allShips[curShip].move(3);
-            } else if (e.getKeyCode() == KeyEvent.VK_SPACE) { //rotate the ship
+            }
+            else if (e.getKeyCode() == KeyEvent.VK_SPACE) { //rotate the ship
                 allShips[curShip].rotate();
             }
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_ENTER) { //try placing the ship
-            if (curShip >= 4) { //start the game if all ships have been placed
-                shipsPlaced++;
-                curShip++;
-                System.out.println("confirm placement");
-                getAIDifficulty();
-            }
-            else if (positionValid(allShips[curShip])) { //if the position is valid, add the next ship to be placed
-                shipsPlaced++;
-                curShip++;
-                addShip();
-            }
-            else {
-                System.out.println("invalid placement"); //display error message if position is invalid
+            else if (e.getKeyCode() == KeyEvent.VK_ENTER) { //try placing the ship
+                if (positionValid(allShips[curShip])) { //if the position is valid, add the next ship to be placed
+                    shipsPlaced++;
+                    curShip++;
+                    if (curShip < 5) addShip();
+                    else {
+                        allPlaced = true;
+                        System.out.println("confirm placement");
+                        getAIDifficulty();
+                    }
+                }
+                else {
+                    System.out.println("invalid placement"); //display error message if position is invalid
+                }
             }
         }
     }
@@ -208,9 +211,10 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         try {
-            int index = buttons.indexOf((JLabel) e.getComponent());
+            int index = buttons.indexOf((JLabel) e.getComponent()); //get ai difficulty
             difficulty.setVisible(false);
             GameSystem.signalStart();
+            startGame();
         } catch (Exception ignored) {}
     }
     @Override
@@ -231,5 +235,4 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     public void mouseReleased(MouseEvent e) {}
     @Override
     public void mousePressed(MouseEvent e) {}
-
 }

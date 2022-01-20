@@ -7,8 +7,8 @@ public class GameLauncher extends JFrame {
 
     public static void main(String[] args) throws Exception {
         setUIFont(new javax.swing.plaf.FontUIResource(Font.createFont(Font.TRUETYPE_FONT,
-                new File("Fonts/Copperplate.ttf")).deriveFont(12f)));
-        MusicSound.playBackgroundMusic();
+                new File("Fonts/customFont.otf")).deriveFont(15f)));
+        MusicSound.importSounds();
         menuDirector();
     }
 
