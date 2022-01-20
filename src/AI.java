@@ -22,4 +22,7 @@ public class AI {
     }
     public void medium() {}
     public void hard() {}
+    public void hunt() {
+
+    }
 }
