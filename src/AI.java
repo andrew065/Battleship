@@ -1,10 +1,14 @@
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.ArrayList;
 
 public class AI {
     boolean lastShotHit = false;
+
+    private int difficulty;
+
+    public void setDiff(int diff) {
+        difficulty = diff;
+    }
 
     public static int[] getCoords() {
         int[] coordinate = new int[2];

@@ -17,6 +17,14 @@ public class Battleship implements MouseListener {
 
         createMarkers(userGrid, 63, 170);
         createMarkers(AIGrid, 793, 170);
+
+        int[][] ships = AI.randomPlaceShip();
+        for (int i = 0; i < ships.length; i++) {
+            for (int j = 0; j < ships[i].length; j++) {
+                System.out.print(ships[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
     public void createMarkers(Marker[][] grid, int x, int y) {

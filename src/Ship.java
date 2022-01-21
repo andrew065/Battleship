@@ -11,11 +11,14 @@ public class Ship extends GameObject {
     private JLabel HORIZONTAL = new JLabel();
     private JLabel current;
 
-    public Ship(JPanel layer, JLabel current, int x, int y, int length) {
-        super(layer, x * 61, y);
+    public Ship(JPanel layer, JLabel current, int x, int y, int length, boolean horizontal) {
+        super(layer, x * 61 + 793, y * 61 + 170);
 
         this.current = current;
         this.length = length;
+        this.horizontal = horizontal;
+
+        current.setVisible(false);
         refresh();
     }
 
@@ -100,8 +103,8 @@ public class Ship extends GameObject {
      * This method will calculate the coordinates of the ship
      * @return - A 2D array containing the coordinates of the ship
      */
-    public int[][] getPosition() {
-        int x1 = (int) Math.round((x - 55) / 61.0); //find leftmost x coordinate and convert to 1-10
+    public int[][] getPosition(int xBuffer) {
+        int x1 = (int) Math.round((this.x - xBuffer) / 61.0); //find leftmost x coordinate and convert to 1-10
         int y1 = (int) Math.round((y - 170) / 61.0); //find topmost y coordinate and convert to 1-10
 
         if (horizontal) { //gets the horizontal position
