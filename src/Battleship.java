@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * @author Andrew Lian
+ */
+
 public class Battleship implements MouseListener {
     private Marker[][] AIGrid = new Marker[10][10];
     private Marker[][] userGrid = new Marker[10][10];

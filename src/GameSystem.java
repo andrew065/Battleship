@@ -4,6 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
+/**
+ * @author Andrew Lian
+ */
+
 public class GameSystem {
     public static long lastRecordTime;
     public static long timeUsed;
@@ -37,15 +41,32 @@ public class GameSystem {
         object.addMouseListener(listener);
     }
 
+    /**
+     * This method adds a text label to a specified panel
+     * @param panel - panel to add label to
+     * @param text - string text of label
+     * @param x - x coordinate
+     * @param y - y coordinate
+     * @param w - width
+     * @param h - height
+     * @param size - font size
+     */
+    public static void addText(JPanel panel, String text, int x, int y, int w, int h, int size) {
+        JLabel label = new JLabel(text);
+        panel.add(label);
+        label.setLocation(x, y);
+        label.setSize(w, h);
+        label.setFont(new Font("Copperplate", Font.PLAIN, size));
+        label.setForeground(Color.WHITE);
+    }
+
     public static void createTime(JLabel timerLabel) {
-        Timer timer = new Timer(1000, new ActionListener() {// initialize the timer
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                long thisTime = System.currentTimeMillis();// record the current time
-                timeUsed += thisTime - lastRecordTime;// add the new time interval to sum of time used
-                timerLabel.setText(formatTime(timeUsed));// display the calculated time used
-                lastRecordTime = thisTime;// record this action of recording
-            }
+        // initialize the timer
+        Timer timer = new Timer(1000, e -> {
+            long thisTime = System.currentTimeMillis();// record the current time
+            timeUsed += thisTime - lastRecordTime;// add the new time interval to sum of time used
+            timerLabel.setText(formatTime(timeUsed));// display the calculated time used
+            lastRecordTime = thisTime;// record this action of recording
         });
     }
 

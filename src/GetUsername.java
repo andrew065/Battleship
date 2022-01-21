@@ -15,7 +15,7 @@ public class GetUsername extends JDialog implements ActionListener {
     JButton okButton = new JButton(); // OK button to confirm username login
     public JFrame login = new JFrame();
 
-    public GetUsername() throws Exception {
+    public GetUsername() {
         login.setUndecorated(true);// hide top bars of the dialog
         login.setBackground(new Color(0, 0, 0, 0));// set dialog background transparent
         login.setResizable(false);// avoid user to change the size of dialog
@@ -75,7 +75,8 @@ public class GetUsername extends JDialog implements ActionListener {
         if(username.length() > 0 && !username.equals("Please enter a username")) {
             login.setVisible(false);
             login.dispose();
-            Menu menu = new Menu(username);
+            User user = new User(username);
+            new Menu(user);
         } else {
             userErrorMessage();
         }

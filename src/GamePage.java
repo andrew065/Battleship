@@ -6,6 +6,10 @@ import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Andrew Lian
+ */
+
 public class GamePage extends JDialog implements KeyListener, MouseListener {
     JLayeredPane frame; //layered pane of game page frame
 

@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.util.Arrays;
 
+/**
+ * @author Andrew Lian
+ */
+
 public class Ship extends GameObject {
     public int length;
     public boolean sunk = false;

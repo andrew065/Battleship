@@ -1,5 +1,9 @@
 import javax.swing.*;
 
+/**
+ * @author Andrew Lian
+ */
+
 public class Marker extends GameObject {
     boolean hit = false;
     private JLabel marker = new JLabel(new ImageIcon("Images/Game/Transparent_Tile.png"));

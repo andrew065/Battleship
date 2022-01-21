@@ -3,6 +3,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+/**
+ * @author Andrew Lian
+ */
+
 public class User {
     public File user;
     public String username;
@@ -12,12 +16,11 @@ public class User {
 
     public User(String username) {
         this.username = username;
-        user = new File("Players/" + username + ".txt");
+        user = new File("Files/Players/" + username + ".txt");
 
         if (user.exists()) {
             newUser = false;
         }
-
     }
 
     /**

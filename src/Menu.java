@@ -2,7 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+/**
+ * @author Andrew Lian
+ */
 
 public class Menu extends JDialog implements MouseListener {
     //menu buttons
@@ -22,7 +27,9 @@ public class Menu extends JDialog implements MouseListener {
     JLabel profile = new JLabel(new ImageIcon("Images/Menu/Profile.png"));
     JLabel instrucPage = new JLabel(new ImageIcon("Images/Menu/Instructions_Page.png"));
     JLabel leaderPage = new JLabel(new ImageIcon("Images/Menu/Leaderboard_Page.png"));
+    JLabel noLeader = new JLabel(new ImageIcon("Images/Menu/No_Leaderboard.png"));
     JLabel statPage = new JLabel(new ImageIcon("Images/Menu/Stats_Page.png"));
+    JLabel noStats = new JLabel(new ImageIcon("Images/Menu/No_Stats.png"));
     JLabel goBack = new JLabel(new ImageIcon("Images/Menu/Back_Button.png"));
 
     //volume buttons
@@ -51,12 +58,14 @@ public class Menu extends JDialog implements MouseListener {
 
     JComponent curOpen;
 
-    String username; //name of current user
+    public User user; //name of current user
+    public Leaderboard leader;
 
     int volume = 5; //volume level
 
-    public Menu(String username) {
-        this.username = username;
+    public Menu(User user) {
+        this.user = user;
+        this.leader = new Leaderboard(user);
 
         frame = getLayeredPane();
 
@@ -135,9 +144,9 @@ public class Menu extends JDialog implements MouseListener {
         settingSel.setVisible(false);
 
         //username display
-        nameDisplay = new JLabel(username);
+        nameDisplay = new JLabel(user.username);
         menu.add(nameDisplay);
-        nameDisplay.setSize(username.length() * 25, 35);
+        nameDisplay.setSize(user.username.length() * 25, 35);
         nameDisplay.setFont(new Font("Copperplate", Font.PLAIN, 35));
         nameDisplay.setForeground(Color.WHITE);
         nameDisplay.setLocation(menu.getWidth() - 80 - nameDisplay.getWidth(), 700);
@@ -166,7 +175,6 @@ public class Menu extends JDialog implements MouseListener {
         GameSystem.addElement(instructions, instrucPage, 0, 0);
 
         frame.add(instructions, Integer.valueOf(2));
-        instructions.setLocation(0, 0);
         instructions.setVisible(false);
     }
 
@@ -182,8 +190,34 @@ public class Menu extends JDialog implements MouseListener {
         GameSystem.addElement(leaderboard, leaderPage, 0, 0);
 
         frame.add(leaderboard, Integer.valueOf(3));
-        leaderboard.setLocation(0, 0);
         leaderboard.setVisible(false);
+    }
+
+    /**
+     * This method displays the name of the users on the leaderboard
+     */
+    public void loadLeaderboard() throws FileNotFoundException {
+        leader.loadLeaderboard();
+
+        int x = 600;
+        int y = 275;
+        for (int i = 0; i < leader.leaderboard.length; i++) {
+            GameSystem.addText(leaderboard, leader.leaderboard[i], x, y, 400, 50, 60);
+            y += 75;
+        }
+
+        leaderboard.remove(noLeader);
+        GameSystem.addElement(leaderboard, leaderPage, 0, 0);
+        leaderboard.repaint();
+    }
+
+    /**
+     * This method displays a "no stats" page if there isn't a leaderboard yet
+     */
+    public void noLeaderboard() {
+        leaderboard.remove(leaderPage);
+        GameSystem.addElement(leaderboard, noLeader, 0, 0);
+        leaderboard.repaint();
     }
 
     /**
@@ -198,8 +232,35 @@ public class Menu extends JDialog implements MouseListener {
         GameSystem.addElement(stats, statPage, 0, 0);
 
         frame.add(stats, Integer.valueOf(4));
-        stats.setLocation(0, 0);
         stats.setVisible(false);
+    }
+
+    /**
+     * This method loads the stats of the current user from the user class, and displays it
+     * @throws FileNotFoundException - user's file may not exist
+     */
+    public void loadStats() throws FileNotFoundException {
+        user.loadData();
+
+        int x = 800;
+        int y = 310;
+        for (int d : user.data) {
+            GameSystem.addText(stats, String.valueOf(d), x, y, 150, 50, 80);
+            y += 80;
+        }
+
+        stats.remove(noStats);
+        GameSystem.addElement(stats, statPage, 0, 0);
+        stats.repaint();
+    }
+
+    /**
+     * This method displays a "no stats" page if the user has not played any games
+     */
+    public void noStats() {
+        stats.remove(statPage);
+        GameSystem.addElement(stats, noStats, 0, 0);
+        stats.repaint();
     }
 
     /**
@@ -253,10 +314,7 @@ public class Menu extends JDialog implements MouseListener {
         back.setLayout(null);
         back.setOpaque(false);
 
-        back.add(goBack);
-        goBack.setSize(goBack.getPreferredSize());
-        goBack.setLocation(0, 0);
-        goBack.addMouseListener(this);
+        GameSystem.addElement(back, goBack, 0, 0, this);
 
         frame.add(goBack, Integer.valueOf(6));
         goBack.setLocation(40, 40);
@@ -267,7 +325,7 @@ public class Menu extends JDialog implements MouseListener {
      * This method will initialize the game page to start a game of battleship
      */
     public void openGame() {
-        GamePage game = new GamePage(this);
+        new GamePage(this);
         hideMenu();
     }
 
@@ -302,17 +360,24 @@ public class Menu extends JDialog implements MouseListener {
                         curOpen = instructions;
                     } else if (index == 2) {
                         buttonEffects.get(index).setVisible(false);
+                        if (leader.hasLeaderboard) loadLeaderboard();
+                        else noLeaderboard();
+
                         leaderboard.setVisible(true);
                         goBack.setVisible(true);
                         curOpen = leaderboard;
                     } else if (index == 3) {
                         buttonEffects.get(index).setVisible(false);
+                        if (user.newUser) noStats();
+                        else loadStats();
+
                         stats.setVisible(true);
                         goBack.setVisible(true);
                         curOpen = stats;
                     } else if (index == 4) {
                         MusicSound.playClick();
                         MusicSound.stopMusic(); //stop music
+                        user.saveData();
                         System.exit(0); //exit system
                     } else if (index == 5) vF.setVisible(!vF.isVisible()); //open or close volume settings
 
@@ -340,14 +405,15 @@ public class Menu extends JDialog implements MouseListener {
                             vOff.setVisible(false);
                         }
                     }
+                    MusicSound.playClick();
                 }
                 if (goBack.isVisible()) {
                     if (e.getComponent() == goBack) {
                         goBack.setVisible(false);
                         curOpen.setVisible(false);
+                        MusicSound.playClick();
                     }
                 }
-                MusicSound.playClick();
             } catch (Exception ignored) {}
         }
     }

@@ -1,17 +1,26 @@
-/**
- * @author Derrick Ha
- */
-import java.util.*;
 import java.io.*;
+import java.util.Scanner;
+
+/**
+ * @author Derrick Ha, Andrew Lian
+ */
 
 public class Leaderboard {
+    public User user;
+    public String[] leaderboard;
+    public File file;
 
-    //USE METHOD AFTER EACH GAME!!!!!!!!!!!!!!!!
-    public static void UpdateLeaderboard(String username) throws FileNotFoundException {
-        //Scanner f = new Scanner("Players/" + username + ".txt");
-        File file = new File("Players/" + username + ".txt");
-        PrintWriter p = new PrintWriter(file);
-        User user = new User(username);
+    public boolean hasLeaderboard = false;
+
+    public Leaderboard(User user) {
+        this.user = user;
+
+        file = new File("Files/Leaderboard.txt");
+
+        if (file.length() > 0) hasLeaderboard = true;
+    }
+
+    public void updateLeaderboard() throws FileNotFoundException {
         user.loadData();
 
         int winner = Game.hasUserOrAIWon();
@@ -24,11 +33,21 @@ public class Leaderboard {
             }
         }
         user.updateData(hasUserWon ? 5 : cnt, hasUserWon);
-        user.saveData();
     }
 
-    public static String[][] DisplayLeaderboard () {
-        String[][] poo = new String[0][0];
-        return poo;
+    public void loadLeaderboard () throws FileNotFoundException {
+        if (hasLeaderboard) {
+            Scanner count = new Scanner(file);
+            Scanner scan = new Scanner(file);
+            int numNames = 0;
+
+            while (count.hasNext()) {
+                numNames++;
+                count.nextLine();
+            }
+
+            leaderboard = new String[numNames];
+            for (int i = 0; i < numNames; i++) leaderboard[i] = scan.nextLine();
+        }
     }
 }
