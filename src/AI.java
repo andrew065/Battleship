@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -107,22 +108,30 @@ public class AI {
                     }
                 }
 
-                if (shipI == 2) { // because submarine exists
+                // create ship object
+                String append = switch (shipI) {
+                    case 0: yield "Aircraft_Carrier";
+                    case 1: yield "Battleship";
+                    case 2: yield "Cruiser";
+                    case 3: yield "Submarine";
+                    case 4: yield "Destroyer";
+                    default:
+                        System.out.println("unauthorized ship size from AI");
+                        yield "";
+                };
+                JLabel shipLabel = new JLabel(new ImageIcon("Images/Ships/" +
+                        append + (isVertical ? "_Rotated" : "") + ".png"));
+                Ship ship = new Ship(new JPanel(), shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
+                // change JPanel soon
+
+                // because submarine exists
+                if (shipI == 2) {
                     shipSize++;
                 }
                 shipSize--;
             } while (isRetry);
-/*
-            String append = switch (shipI) {
-                case 0: yield "Aircraft Carrier";
-                case 1: yield "Battleship";
-                case 2: yield "Cruiser";
-                case 3: yield "Submarine";
-                case 4: yield "Destroyer";
-                default:
-                    System.out.println("unauthorized ship size from AI");
-                    yield "";
-            }; // use for game class*/
+
+
         }
 
         return ships;
