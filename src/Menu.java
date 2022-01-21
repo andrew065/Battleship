@@ -5,15 +5,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 public class Menu extends JDialog implements MouseListener {
-    //menu button coordinates
-    int[] PLAY_CO = {145, 260};
-    int[] INS_CO = {145, 350};
-    int[] LEADER_CO = {145, 440};
-    int[] STAT_CO = {145, 530};
-    int[] QUIT_CO = {145, 620};
-    int[] SETTINGS_CO = {1323, 640};
-    int[] PROFILE_CO = {1110, 690};
-
     //menu buttons
     JLabel bg = new JLabel(new ImageIcon("Images/Menu/Battleship-Menu.png"));
     JLabel playButton = new JLabel(new ImageIcon("Images/Menu/Play_Button.png"));
@@ -104,43 +95,43 @@ public class Menu extends JDialog implements MouseListener {
         //play button settings
         menuButtons.add(playButton);
         buttonEffects.add(playSel);
-        GameSystem.addElement(menu, playButton, PLAY_CO[0], PLAY_CO[1], this);
-        GameSystem.addElement(menu, playSel, PLAY_CO[0] - 15, PLAY_CO[1] - 13, this);
+        GameSystem.addElement(menu, playButton, 145, 260, this);
+        GameSystem.addElement(menu, playSel, 130, 247, this);
         playSel.setVisible(false);
 
         //instructions button settings
         menuButtons.add(instrucButton);
         buttonEffects.add(instrucSel);
-        GameSystem.addElement(menu, instrucButton, INS_CO[0], INS_CO[1], this);
-        GameSystem.addElement(menu, instrucSel, INS_CO[0] - 15, INS_CO[1] - 13, this);
+        GameSystem.addElement(menu, instrucButton, 145, 350, this);
+        GameSystem.addElement(menu, instrucSel, 130, 337, this);
         instrucSel.setVisible(false);
 
         //leaderboard button settings
         menuButtons.add(leaderButton);
         buttonEffects.add(leaderSel);
-        GameSystem.addElement(menu, leaderButton, LEADER_CO[0], LEADER_CO[1], this);
-        GameSystem.addElement(menu, leaderSel, LEADER_CO[0] - 15, LEADER_CO[1] - 13, this);
+        GameSystem.addElement(menu, leaderButton, 145, 440, this);
+        GameSystem.addElement(menu, leaderSel, 130, 427, this);
         leaderSel.setVisible(false);
 
         //stat button settings
         menuButtons.add(statButton);
         buttonEffects.add(statSel);
-        GameSystem.addElement(menu, statButton, STAT_CO[0], STAT_CO[1], this);
-        GameSystem.addElement(menu, statSel, STAT_CO[0] - 15, STAT_CO[1] - 13, this);
+        GameSystem.addElement(menu, statButton, 145, 530, this);
+        GameSystem.addElement(menu, statSel, 130, 517, this);
         statSel.setVisible(false);
 
         //quit button settings
         menuButtons.add(quitButton);
         buttonEffects.add(quitSel);
-        GameSystem.addElement(menu, quitButton, QUIT_CO[0], QUIT_CO[1], this);
-        GameSystem.addElement(menu, quitSel, QUIT_CO[0] - 15, QUIT_CO[1] - 13, this);
+        GameSystem.addElement(menu, quitButton, 145, 620, this);
+        GameSystem.addElement(menu, quitSel, 130, 607, this);
         quitSel.setVisible(false);
 
         //settings button
         menuButtons.add(settings);
         buttonEffects.add(settingSel);
-        GameSystem.addElement(menu, settings, SETTINGS_CO[0], SETTINGS_CO[1], this);
-        GameSystem.addElement(menu, settingSel, SETTINGS_CO[0] - 3, SETTINGS_CO[1] - 3, this);
+        GameSystem.addElement(menu, settings, 1323, 640, this);
+        GameSystem.addElement(menu, settingSel, 1320, 637, this);
         settingSel.setVisible(false);
 
         //username display
@@ -154,7 +145,7 @@ public class Menu extends JDialog implements MouseListener {
         nameDisplay.setVerticalAlignment(JLabel.CENTER);
 
         //profile settings
-        GameSystem.addElement(menu, profile, PROFILE_CO[0], PROFILE_CO[1]);
+        GameSystem.addElement(menu, profile, 1110, 690);
 
         //background settings
         GameSystem.addElement(menu, bg, 0, 0);
@@ -276,7 +267,7 @@ public class Menu extends JDialog implements MouseListener {
      * This method will initialize the game page to start a game of battleship
      */
     public void openGame() {
-        GamePage game = new GamePage();
+        GamePage game = new GamePage(this);
         hideMenu();
     }
 
@@ -300,7 +291,10 @@ public class Menu extends JDialog implements MouseListener {
             try {
                 if (!goBack.isVisible()) {
                     int index = menuButtons.indexOf((JLabel) e.getComponent());
-                    if (index == 0) openGame();
+                    if (index == 0) {
+                        buttonEffects.get(index).setVisible(false);
+                        openGame();
+                    }
                     else if (index == 1) {
                         buttonEffects.get(index).setVisible(false);
                         instructions.setVisible(true);
@@ -317,6 +311,7 @@ public class Menu extends JDialog implements MouseListener {
                         goBack.setVisible(true);
                         curOpen = stats;
                     } else if (index == 4) {
+                        MusicSound.playClick();
                         MusicSound.stopMusic(); //stop music
                         System.exit(0); //exit system
                     } else if (index == 5) vF.setVisible(!vF.isVisible()); //open or close volume settings

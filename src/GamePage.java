@@ -14,6 +14,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     JPanel shipsPage;
     JPanel difficulty;
     JPanel markers;
+    JPanel endPage;
 
     //initializing ai difficulty sprites
     JLabel easy = new JLabel(new ImageIcon("Images/Game/1_Easy.png"));
@@ -55,7 +56,10 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     int curShip = 0;
     boolean allPlaced = false;
 
-    public GamePage() {
+    Menu menu;
+
+    public GamePage(Menu menu) {
+        this.menu = menu;
         frame = getLayeredPane(); //initialize frame
 
         //frame settings
@@ -117,11 +121,11 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
      * @return - a boolean indicating the validity of the position
      */
     public boolean positionValid(Ship ship) {
-        int[][] curCoords = ship.getPosition(); //get the coordinates of the current ship
+        int[][] curCoords = ship.getPosition(55); //get the coordinates of the current ship
 
         for (int i = 0; i < 5; i++) {
             if (allShips[i] != null && allShips[i] != ship) {
-                int[][] existingShipCoord = allShips[i].getPosition(); //get coordinates of existing ship
+                int[][] existingShipCoord = allShips[i].getPosition(55); //get coordinates of existing ship
 
                 for (int[] co1 : existingShipCoord) { //loop through both arrays and compare values
                     for (int[] co2 : curCoords) {
@@ -155,14 +159,47 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         frame.add(difficulty, Integer.valueOf(3));
     }
 
+    /**
+     * This method starts the game by initializing a JPanel for the markers and creating an instance of the battleship class
+     */
     public void startGame() {
         markers = new JPanel();
         markers.setSize(1459, 821);
         markers.setLayout(null);
         markers.setOpaque(false);
 
-        frame.add(markers, new Integer(4));
+        frame.add(markers, Integer.valueOf(4));
         Battleship battleship = new Battleship(markers);
+    }
+
+    /**
+     * This method initializes the end page
+     * @param won - boolean indicating a win/loss from the user
+     */
+    public void initializeEndPage(boolean won) {
+        endPage = new JPanel();
+        endPage.setSize(1459, 821);
+        endPage.setLayout(null);
+        endPage.setOpaque(false);
+
+        GameSystem.addElement(endPage, menuButton, 600, 490, this);
+        GameSystem.addElement(endPage, menuSel, 600, 490, this);
+        menuSel.setVisible(false);
+
+        if (won) GameSystem.addElement(endPage, win, 0, 0);
+        else GameSystem.addElement(endPage, lose, 0, 0);
+
+        frame.add(endPage, Integer.valueOf(5));
+    }
+
+    /**
+     * This method disposes the current frame, saves the game stats, and goes back to the menu
+     */
+    public void returnToMenu() {
+        setVisible(false);
+        dispose();
+        //add end game operations (save stats, etc)
+        menu.showMenu();
     }
 
     //KeyListener methods
@@ -171,18 +208,23 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         if (!allPlaced) {
             if (e.getKeyCode() == KeyEvent.VK_UP) { //move the ship up
                 allShips[curShip].move(0);
+                MusicSound.playTick();
             }
             if (e.getKeyCode() == KeyEvent.VK_LEFT) { //move the ship left
                 allShips[curShip].move(1);
+                MusicSound.playTick();
             }
             else if (e.getKeyCode() == KeyEvent.VK_DOWN) { //move the ship down
                 allShips[curShip].move(2);
+                MusicSound.playTick();
             }
             else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //move the ship right
                 allShips[curShip].move(3);
+                MusicSound.playTick();
             }
             else if (e.getKeyCode() == KeyEvent.VK_SPACE) { //rotate the ship
                 allShips[curShip].rotate();
+                MusicSound.playTick();
             }
             else if (e.getKeyCode() == KeyEvent.VK_ENTER) { //try placing the ship
                 if (positionValid(allShips[curShip])) { //if the position is valid, add the next ship to be placed
@@ -194,11 +236,14 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
                         System.out.println("confirm placement");
                         getAIDifficulty();
                     }
+                    MusicSound.playClick();
                 }
                 else {
                     System.out.println("invalid placement"); //display error message if position is invalid
                 }
             }
+            else if (e.getKeyCode() == KeyEvent.VK_W) initializeEndPage(true);
+            else if (e.getKeyCode() == KeyEvent.VK_L) initializeEndPage(false);
         }
     }
     @Override
@@ -211,24 +256,37 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         try {
-            int index = buttons.indexOf((JLabel) e.getComponent()); //get ai difficulty
-            difficulty.setVisible(false);
-            GameSystem.signalStart();
-            startGame();
+            if (e.getComponent() == menuButton) {
+                returnToMenu();
+            }
+            else {
+                int index = buttons.indexOf((JLabel) e.getComponent()); //get ai difficulty
+                difficulty.setVisible(false);
+                GameSystem.signalStart();
+                startGame();
+            }
+            MusicSound.playClick();
         } catch (Exception ignored) {}
     }
     @Override
     public void mouseEntered(MouseEvent e) {
         try {
-            int index = buttons.indexOf((JLabel) e.getComponent());
-            selection.get(index).setVisible(true);
+            if (e.getComponent() == menuButton) menuSel.setVisible(true);
+            else {
+                int index = buttons.indexOf((JLabel) e.getComponent());
+                selection.get(index).setVisible(true);
+            }
+            MusicSound.playTick();
         } catch (Exception ignored) {}
     }
     @Override
     public void mouseExited(MouseEvent e) {
         try {
-            int index = buttons.indexOf((JLabel) e.getComponent());
-            selection.get(index).setVisible(false);
+            if (e.getComponent() == menuButton) menuSel.setVisible(false);
+            else {
+                int index = buttons.indexOf((JLabel) e.getComponent());
+                selection.get(index).setVisible(false);
+            }
         } catch (Exception ignored) {}
     }
     @Override

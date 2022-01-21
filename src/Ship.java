@@ -3,12 +3,24 @@ import java.util.Arrays;
 
 public class Ship extends GameObject {
     public int length;
+    public boolean sunk = false;
     public boolean horizontal = true;
     private int[][] position;
 
-    private final JLabel VERTICAL;
-    private final JLabel HORIZONTAL;
+    private JLabel VERTICAL = new JLabel();
+    private JLabel HORIZONTAL = new JLabel();
     private JLabel current;
+
+    public Ship(JPanel layer, JLabel current, int x, int y, int length, boolean horizontal) {
+        super(layer, x * 61 + 793, y * 61 + 170);
+
+        this.current = current;
+        this.length = length;
+        this.horizontal = horizontal;
+
+        current.setVisible(false);
+        refresh();
+    }
 
     public Ship(JPanel layer, JLabel horizontal, JLabel vertical, int x, int y, int length) {
         super(layer, x, y);
@@ -35,6 +47,14 @@ public class Ship extends GameObject {
     }
 
     /**
+     * This method sets sprite to visible, and also indicates that the current object is sunk
+     */
+    public void sunk() {
+        current.setVisible(true);
+        sunk = true;
+    }
+
+    /**
      * This method takes in a direction and moves the ship in that direction by 1 square on the grid
      * @param dir - the direction (0-3) - up, down, left, right
      */
@@ -58,7 +78,7 @@ public class Ship extends GameObject {
     public void rotate() {
         layer.remove(current);
 
-        //error correction to ensure the ship stays within the grid
+        //error correction to ensure the ship stays within each grid
         if (!horizontal && x > 55 + 61 * (10 - length)) x = 60 + 61 * (10 - length);
         else if (horizontal && y > 170 + 61 * (10 - length)) y = 170 + 61 * (10 - length);
 
@@ -83,8 +103,8 @@ public class Ship extends GameObject {
      * This method will calculate the coordinates of the ship
      * @return - A 2D array containing the coordinates of the ship
      */
-    public int[][] getPosition() {
-        int x1 = (int) Math.round((x - 55) / 61.0); //find leftmost x coordinate and convert to 1-10
+    public int[][] getPosition(int xBuffer) {
+        int x1 = (int) Math.round((this.x - xBuffer) / 61.0); //find leftmost x coordinate and convert to 1-10
         int y1 = (int) Math.round((y - 170) / 61.0); //find topmost y coordinate and convert to 1-10
 
         if (horizontal) { //gets the horizontal position
