@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class Ship extends GameObject {
     public int length;
-    public boolean sunk = false;
+    public int hits;
     public boolean horizontal = true;
     private int[][] position;
 
@@ -22,8 +22,12 @@ public class Ship extends GameObject {
         this.length = length;
         this.horizontal = horizontal;
 
-        current.setVisible(false);
+        position = new int[length][2];
+        hits = 0;
+
+        this.layer.add(current);
         refresh();
+        current.setVisible(false);
     }
 
     public Ship(JPanel layer, JLabel horizontal, JLabel vertical, int x, int y, int length) {
@@ -55,7 +59,7 @@ public class Ship extends GameObject {
      */
     public void sunk() {
         current.setVisible(true);
-        sunk = true;
+        refresh();
     }
 
     /**
@@ -108,8 +112,8 @@ public class Ship extends GameObject {
      * @return - A 2D array containing the coordinates of the ship
      */
     public int[][] getPosition(int xBuffer) {
-        int x1 = (int) Math.round((this.x - xBuffer) / 61.0); //find leftmost x coordinate and convert to 1-10
-        int y1 = (int) Math.round((y - 170) / 61.0); //find topmost y coordinate and convert to 1-10
+        int x1 = (this.x - xBuffer) / 61; //find leftmost x coordinate and convert to 1-10
+        int y1 = (y - 170) / 61; //find topmost y coordinate and convert to 1-10
 
         if (horizontal) { //gets the horizontal position
             for (int[] coords : position) Arrays.fill(coords, y1);

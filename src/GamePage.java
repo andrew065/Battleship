@@ -173,7 +173,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         markers.setOpaque(false);
 
         frame.add(markers, Integer.valueOf(4));
-        new Battleship(markers);
+        new Battleship(markers, shipsPage);
     }
 
     /**
