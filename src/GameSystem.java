@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 /**
@@ -9,9 +7,8 @@ import java.awt.event.MouseListener;
  */
 
 public class GameSystem {
-    public static long lastRecordTime;
-    public static long timeUsed;
-
+    public static Timer timer;
+    public static long timeSec;
 
     /**
      * This method takes in an object and its location and adds it to the specified JPanel
@@ -60,31 +57,42 @@ public class GameSystem {
         label.setForeground(Color.WHITE);
     }
 
-    public static void createTime(JLabel timerLabel) {
-        // initialize the timer
-        Timer timer = new Timer(1000, e -> {
-            long thisTime = System.currentTimeMillis();// record the current time
-            timeUsed += thisTime - lastRecordTime;// add the new time interval to sum of time used
-            timerLabel.setText(formatTime(timeUsed));// display the calculated time used
-            lastRecordTime = thisTime;// record this action of recording
+    /**
+     * This method creates a JLabel that contains the time and adds it to the given panel
+     * @param panel - the panel to add the JLabel to
+     */
+    public static void createTime(JPanel panel) {
+        JLabel t = new JLabel();
+        addElement(panel, t, 637, 40);
+        t.setSize(250, 80);
+        t.setFont(new Font("Copperplate", Font.PLAIN, 68));
+        t.setForeground(Color.WHITE);
+
+        timer = new Timer(1000, e -> {
+            timeSec++;
+            t.setText(formatTime());
         });
+        timer.start();
     }
 
-    private static String formatTime(long secondNum) {
-        secondNum /= 1000;// convert millisecond to seconds
-        String[] timeInfo = new String[3];// store the converted number in a String array
-        timeInfo[0] = Long.toString(secondNum / 3600);// calculate number of hours
-        timeInfo[1] = Long.toString((secondNum % 3600) / 60);// calculate the number of minutes
-        timeInfo[2] = Long.toString(secondNum % 60);// calculate the number of seconds
-        String formattedTime = "";// create a String to return the result
-        // for converted number, add to the result by format of no less than two digits
-        for (int i = 0; i < 3; i++) {
-            if (timeInfo[i].length() == 1) {
-                formattedTime += "0";
-            }
-            formattedTime += (timeInfo[i] + ":");
-        }
-        return formattedTime.substring(0, formattedTime.length() - 1);// return the answer
+    /**
+     * This method stops the timer/stopwatch
+     */
+    public static void stopTime() {
+        timer.stop();
+    }
+
+    /**
+     * This method formats the time and converts seconds into minutes:seconds
+     * @return - a string containing the reformatted time
+     */
+    private static String formatTime() {
+        String min = "00";
+        String sec = timeSec % 60 < 10? "0" + timeSec % 60 : "" + timeSec % 60;
+        if (timeSec < 600) min =  "0" + timeSec / 60;
+        else if (timeSec > 600) min = "" + timeSec / 60;
+
+        return min + ":" + sec;
     }
 
     /**

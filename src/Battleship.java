@@ -7,8 +7,8 @@ import java.awt.event.MouseListener;
  */
 
 public class Battleship implements MouseListener {
-    private Marker[][] AIGrid = new Marker[10][10];
-    private Marker[][] userGrid = new Marker[10][10];
+    private final Marker[][] AIGrid = new Marker[10][10];
+    private final Marker[][] userGrid = new Marker[10][10];
 
     private int userSunk;
     private int AISunk;
@@ -18,6 +18,8 @@ public class Battleship implements MouseListener {
     public Battleship(JPanel layer) {
         this.layer = layer;
         this.layer.addMouseListener(this);
+
+        GameSystem.createTime(layer);
 
         createMarkers(userGrid, 63, 170);
         createMarkers(AIGrid, 793, 170);

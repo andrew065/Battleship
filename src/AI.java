@@ -14,8 +14,9 @@ public class AI {
 
     private int difficulty;
 
-    public void setDiff(int diff) {
+    public AI(int diff) {
         difficulty = diff;
+
     }
 
     public static int[] getCoords() {
