@@ -89,7 +89,7 @@ public class Battleship implements MouseListener {
      * @param x - x coordinate of user's shot
      * @param y - y coordiante of user's shot
      */
-    public void userShot(int x, int y) throws InterruptedException {
+    public void userShot(int x, int y) {
         boolean uniqueShot = true;
         for (Ship s : AIShips) {
             for (int[] co : s.getPosition(793)) {
@@ -102,22 +102,27 @@ public class Battleship implements MouseListener {
         }
         if (uniqueShot) {
             checkHit(AIShips, AIGrid, x, y, 793, true); //check user's hit
-            updateUserStats();
-
-            //run on new thread to prevent sound from cutting each other out and to have delay shot for AI
-            Thread thread = new Thread(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                int[] AICoord = AI.getShot(); //get AI hit
-                checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
-                updateAIStats();
-                checkGameOver();
-            });
-            thread.start();
+            updateUserStats(); //updates the user's stats
+            AIShot(); //call method for AI to shoot
         }
+    }
+
+    /**
+     * This method gets the AI's shot and updates the grid on a separate thread 1 second after the user shoots
+     */
+    public void AIShot() {
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            int[] AICoord = AI.getShot(); //get AI hit
+            checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
+            updateAIStats(); //update the AI's stats
+            checkGameOver(); //check if game is over
+        });
+        thread.start(); //start the thread
     }
 
     /**
@@ -216,11 +221,7 @@ public class Battleship implements MouseListener {
             int x = (e.getX() - 793) / 61; //x coordinate (1-10)
             int y = (e.getY() - 170) / 61; //y coordinate (1-10)
             if (x <= 10 && y <= 10 && !gameOver) {
-                try {
-                    userShot(x, y);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                userShot(x, y);
             }
         }
     }

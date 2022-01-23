@@ -87,6 +87,8 @@ public class GameSystem {
         t.setFont(new Font("Copperplate", Font.PLAIN, 68));
         t.setForeground(Color.WHITE);
 
+        timeSec = 0; //reset counter
+
         timer = new Timer(1000, e -> {
             timeSec++;
             t.setText(formatTime());
