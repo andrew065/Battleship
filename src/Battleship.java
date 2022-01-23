@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,6 +36,8 @@ public class Battleship implements MouseListener {
     public Ship[] AIShips;
     public Ship[] userShips;
 
+    public List<int[]> prevHits;
+
     public GamePage game;
 
     public Battleship(GamePage game, JPanel mLayer, JPanel sLayer, Ship[] userShips) {
@@ -48,6 +53,8 @@ public class Battleship implements MouseListener {
         addCounters();
 
         AIShips = AI.randomPlaceShip(sLayer);
+
+        prevHits = new ArrayList<>();
     }
 
     /**
@@ -90,21 +97,23 @@ public class Battleship implements MouseListener {
      * @param y - y coordiante of user's shot
      */
     public void userShot(int x, int y) {
-        boolean uniqueShot = true;
-        for (Ship s : AIShips) {
-            for (int[] co : s.getPosition(793)) {
-                if (co[0] == x && co[1] == y) {
-                    if (Objects.requireNonNull(s.pastHits).contains(co)) {
-                        uniqueShot = false;
-                    }
-                }
+        int[] co = {x, y};
+        boolean unique = true;
+
+        for (int[] coords : prevHits) {
+            if (Arrays.equals(coords, co)) {
+                unique = false;
+                break;
             }
         }
-        if (uniqueShot) {
+
+        if (unique) {
+            prevHits.add(co);
             checkHit(AIShips, AIGrid, x, y, 793, true); //check user's hit
             updateUserStats(); //updates the user's stats
             AIShot(); //call method for AI to shoot
         }
+        System.out.println(Arrays.deepToString(prevHits.toArray()) + prevHits.contains(co));
     }
 
     /**
@@ -143,7 +152,6 @@ public class Battleship implements MouseListener {
                 if (co[0] == x && co[1] == y) {
                     hit = true;
                     s.hits++;
-                    s.addHit(co);
 
                     if (s.hits == s.length) {
                         s.sunk();

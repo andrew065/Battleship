@@ -12,7 +12,6 @@ public class Ship extends GameObject {
     public int hits;
     public boolean horizontal = true;
     private final int[][] position;
-    public List<int[]> pastHits = new ArrayList<>();
 
     private JLabel VERTICAL = new JLabel();
     private JLabel HORIZONTAL = new JLabel();
@@ -55,10 +54,6 @@ public class Ship extends GameObject {
         current.setLocation(x, y);
         current.setSize(current.getPreferredSize());
         layer.repaint();
-    }
-
-    public void addHit(int[] coord) {
-        pastHits.add(coord);
     }
 
     /**
