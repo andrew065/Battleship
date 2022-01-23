@@ -6,17 +6,19 @@ public class AI {
     boolean lastShotHit = false;
     int[][] shootGrid = new int[10][10];
     static int[] currentCoor = {4, 4};
-    static int layer = 0;
+    static int layerInner = 0;
+    static int layerOuter = 0;
     boolean triedLeft = false;
     boolean triedRight = false;
     boolean triedDown = false;
     boolean triedUp = false;
+    static boolean[] huntDirections = new boolean[4];
+    static boolean[] shotsFired = new boolean[4];
 
     private int difficulty;
 
-    public AI(int diff) {
+    public void setDiff(int diff) {
         difficulty = diff;
-
     }
 
     public static int[] getCoords() {
@@ -38,56 +40,83 @@ public class AI {
     }
     public void medium() {}
     public int[] hard() {
+        int randX;
+        int randY;
         if(lastShotHit) {
             return hunt();
         } else {
-            if(layer == 0) {
-                layer++;
-                return currentCoor;
-            } else {
-                if(checkDoneLayer()) {
-                    layer++;
-                }
-                int[] possibleCoor = currentCoor;
-                possibleCoor[0]+=2;
-                possibleCoor[1]+=2;
-                while(!(currentCoor[0] <= layer && currentCoor[1] <= layer)) {
-                    possibleCoor = currentCoor;
-                    possibleCoor[0]-=-2;
-                    possibleCoor[1]-=-2;
-                }
+            if(checkDoneLayer()) {
+                layerInner++;
+                layerOuter++;
             }
+            randX = (int) (Math.random() * 10);
+            randY = (int) (Math.random() * 10);
+            while((Game.aiToUserBoardHits[randY][randX] == 1 || Game.aiToUserBoardHits[randY][randX] == 2) || ((randX == 4 - layerInner || randX == 4 + layerOuter) && (randY == 4 - layerInner || randY == 4 + layerOuter))) {
+                randX = (int) (Math.random() * 10);
+                randY = (int) (Math.random() * 10);
+            }
+
         }
+        currentCoor[0] = randX;
+        currentCoor[1] = randY;
         return currentCoor;
     }
 
     private boolean checkDoneLayer() {
         for(int i  = 0; i < shootGrid.length; i++) {
             for(int j  = 0; j < shootGrid[i].length; j++) {
-                if(i <= layer && j <= layer && i % 2 == 0 && j % 2 == 0) {
+                if((i == 4 - layerInner || i == 4 + layerOuter) && (j == 4 - layerInner || j == 4 + layerOuter)) {
                     if(shootGrid[i][j] == 0) {
                         return false;
                     }
                 }
             }
+
         }
         return true;
     }
 
     private int[] hunt() {
         int[] huntCoor = currentCoor;
+        if(huntDirections[0]) { // up
+            huntCoor[1]++;
+        } else if(huntDirections[1]) { // down
+            huntCoor[1]--;
+        } else if(huntDirections[2]) { // left
+            huntCoor[0]--;
+        } else if(huntDirections[3]) { // right
+            huntCoor[0]++;
+        } else {
+
+        }
+
         return huntCoor;
+    }
+
+    private int[] checkSurrond() {
+        int[] checkCoor = currentCoor;
+        if(shootGrid[checkCoor[1] + 1][checkCoor[0]] == 0) { // up
+            checkCoor[1]++;
+        } else if(shootGrid[checkCoor[1] - 1][checkCoor[0]] == 0) { // down
+            checkCoor[1]--;
+        } else if(shootGrid[checkCoor[1] + 1][checkCoor[0]] == 0) { // left
+            checkCoor[0]--;
+        } else if(shootGrid[checkCoor[1] + 1][checkCoor[0]] == 0) { // right
+            checkCoor[0]++;
+        } else {
+
+        }
+
+        return checkCoor;
     }
 
     /**
      * Places 5 ships randomly & returns integer values based on it.
      */
-    public static Ship[] randomPlaceShip(JPanel panel) {
+    public static int[][] randomPlaceShip() {
         Random rand = new Random(System.currentTimeMillis());
 
         boolean[][] marked = new boolean[10][10]; // places where other ships can't be placed
-
-        Ship[] shipObjs = new Ship[5];
 
         int[][] ships = new int[5][10];
         for (int[] ship : ships) {
@@ -164,7 +193,8 @@ public class AI {
                 };
                 JLabel shipLabel = new JLabel(new ImageIcon("Images/Ships/" +
                         append + (isVertical ? "_Rotated" : "") + ".png"));
-                shipObjs[shipI] = new Ship(panel, shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
+                Ship ship = new Ship(new JPanel(), shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
+                // change JPanel soon
 
                 // because submarine exists
                 if (shipI == 2) {
@@ -176,6 +206,6 @@ public class AI {
 
         }
 
-        return shipObjs;
+        return ships;
     }
 }
