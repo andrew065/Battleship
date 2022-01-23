@@ -6,6 +6,14 @@ import java.util.Enumeration;
 public class GameLauncher extends JFrame {
 
     public static void main(String[] args) throws Exception {
+        AI.setVisited();
+        for(int i = 0; i < AI.visitedCoor.size(); i++) {
+            System.out.print(AI.visitedCoor.get(i)[0] + ", ");
+            System.out.print(AI.visitedCoor.get(i)[1]);
+            System.out.println();
+        }
+        System.out.println(AI.visitedCoor);
+
         setUIFont(new javax.swing.plaf.FontUIResource(Font.createFont(Font.TRUETYPE_FONT,
                 new File("Fonts/customFont.otf")).deriveFont(15f)));
         MusicSound.importSounds();

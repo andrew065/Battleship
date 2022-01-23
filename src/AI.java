@@ -27,11 +27,13 @@ public class AI {
         }
         return hitCoor;
     }
+
     public int[] medium() { // shoots strategically but does not zone in on ships when it hits
         currentCoor = visitedCoor.get(currentShootCoor);
         currentShootCoor+=2;
         return currentCoor;
     }
+
     public int[] hard() {
         shootGrid = Game.aiToUserBoardHits;
 
@@ -57,59 +59,64 @@ public class AI {
     public static void setVisited() { // call outside class
         int degree = 0;
         int lastDegree = 0;
-        int[] currentCoor = {4, 4};
+        int[] currentCoor = {4, 5};
 
         while(true) {
             if(visitedCoor.size() == 100) {
                 break;
             }
             if(degree == 0 && !checkVisited(currentCoor, degree)) {
-                currentCoor[0]++;
                 visitedCoor.add(currentCoor.clone());
+                currentCoor[0]++;
+                lastDegree = degree;
                 degree++;
             } else if(degree == 1 && !checkVisited(currentCoor, degree)) {
-                currentCoor[1]--;
                 visitedCoor.add(currentCoor.clone());
+                currentCoor[1]--;
+                lastDegree = degree;
                 degree++;
             } else if(degree == 2 && !checkVisited(currentCoor, degree)) {
-                currentCoor[0]--;
                 visitedCoor.add(currentCoor.clone());
+                currentCoor[0]--;
+                lastDegree = degree;
                 degree++;
             } else if(degree == 3 && !checkVisited(currentCoor, degree)) {
-                currentCoor[1]++;
                 visitedCoor.add(currentCoor.clone());
+                currentCoor[1]++;
+                lastDegree = degree;
                 degree = 0;
             } else {
                 if(lastDegree == 0) {
+                    visitedCoor.add(currentCoor.clone());
                     currentCoor[0]++;
-                    visitedCoor.add(currentCoor.clone());
                 } else if(lastDegree == 1) {
+                    visitedCoor.add(currentCoor.clone());
                     currentCoor[1]--;
-                    visitedCoor.add(currentCoor.clone());
                 } else if(lastDegree == 2) {
+                    visitedCoor.add(currentCoor.clone());
                     currentCoor[0]--;
-                    visitedCoor.add(currentCoor.clone());
                 } else if(lastDegree == 3) {
-                    currentCoor[1]++;
                     visitedCoor.add(currentCoor.clone());
+                    currentCoor[1]++;
                 }
             }
         }
     }
 
     private static boolean checkVisited(int[] currentCoor, int degree) {
+        int[] tempCoor = currentCoor.clone();
         if(degree == 0) {
-            currentCoor[0]++;
+            tempCoor[0]++;
         } else if(degree == 1) {
-            currentCoor[1]--;
+            tempCoor[1]--;
         } else if(degree == 2) {
-            currentCoor[0]--;
+            tempCoor[0]--;
         } else if(degree == 3) {
-            currentCoor[1]++;
+            tempCoor[1]++;
         }
 
         for(int[] coor: visitedCoor) {
-            if(coor[0] == currentCoor[0] && coor[1] == currentCoor[1]) {
+            if(coor[0] == tempCoor[0] && coor[1] == tempCoor[1]) {
                 return true;
             }
         }
