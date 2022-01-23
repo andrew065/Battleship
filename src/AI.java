@@ -24,7 +24,7 @@ public class AI {
         int[] hitCoor = new int[2];
         hitCoor[0] = (int) (Math.random() * 10);
         hitCoor[1] = (int) (Math.random() * 10);
-        while(shootGrid[hitCoor[0]][hitCoor[1]] == 1 || shootGrid[hitCoor[0]][hitCoor[1]] == 2) {
+        while(shootGrid[hitCoor[1]][hitCoor[0]] == 1 || shootGrid[hitCoor[1]][hitCoor[0]] == 2) {
             hitCoor[0] = (int) (Math.random() * 10);
             hitCoor[1] = (int) (Math.random() * 10);
         }
