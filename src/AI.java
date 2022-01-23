@@ -104,16 +104,18 @@ public class AI {
     }
 
     private int[] hunt() {
-
+        return new int[0];
     }
 
     /**
      * Places 5 ships randomly & returns integer values based on it.
      */
-    public static int[][] randomPlaceShip() {
+    public static Ship[] randomPlaceShip(JPanel panel) {
         Random rand = new Random(System.currentTimeMillis());
 
         boolean[][] marked = new boolean[10][10]; // places where other ships can't be placed
+
+        Ship[] shipObjs = new Ship[5];
 
         int[][] ships = new int[5][10];
         for (int[] ship : ships) {
@@ -190,7 +192,7 @@ public class AI {
                 };
                 JLabel shipLabel = new JLabel(new ImageIcon("Images/Ships/" +
                         append + (isVertical ? "_Rotated" : "") + ".png"));
-                Ship ship = new Ship(new JPanel(), shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
+                shipObjs[shipI] = new Ship(panel, shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
                 // change JPanel soon
 
                 // because submarine exists
@@ -324,7 +326,6 @@ public class AI {
             } while (isRetry);
         }
 
-        return ships;
         return shipObjs;
     }
 }
