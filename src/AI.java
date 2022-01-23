@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -6,26 +7,13 @@ public class AI {
     boolean lastShotHit = false;
     int[][] shootGrid = new int[10][10];
     static int[] currentCoor = {4, 4};
-    static int layerInner = 0;
-    static int layerOuter = 0;
-    boolean triedLeft = false;
-    boolean triedRight = false;
-    boolean triedDown = false;
-    boolean triedUp = false;
-    static boolean[] huntDirections = new boolean[4];
-    static boolean[] shotsFired = new boolean[4];
+    static ArrayList<int[]> visitedCoor = new ArrayList<>();
+    static int currentShootCoor = 0;
 
     private int difficulty;
 
     public void setDiff(int diff) {
         difficulty = diff;
-    }
-
-    public static int[] getCoords() {
-        int[] coordinate = new int[2];
-
-
-        return coordinate;
     }
 
     public int[] easy() {
@@ -38,76 +26,85 @@ public class AI {
         }
         return hitCoor;
     }
-    public void medium() {}
+    public int[] medium() { // shoots strategically but does not zone in on ships when it hits
+        currentCoor = visitedCoor.get(currentShootCoor);
+        currentShootCoor+=2;
+        return currentCoor;
+    }
     public int[] hard() {
-        int randX;
-        int randY;
         if(lastShotHit) {
             return hunt();
-        } else {
-            if(checkDoneLayer()) {
-                layerInner++;
-                layerOuter++;
-            }
-            randX = (int) (Math.random() * 10);
-            randY = (int) (Math.random() * 10);
-            while((Game.aiToUserBoardHits[randY][randX] == 1 || Game.aiToUserBoardHits[randY][randX] == 2) || ((randX == 4 - layerInner || randX == 4 + layerOuter) && (randY == 4 - layerInner || randY == 4 + layerOuter))) {
-                randX = (int) (Math.random() * 10);
-                randY = (int) (Math.random() * 10);
-            }
-
         }
-        currentCoor[0] = randX;
-        currentCoor[1] = randY;
+
+        currentCoor = visitedCoor.get(currentShootCoor);
+        currentShootCoor+=2;
         return currentCoor;
     }
 
-    private boolean checkDoneLayer() {
-        for(int i  = 0; i < shootGrid.length; i++) {
-            for(int j  = 0; j < shootGrid[i].length; j++) {
-                if((i == 4 - layerInner || i == 4 + layerOuter) && (j == 4 - layerInner || j == 4 + layerOuter)) {
-                    if(shootGrid[i][j] == 0) {
-                        return false;
-                    }
+    public static void setVisited() { // call outside class
+        int degree = 0;
+        int lastDegree = 0;
+        int[] currentCoor = {4, 4};
+
+        while(true) {
+            if(visitedCoor.size() == 100) {
+                break;
+            }
+            if(degree == 0 && !checkVisited(currentCoor, degree)) {
+                currentCoor[0]++;
+                visitedCoor.add(currentCoor.clone());
+                degree++;
+            } else if(degree == 1 && !checkVisited(currentCoor, degree)) {
+                currentCoor[1]--;
+                visitedCoor.add(currentCoor.clone());
+                degree++;
+            } else if(degree == 2 && !checkVisited(currentCoor, degree)) {
+                currentCoor[0]--;
+                visitedCoor.add(currentCoor.clone());
+                degree++;
+            } else if(degree == 3 && !checkVisited(currentCoor, degree)) {
+                currentCoor[1]++;
+                visitedCoor.add(currentCoor.clone());
+                degree = 0;
+            } else {
+                if(lastDegree == 0) {
+                    currentCoor[0]++;
+                    visitedCoor.add(currentCoor.clone());
+                } else if(lastDegree == 1) {
+                    currentCoor[1]--;
+                    visitedCoor.add(currentCoor.clone());
+                } else if(lastDegree == 2) {
+                    currentCoor[0]--;
+                    visitedCoor.add(currentCoor.clone());
+                } else if(lastDegree == 3) {
+                    currentCoor[1]++;
+                    visitedCoor.add(currentCoor.clone());
                 }
             }
-
         }
-        return true;
+    }
+
+    private static boolean checkVisited(int[] currentCoor, int degree) {
+        if(degree == 0) {
+            currentCoor[0]++;
+        } else if(degree == 1) {
+            currentCoor[1]--;
+        } else if(degree == 2) {
+            currentCoor[0]--;
+        } else if(degree == 3) {
+            currentCoor[1]++;
+        }
+
+        for(int[] coor: visitedCoor) {
+            if(coor[0] == currentCoor[0] && coor[1] == currentCoor[1]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int[] hunt() {
-        int[] huntCoor = currentCoor;
-        if(huntDirections[0]) { // up
-            huntCoor[1]++;
-        } else if(huntDirections[1]) { // down
-            huntCoor[1]--;
-        } else if(huntDirections[2]) { // left
-            huntCoor[0]--;
-        } else if(huntDirections[3]) { // right
-            huntCoor[0]++;
-        } else {
 
-        }
-
-        return huntCoor;
-    }
-
-    private int[] checkSurrond() {
-        int[] checkCoor = currentCoor;
-        if(shootGrid[checkCoor[1] + 1][checkCoor[0]] == 0) { // up
-            checkCoor[1]++;
-        } else if(shootGrid[checkCoor[1] - 1][checkCoor[0]] == 0) { // down
-            checkCoor[1]--;
-        } else if(shootGrid[checkCoor[1] + 1][checkCoor[0]] == 0) { // left
-            checkCoor[0]--;
-        } else if(shootGrid[checkCoor[1] + 1][checkCoor[0]] == 0) { // right
-            checkCoor[0]++;
-        } else {
-
-        }
-
-        return checkCoor;
     }
 
     /**
