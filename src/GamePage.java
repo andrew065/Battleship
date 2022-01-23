@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -168,7 +169,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     /**
      * This method starts the game by initializing a JPanel for the markers and creating an instance of the battleship class
      */
-    public void startGame(int diff) {
+    public void startGame(int diff) throws FileNotFoundException {
         markers = new JPanel();
         markers.setSize(1459, 821);
         markers.setLayout(null);

@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Arrays;
 
 /**
  * @author Andrew Lian
@@ -161,5 +165,21 @@ public class GameSystem {
     public static void closeStartSignal(JFrame frame) {
         frame.setVisible(false);
         frame.dispose();
+    }
+
+    /**
+     * This method exports a list of the position of each of the AI's ships
+     * @param ships - the array containing the AI's ships
+     * @throws FileNotFoundException - file may not be found
+     */
+    public static void exportShip(Ship[] ships) throws FileNotFoundException {
+        File file = new File("AI_Export.txt");
+        PrintWriter writer = new PrintWriter(file);
+
+        for (Ship s : ships) {
+            int[][] position = s.getPosition(793);
+            writer.println(Arrays.deepToString(position));
+        }
+        writer.close();
     }
 }

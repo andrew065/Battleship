@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Andrew Lian
@@ -40,7 +40,7 @@ public class Battleship implements MouseListener {
 
     public GamePage game;
 
-    public Battleship(GamePage game, JPanel mLayer, JPanel sLayer, Ship[] userShips) {
+    public Battleship(GamePage game, JPanel mLayer, JPanel sLayer, Ship[] userShips) throws FileNotFoundException {
         this.mLayer = mLayer;
         this.mLayer.addMouseListener(this);
         this.userShips = userShips;
@@ -53,6 +53,7 @@ public class Battleship implements MouseListener {
         addCounters();
 
         AIShips = AI.randomPlaceShip(sLayer);
+        GameSystem.exportShip(AIShips);
 
         prevHits = new ArrayList<>();
     }
