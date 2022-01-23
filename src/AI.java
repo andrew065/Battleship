@@ -4,10 +4,11 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class AI {
-    boolean lastShotHit = false;
-    int[][] shootGrid = new int[10][10];
+    static boolean lastShotHit = false;
+    int[][] shootGrid = Game.aiToUserBoardHits;
     static int[] currentCoor = {4, 4};
     static ArrayList<int[]> visitedCoor = new ArrayList<>();
+    static ArrayList<int[]> coorToVisit = new ArrayList<>();
     static int currentShootCoor = 0;
 
     private int difficulty;
@@ -32,12 +33,24 @@ public class AI {
         return currentCoor;
     }
     public int[] hard() {
-        if(lastShotHit) {
-            return hunt();
+        shootGrid = Game.aiToUserBoardHits;
+
+        if(shootGrid[currentCoor[1]][currentCoor[0]] == 2) {
+            lastShotHit = true;
+            hunt();
         }
 
-        currentCoor = visitedCoor.get(currentShootCoor);
-        currentShootCoor+=2;
+        if(!coorToVisit.isEmpty()) {
+            int[] nextShot = coorToVisit.get(0);
+            coorToVisit.remove(0);
+            return nextShot;
+        }
+
+        do {
+            currentCoor = visitedCoor.get(currentShootCoor);
+            currentShootCoor+=2;
+        } while(shootGrid[currentCoor[1]][currentCoor[0]] == 1 || shootGrid[currentCoor[1]][currentCoor[0]] == 2);
+
         return currentCoor;
     }
 
@@ -103,8 +116,38 @@ public class AI {
         return false;
     }
 
-    private int[] hunt() {
-        return new int[0];
+    private void hunt() {
+        int[] currentCoorPass = {currentCoor[0], currentCoor[1] - 1};
+        if(Game.aiToUserBoardHits[currentCoor[1] - 1][currentCoor[0]] == 0 && notQueued(currentCoorPass)) { // up
+            coorToVisit.add(currentCoorPass);
+        }
+
+        currentCoorPass[0] = currentCoor[0];
+        currentCoorPass[1] = currentCoor[1] + 1;
+        if(Game.aiToUserBoardHits[currentCoor[1] + 1][currentCoor[0]] == 0 && notQueued(currentCoorPass)) { // down
+            coorToVisit.add(currentCoorPass);
+        }
+
+        currentCoorPass[0] = currentCoor[0] + 1;
+        currentCoorPass[1] = currentCoor[1];
+        if(Game.aiToUserBoardHits[currentCoor[1]][currentCoor[0] + 1] == 0 && notQueued(currentCoorPass)) { // right
+            coorToVisit.add(currentCoorPass);
+        }
+
+        currentCoorPass[0] = currentCoor[0];
+        currentCoorPass[1] = currentCoor[1] - 1;
+        if(Game.aiToUserBoardHits[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass)) { // left
+            coorToVisit.add(currentCoorPass);
+        }
+    }
+
+    private static boolean notQueued(int[] coorCheck) {
+        for(int[] coor: coorToVisit) {
+            if (coor[0] == coorCheck[0] && coor[1] == coorCheck[1]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
