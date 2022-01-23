@@ -178,6 +178,9 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         frame.add(markers, Integer.valueOf(4));
         new Battleship(this, markers, shipsPage, userShips);
         AI.difficulty = diff;
+        if(diff == 2) {
+            AI.addStartCoor();
+        }
     }
 
     /**

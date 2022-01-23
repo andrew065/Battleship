@@ -14,6 +14,14 @@ public class AI {
 
     public static int difficulty;
 
+    public static void addStartCoor() {
+        int[][] startHits = {{0, 0}, {0, 9}, {9, 0}, {9, 9}};
+        for(int[] hit: startHits) {
+            coorToVisit.add(hit);
+            everyVisitedPoint.add(hit);
+        }
+    }
+
     public static int[] getShot() {
         if (difficulty == 0) return easy();
         else if (difficulty == 1) return medium();
@@ -32,8 +40,22 @@ public class AI {
     }
 
     public static int[] medium() { // shoots strategically but does not zone in on ships when it hits
-        currentCoor = visitedCoor.get(currentShootCoor);
-        currentShootCoor+=2;
+        if(shootGrid[currentCoor[1]][currentCoor[0]] == 2) {
+            lastShotHit = true;
+            hunt();
+        }
+
+        if(!coorToVisit.isEmpty()) {
+            int[] nextShot = coorToVisit.get(0);
+            currentCoor = nextShot;
+            coorToVisit.remove(0);
+            everyVisitedPoint.add(nextShot);
+            return nextShot;
+        }
+
+        currentCoor = easy();
+
+        everyVisitedPoint.add(currentCoor);
         return currentCoor;
     }
 
@@ -47,7 +69,6 @@ public class AI {
             int[] nextShot = coorToVisit.get(0);
             currentCoor = nextShot;
             coorToVisit.remove(0);
-            System.out.println(nextShot[0] + ", " + nextShot[1]);
             everyVisitedPoint.add(nextShot);
             return nextShot;
         }
@@ -57,7 +78,6 @@ public class AI {
             currentShootCoor+=2;
         } while(shootGrid[currentCoor[1]][currentCoor[0]] == 1 || shootGrid[currentCoor[1]][currentCoor[0]] == 2 || !visitedBeforeAnySpace(currentCoor));
 
-        System.out.println(currentCoor[0] + ", " + currentCoor[1]);
         everyVisitedPoint.add(currentCoor);
         return currentCoor;
     }
@@ -165,7 +185,7 @@ public class AI {
 
         if(currentCoor[0] - 1 >= 0) {
             int[] currentCoorPass4 = {currentCoor[0] - 1, currentCoor[1]};
-            if (shootGrid[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass4) && visitedBeforeAnySpace(currentCoorPass4)) { // left
+            if (shootGrid[currentCoor[1]][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass4) && visitedBeforeAnySpace(currentCoorPass4)) { // left
                 everyVisitedPoint.add(currentCoorPass4);
                 coorToVisit.add(currentCoorPass4);
             }
