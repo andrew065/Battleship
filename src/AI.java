@@ -203,6 +203,128 @@ public class AI {
 
         }
 
+        return shipObjs;
+    }
+
+    /**
+     * Places ships randomly & returns integer values based on it.
+     * Weighted placing: destroyer is near the middle & the others are near the border.
+     */
+    public static Ship[] weightedPlaceShip(JPanel panel) {
+        Random rand = new Random(System.currentTimeMillis());
+
+        boolean[][] marked = new boolean[10][10]; // places where other ships can't be placed
+
+        Ship[] shipObjs = new Ship[5];
+
+        int[][] ships = new int[5][10];
+        for (int[] ship : ships) {
+            Arrays.fill(ship, -2);
+        }
+
+        boolean isRetry;
+        int shipSize = 5; // index in ships
+        for (int shipI = 0; shipI < 5; shipI++) {
+            repeat:
+            do {
+                isRetry = false;
+
+                // generate near-border coordinates
+                int rowCoord;
+                int columnCoord;
+                boolean isVertical;
+                if (shipI != 4) {
+                    rowCoord = rand.nextInt(10);
+                    if ((rowCoord >= 1) && (rowCoord <= 8)) { // case 1: middle row (restrict to left/right side)
+                        isVertical = false;
+                        columnCoord = (rand.nextBoolean()) ? rand.nextInt(2) : rand.nextInt(2) + 8;
+                    } else { // case 2: top/bottom row (no restrictions)
+                        isVertical = true;
+                        columnCoord = rand.nextInt(10);
+                    }
+                } else { // place destroyer in middle
+                    isVertical = rand.nextBoolean();
+                    rowCoord = rand.nextInt(6) + 4;
+                    columnCoord = rand.nextInt(6) + 4;
+                }
+
+                ships[shipI][0] = rowCoord; // even number is row number
+                ships[shipI][1] = columnCoord; // odd number is column number
+
+                if (isVertical) {
+                    for (int i = 2; i < shipSize * 2; i += 2) { // fill vertically
+                        ships[shipI][i] = ships[shipI][0];
+                        ships[shipI][i + 1] = ships[shipI][1] + i / 2;
+                    }
+                } else {
+                    for (int i = 2; i < shipSize * 2; i += 2) { // fill horizontally
+                        ships[shipI][i] = ships[shipI][0] + i / 2;
+                        ships[shipI][i + 1] = ships[shipI][1];
+                    }
+                }
+
+                // retry conditions
+                if ((ships[shipI][shipSize * 2 - 2] >= 10) || (ships[shipI][shipSize * 2 - 1] >= 10)) { // 1. out of bounds
+                    isRetry = true;
+                    continue;
+                }
+                for (int i = 0; i < shipSize * 2; i += 2) { // 2. touches a marked spot
+                    if (marked[ships[shipI][i]][ships[shipI][i + 1]]) {
+                        isRetry = true;
+                        continue repeat;
+                    }
+                }
+
+                // record as marked
+                for (int i = 0; i < shipSize * 2; i += 2) {
+                    marked[ships[shipI][i]][ships[shipI][i + 1]] = true;
+
+                    if (isVertical) { // make buffer for the ship's long sides
+                        if (ships[shipI][i] + 1 < 10) {
+                            marked[ships[shipI][i] + 1][ships[shipI][i + 1]] = true;
+                        }
+                        if (ships[shipI][i] - 1 >= 0) {
+                            marked[ships[shipI][i] - 1][ships[shipI][i + 1]] = true;
+                        }
+                    } else {
+                        if (ships[shipI][i + 1] + 1 < 10) { // check for out of bounds
+                            marked[ships[shipI][i]][ships[shipI][i + 1] + 1] = true;
+                        }
+                        if (ships[shipI][i + 1] - 1 >= 0) {
+                            marked[ships[shipI][i]][ships[shipI][i + 1] - 1] = true;
+                        }
+                    }
+                }
+
+                // create ship object
+                String append = switch (shipI) {
+                    case 0:
+                        yield "Aircraft_Carrier";
+                    case 1:
+                        yield "Battleship";
+                    case 2:
+                        yield "Cruiser";
+                    case 3:
+                        yield "Submarine";
+                    case 4:
+                        yield "Destroyer";
+                    default:
+                        System.out.println("unauthorized ship size from AI");
+                        yield "";
+                };
+                JLabel shipLabel = new JLabel(new ImageIcon("Images/Ships/" +
+                        append + (isVertical ? "_Rotated" : "") + ".png"));
+                shipObjs[shipI] = new Ship(panel, shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
+
+                // because submarine exists
+                if (shipI == 2) {
+                    shipSize++;
+                }
+                shipSize--;
+            } while (isRetry);
+        }
+
         return ships;
+        return shipObjs;
     }
 }
