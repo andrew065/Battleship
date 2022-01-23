@@ -124,24 +124,32 @@ public class AI {
     }
 
     private static void hunt() {
-        int[] currentCoorPass1 = {currentCoor[0], currentCoor[1] - 1};
-        if(Game.aiToUserBoardHits[currentCoor[1] - 1][currentCoor[0]] == 0 && notQueued(currentCoorPass1)) { // up
-            coorToVisit.add(currentCoorPass1);
+        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+            int[] currentCoorPass1 = {currentCoor[0], currentCoor[1] - 1};
+            if(shootGrid[currentCoor[1] - 1][currentCoor[0]] == 0 && notQueued(currentCoorPass1)) { // up
+                coorToVisit.add(currentCoorPass1);
+            }
         }
 
-        int[] currentCoorPass2 = {currentCoor[0], currentCoor[1] + 1};
-        if(Game.aiToUserBoardHits[currentCoor[1] + 1][currentCoor[0]] == 0 && notQueued(currentCoorPass2)) { // down
-            coorToVisit.add(currentCoorPass2);
+        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+            int[] currentCoorPass2 = {currentCoor[0], currentCoor[1] + 1};
+            if (shootGrid[currentCoor[1] + 1][currentCoor[0]] == 0 && notQueued(currentCoorPass2)) { // down
+                coorToVisit.add(currentCoorPass2);
+            }
         }
 
-        int[] currentCoorPass3 = {currentCoor[0] + 1, currentCoor[1]};
-        if(Game.aiToUserBoardHits[currentCoor[1]][currentCoor[0] + 1] == 0 && notQueued(currentCoorPass3)) { // right
-            coorToVisit.add(currentCoorPass3);
+        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+            int[] currentCoorPass3 = {currentCoor[0] + 1, currentCoor[1]};
+            if (shootGrid[currentCoor[1]][currentCoor[0] + 1] == 0 && notQueued(currentCoorPass3)) { // right
+                coorToVisit.add(currentCoorPass3);
+            }
         }
 
-        int[] currentCoorPass4 = {currentCoor[0] - 1, currentCoor[1]};
-        if(Game.aiToUserBoardHits[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass4)) { // left
-            coorToVisit.add(currentCoorPass4);
+        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+            int[] currentCoorPass4 = {currentCoor[0] - 1, currentCoor[1]};
+            if (shootGrid[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass4)) { // left
+                coorToVisit.add(currentCoorPass4);
+            }
         }
     }
 
