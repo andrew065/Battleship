@@ -15,7 +15,7 @@ public class AI {
 
     public static int[] getShot() {
         if (difficulty == 0) return easy();
-        else if (difficulty == 2) return medium();
+        else if (difficulty == 1) return medium();
         else return hard();
     }
 

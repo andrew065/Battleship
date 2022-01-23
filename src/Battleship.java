@@ -161,7 +161,7 @@ public class Battleship implements MouseListener {
             if (user) userHit++;
             else {
                 AIHit++;
-                AI.shootGrid[x][y] = 1;
+                AI.shootGrid[y][x] = 2;
             }
             if (!sunk) MusicSound.playFire(2);
         }
@@ -170,7 +170,7 @@ public class Battleship implements MouseListener {
             if (user) userMiss++;
             else {
                 AIMiss++;
-                AI.shootGrid[x][y] = 2;
+                AI.shootGrid[y][x] = 1;
             }
             MusicSound.playFire(1);
         }
