@@ -94,7 +94,7 @@ public class MusicSound {
 
             clip.start();
 
-            if ((status == 2) && (rand.nextBoolean())) { // 50% chance of playing the sound of bells when hit
+            if ((status == 2) && (rand.nextInt(10) < 3)) { // 0% chance of playing the sound of bells when hit
                 playBells();
             }
 
@@ -107,35 +107,33 @@ public class MusicSound {
      * Plays an audio file for a massive explosion.
      */
     public static void playSunk() {
-        playSound(sunkFile, (float) 5.0);
+        playSound(sunkFile, 5.0f);
     }
 
     /**
      * Plays a tick noise. Useful for button hovers.
      */
     public static void playTick() {
-        playSound(tickFile, (float) 5.0);
+        playSound(tickFile, 10.0f);
     }
 
     /**
      * Plays a button pressing noise.
      */
-    public static void playClick() {
-        playSound(clickFile, (float) 0.0);
-    }
+    public static void playClick() { playSound(clickFile, 0.0f); }
 
     /**
      * Plays the sound of a ship horn.
      */
     public static void playHorn() {
-        playSound(hornFile, (float) 5.0);
+        playSound(hornFile,5.0f);
     }
 
     /**
      * Plays the sound of bells.
      */
     public static void playBells() {
-        playSound(bellsFile, (float) 5.0);
+        playSound(bellsFile,5.0f);
     }
 
     private static void playSound(File hornFile, float gainVal) {

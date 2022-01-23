@@ -340,8 +340,8 @@ public class AI {
                     }
                 } else { // place destroyer in middle
                     isVertical = rand.nextBoolean();
-                    rowCoord = rand.nextInt(6) + 4;
-                    columnCoord = rand.nextInt(6) + 4;
+                    rowCoord = rand.nextInt(1) + 4;
+                    columnCoord = rand.nextInt(1) + 4;
                 }
 
                 ships[shipI][0] = rowCoord; // even number is row number
