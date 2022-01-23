@@ -14,9 +14,9 @@ public class AI {
     public static int difficulty;
 
     public static int[] getShot() {
-        int[] coords = new int[2];
-        if (difficulty == 0) coords = easy();
-        return coords;
+        if (difficulty == 0) return easy();
+        else if (difficulty == 1) return medium();
+        else return hard();
     }
 
     public static int[] easy() {
@@ -30,15 +30,13 @@ public class AI {
         return hitCoor;
     }
 
-    public int[] medium() { // shoots strategically but does not zone in on ships when it hits
+    public static int[] medium() { // shoots strategically but does not zone in on ships when it hits
         currentCoor = visitedCoor.get(currentShootCoor);
         currentShootCoor+=2;
         return currentCoor;
     }
 
-    public int[] hard() {
-        shootGrid = Game.aiToUserBoardHits;
-
+    public static int[] hard() {
         if(shootGrid[currentCoor[1]][currentCoor[0]] == 2) {
             lastShotHit = true;
             hunt();
@@ -125,27 +123,27 @@ public class AI {
         return false;
     }
 
-    private void hunt() {
+    private static void hunt() {
         int[] currentCoorPass = {currentCoor[0], currentCoor[1] - 1};
-        if(Game.aiToUserBoardHits[currentCoor[1] - 1][currentCoor[0]] == 0 && notQueued(currentCoorPass)) { // up
+        if(shootGrid[currentCoor[1] - 1][currentCoor[0]] == 0 && notQueued(currentCoorPass)) { // up
             coorToVisit.add(currentCoorPass);
         }
 
         currentCoorPass[0] = currentCoor[0];
         currentCoorPass[1] = currentCoor[1] + 1;
-        if(Game.aiToUserBoardHits[currentCoor[1] + 1][currentCoor[0]] == 0 && notQueued(currentCoorPass)) { // down
+        if(shootGrid[currentCoor[1] + 1][currentCoor[0]] == 0 && notQueued(currentCoorPass)) { // down
             coorToVisit.add(currentCoorPass);
         }
 
         currentCoorPass[0] = currentCoor[0] + 1;
         currentCoorPass[1] = currentCoor[1];
-        if(Game.aiToUserBoardHits[currentCoor[1]][currentCoor[0] + 1] == 0 && notQueued(currentCoorPass)) { // right
+        if(shootGrid[currentCoor[1]][currentCoor[0] + 1] == 0 && notQueued(currentCoorPass)) { // right
             coorToVisit.add(currentCoorPass);
         }
 
         currentCoorPass[0] = currentCoor[0];
         currentCoorPass[1] = currentCoor[1] - 1;
-        if(Game.aiToUserBoardHits[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass)) { // left
+        if(shootGrid[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass)) { // left
             coorToVisit.add(currentCoorPass);
         }
     }
