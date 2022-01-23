@@ -12,12 +12,15 @@ public class Leaderboard {
 
     public boolean hasLeaderboard = false;
 
-    public Leaderboard(User user) {
+    public Leaderboard(User user) throws FileNotFoundException {
         this.user = user;
 
         file = new File("Files/Leaderboard.txt");
 
-        if (file.length() > 0) hasLeaderboard = true;
+        if (file.length() > 0) {
+            hasLeaderboard = true;
+            loadLeaderboard();
+        }
     }
 
     public void updateLeaderboard() throws FileNotFoundException {

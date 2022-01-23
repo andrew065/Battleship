@@ -1,5 +1,7 @@
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Andrew Lian
@@ -9,7 +11,8 @@ public class Ship extends GameObject {
     public int length;
     public int hits;
     public boolean horizontal = true;
-    private int[][] position;
+    private final int[][] position;
+    public List<int[]> pastHits = new ArrayList<>();
 
     private JLabel VERTICAL = new JLabel();
     private JLabel HORIZONTAL = new JLabel();
@@ -52,6 +55,10 @@ public class Ship extends GameObject {
         current.setLocation(x, y);
         current.setSize(current.getPreferredSize());
         layer.repaint();
+    }
+
+    public void addHit(int[] coord) {
+        pastHits.add(coord);
     }
 
     /**

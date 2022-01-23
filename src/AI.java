@@ -11,17 +11,19 @@ public class AI {
     static ArrayList<int[]> coorToVisit = new ArrayList<>();
     static int currentShootCoor = 0;
 
-    private int difficulty;
+    public static int difficulty;
 
-    public void setDiff(int diff) {
-        difficulty = diff;
+    public static int[] getShot() {
+        int[] coords = new int[2];
+        if (difficulty == 0) coords = easy();
+        return coords;
     }
 
-    public int[] easy() {
+    public static int[] easy() {
         int[] hitCoor = new int[2];
         hitCoor[0] = (int) (Math.random() * 10);
         hitCoor[1] = (int) (Math.random() * 10);
-        while(Game.aiToUserBoardHits[hitCoor[0]][hitCoor[1]] == 1 || Game.aiToUserBoardHits[hitCoor[0]][hitCoor[1]] == 2) {
+        while(shootGrid[hitCoor[0]][hitCoor[1]] == 1 || shootGrid[hitCoor[0]][hitCoor[1]] == 2) {
             hitCoor[0] = (int) (Math.random() * 10);
             hitCoor[1] = (int) (Math.random() * 10);
         }
