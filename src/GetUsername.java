@@ -4,13 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 public class GetUsername extends JDialog implements ActionListener {
     private Boolean firstClick = true; // first click boolean for hiding instructions
 
-    private JLabel bgi = new JLabel(new ImageIcon("Images/Login/BattleshipLogin.png")); // background image of login interface
     static JTextField loginText = new JTextField("Please enter a username"); // text-field for input of username
     JButton okButton = new JButton(); // OK button to confirm username login
     public JFrame login = new JFrame();
@@ -22,6 +22,8 @@ public class GetUsername extends JDialog implements ActionListener {
         login.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);// set action: dispose after login
         login.setSize(500, 250);// set size of login interface
 
+        // background image of login interface
+        JLabel bgi = new JLabel(new ImageIcon("Images/Login/BattleshipLogin.png"));
         bgi.setBounds(0, 0, 500, 250);// set background image
         login.setLocationRelativeTo(null);// display dialog at center of the screen to attract attention
 
@@ -75,8 +77,17 @@ public class GetUsername extends JDialog implements ActionListener {
         if(username.length() > 0 && !username.equals("Please enter a username")) {
             login.setVisible(false);
             login.dispose();
-            User user = new User(username);
-            new Menu(user);
+            User user = null;
+            try {
+                user = new User(username);
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
+            try {
+                new Menu(user);
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
         } else {
             userErrorMessage();
         }

@@ -20,8 +20,8 @@ public class GameLauncher extends JFrame {
         menuDirector();
     }
 
-    public static void menuDirector() throws Exception {
-        GetUsername loginScreen = new GetUsername();
+    public static void menuDirector() {
+        new GetUsername();
     }
 
     public static void setUIFont (javax.swing.plaf.FontUIResource f){

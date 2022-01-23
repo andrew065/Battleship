@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -14,12 +15,13 @@ public class User {
     public boolean newUser = true;
     public int[] data = new int[4]; // #games - #sunk - #win - #losses
 
-    public User(String username) {
+    public User(String username) throws FileNotFoundException {
         this.username = username;
         user = new File("Files/Players/" + username + ".txt");
 
         if (user.exists()) {
             newUser = false;
+            loadData();
         }
     }
 

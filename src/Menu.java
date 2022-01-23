@@ -63,7 +63,7 @@ public class Menu extends JDialog implements MouseListener {
 
     int volume = 5; //volume level
 
-    public Menu(User user) {
+    public Menu(User user) throws FileNotFoundException {
         this.user = user;
         this.leader = new Leaderboard(user);
 
@@ -196,9 +196,7 @@ public class Menu extends JDialog implements MouseListener {
     /**
      * This method displays the name of the users on the leaderboard
      */
-    public void loadLeaderboard() throws FileNotFoundException {
-        leader.loadLeaderboard();
-
+    public void loadLeaderboard() {
         int x = 600;
         int y = 275;
         for (int i = 0; i < leader.leaderboard.length; i++) {
@@ -237,11 +235,9 @@ public class Menu extends JDialog implements MouseListener {
 
     /**
      * This method loads the stats of the current user from the user class, and displays it
-     * @throws FileNotFoundException - user's file may not exist
      */
-    public void loadStats() throws FileNotFoundException {
-        user.loadData();
-
+    public void loadStats() {
+        stats.removeAll();
         int x = 800;
         int y = 310;
         for (int d : user.data) {
@@ -325,7 +321,7 @@ public class Menu extends JDialog implements MouseListener {
      * This method will initialize the game page to start a game of battleship
      */
     public void openGame() {
-        new GamePage(this);
+        new GamePage(this, user);
         hideMenu();
     }
 
@@ -370,7 +366,6 @@ public class Menu extends JDialog implements MouseListener {
                         buttonEffects.get(index).setVisible(false);
                         if (user.newUser) noStats();
                         else loadStats();
-
                         stats.setVisible(true);
                         goBack.setVisible(true);
                         curOpen = stats;

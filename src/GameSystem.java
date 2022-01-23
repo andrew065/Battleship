@@ -58,6 +58,25 @@ public class GameSystem {
     }
 
     /**
+     * This method initializes a given text label and adds it to a specified panel
+     * @param panel - the panel to add the label to
+     * @param label - the label to the initialized
+     * @param x - x coordinate
+     * @param y - y coordinate
+     * @param w - width
+     * @param h - height
+     * @param size - font size
+     */
+    public static void addText(JPanel panel, JLabel label, int x, int y, int w, int h, int size, boolean left) {
+        panel.add(label);
+        label.setLocation(x, y);
+        label.setSize(w, h);
+        label.setHorizontalAlignment(left? SwingConstants.LEFT: SwingConstants.RIGHT);
+        label.setFont(new Font("Copperplate", Font.PLAIN, size));
+        label.setForeground(Color.WHITE);
+    }
+
+    /**
      * This method creates a JLabel that contains the time and adds it to the given panel
      * @param panel - the panel to add the JLabel to
      */
