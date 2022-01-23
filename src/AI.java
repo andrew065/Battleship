@@ -10,6 +10,7 @@ public class AI {
     static ArrayList<int[]> visitedCoor = new ArrayList<>();
     static ArrayList<int[]> coorToVisit = new ArrayList<>();
     static int currentShootCoor = 0;
+    static ArrayList<int[]> everyVisitedPoint = new ArrayList<>();
 
     public static int difficulty;
 
@@ -44,16 +45,30 @@ public class AI {
 
         if(!coorToVisit.isEmpty()) {
             int[] nextShot = coorToVisit.get(0);
+            currentCoor = nextShot;
             coorToVisit.remove(0);
+            System.out.println(nextShot[0] + ", " + nextShot[1]);
+            everyVisitedPoint.add(nextShot);
             return nextShot;
         }
 
         do {
             currentCoor = visitedCoor.get(currentShootCoor);
             currentShootCoor+=2;
-        } while(shootGrid[currentCoor[1]][currentCoor[0]] == 1 || shootGrid[currentCoor[1]][currentCoor[0]] == 2);
+        } while(shootGrid[currentCoor[1]][currentCoor[0]] == 1 || shootGrid[currentCoor[1]][currentCoor[0]] == 2 || !visitedBeforeAnySpace(currentCoor));
 
+        System.out.println(currentCoor[0] + ", " + currentCoor[1]);
+        everyVisitedPoint.add(currentCoor);
         return currentCoor;
+    }
+
+    private static boolean visitedBeforeAnySpace(int[] coorCheck) {
+        for(int[] coor: everyVisitedPoint) {
+            if (coor[0] == coorCheck[0] && coor[1] == coorCheck[1]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void setVisited() { // call outside class
@@ -124,30 +139,34 @@ public class AI {
     }
 
     private static void hunt() {
-        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+        if(currentCoor[1] - 1 >= 0) {
             int[] currentCoorPass1 = {currentCoor[0], currentCoor[1] - 1};
-            if(shootGrid[currentCoor[1] - 1][currentCoor[0]] == 0 && notQueued(currentCoorPass1)) { // up
+            if(shootGrid[currentCoor[1] - 1][currentCoor[0]] == 0 && notQueued(currentCoorPass1) && visitedBeforeAnySpace(currentCoorPass1)) { // up
+                everyVisitedPoint.add(currentCoorPass1);
                 coorToVisit.add(currentCoorPass1);
             }
         }
 
-        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+        if(currentCoor[1] + 1 <= 9) {
             int[] currentCoorPass2 = {currentCoor[0], currentCoor[1] + 1};
-            if (shootGrid[currentCoor[1] + 1][currentCoor[0]] == 0 && notQueued(currentCoorPass2)) { // down
+            if (shootGrid[currentCoor[1] + 1][currentCoor[0]] == 0 && notQueued(currentCoorPass2) && visitedBeforeAnySpace(currentCoorPass2)) { // down
+                everyVisitedPoint.add(currentCoorPass2);
                 coorToVisit.add(currentCoorPass2);
             }
         }
 
-        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+        if(currentCoor[0] + 1 <= 9) {
             int[] currentCoorPass3 = {currentCoor[0] + 1, currentCoor[1]};
-            if (shootGrid[currentCoor[1]][currentCoor[0] + 1] == 0 && notQueued(currentCoorPass3)) { // right
+            if (shootGrid[currentCoor[1]][currentCoor[0] + 1] == 0 && notQueued(currentCoorPass3) && visitedBeforeAnySpace(currentCoorPass3)) { // right
+                everyVisitedPoint.add(currentCoorPass3);
                 coorToVisit.add(currentCoorPass3);
             }
         }
 
-        if(currentCoor[0] >= 0 && currentCoor[1] >= 0) {
+        if(currentCoor[0] - 1 >= 0) {
             int[] currentCoorPass4 = {currentCoor[0] - 1, currentCoor[1]};
-            if (shootGrid[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass4)) { // left
+            if (shootGrid[currentCoor[1] - 1][currentCoor[0] - 1] == 0 && notQueued(currentCoorPass4) && visitedBeforeAnySpace(currentCoorPass4)) { // left
+                everyVisitedPoint.add(currentCoorPass4);
                 coorToVisit.add(currentCoorPass4);
             }
         }

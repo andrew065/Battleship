@@ -113,7 +113,6 @@ public class Battleship implements MouseListener {
             updateUserStats(); //updates the user's stats
             AIShot(); //call method for AI to shoot
         }
-        System.out.println(Arrays.deepToString(prevHits.toArray()) + prevHits.contains(co));
     }
 
     /**
