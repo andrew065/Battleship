@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -44,21 +43,29 @@ public class Battleship implements MouseListener {
 
         GameSystem.createTime(mLayer);
 
-        createMarkers(userGrid, 63, 170);
-        createMarkers(AIGrid, 793, 170);
+        createMarkers(userGrid, 63);
+        createMarkers(AIGrid, 793);
         addCounters();
 
         AIShips = AI.randomPlaceShip(sLayer);
     }
 
-    public void createMarkers(Marker[][] grid, int x, int y) {
+    /**
+     * This method creates the hit/miss markers for both the AI and user
+     * @param grid - the grid belonging to AI/User
+     * @param xBuff - x buffer
+     */
+    public void createMarkers(Marker[][] grid, int xBuff) {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                grid[i][j] = new Marker(mLayer, x + 61 * i, y + 61 * j);
+                grid[i][j] = new Marker(mLayer, xBuff + 61 * i, 170 + 61 * j);
             }
         }
     }
 
+    /**
+     * This method adds the in-game counters to the frame
+     */
     public void addCounters() {
         userTotal = new JLabel(String.valueOf(userHit + userMiss));
         userHitLabel = new JLabel(String.valueOf(userHit));
@@ -77,7 +84,12 @@ public class Battleship implements MouseListener {
         mLayer.repaint();
     }
 
-    public void userHit(int x, int y) {
+    /**
+     * This method checks if the user's shot is valid, and then updates the board and get a hit from the AI
+     * @param x - x coordinate of user's shot
+     * @param y - y coordiante of user's shot
+     */
+    public void userShot(int x, int y) throws InterruptedException {
         boolean uniqueShot = true;
         for (Ship s : AIShips) {
             for (int[] co : s.getPosition(793)) {
@@ -90,17 +102,37 @@ public class Battleship implements MouseListener {
         }
         if (uniqueShot) {
             checkHit(AIShips, AIGrid, x, y, 793, true); //check user's hit
+            updateUserStats();
 
-            int[] AICoord = AI.getShot(); //get AI hit
-            checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
-
-            updateStats();
-            checkGameOver();
+            //run on new thread to prevent sound from cutting each other out and to have delay shot for AI
+            Thread thread = new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                int[] AICoord = AI.getShot(); //get AI hit
+                checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
+                updateAIStats();
+                checkGameOver();
+            });
+            thread.start();
         }
     }
 
+    /**
+     * This method checks if the given shot from the given side is a hit/miss
+     * @param ships - the array of ships to check if hit
+     * @param grid - the grid to update
+     * @param x - x coordinate of shot
+     * @param y - y coordinate of shot
+     * @param buff - x buffer
+     * @param user - boolean indicating if the shot is from user/AI
+     */
     public void checkHit(Ship[] ships, Marker[][] grid, int x, int y, int buff, boolean user) {
         boolean hit = false;
+        boolean sunk = false;
+
         for (Ship s : ships) {
             for (int[] co : s.getPosition(buff)) {
                 if (co[0] == x && co[1] == y) {
@@ -110,8 +142,10 @@ public class Battleship implements MouseListener {
 
                     if (s.hits == s.length) {
                         s.sunk();
+                        sunk = true; //for sound effects
                         if (user) userSunk++;
                         else AISunk++;
+                        MusicSound.playSunk();
                     }
                     break;
                 }
@@ -124,6 +158,7 @@ public class Battleship implements MouseListener {
                 AIHit++;
                 AI.shootGrid[x][y] = 1;
             }
+            if (!sunk) MusicSound.playFire(2);
         }
         else {
             grid[x][y].displayMarker(new JLabel(new ImageIcon("Images/Game/Miss_Marker.png")), false);
@@ -132,10 +167,14 @@ public class Battleship implements MouseListener {
                 AIMiss++;
                 AI.shootGrid[x][y] = 2;
             }
+            MusicSound.playFire(1);
         }
     }
 
-    public void updateStats() {
+    /**
+     * This method updates the user's in-game stats
+     */
+    public void updateUserStats() {
         userTotal.setText(String.valueOf(userHit + userMiss));
         userHitLabel.setText(String.valueOf(userHit));
         userMissLabel.setText(String.valueOf(userMiss));
@@ -144,26 +183,45 @@ public class Battleship implements MouseListener {
         AIMissLabel.setText(String.valueOf(AIMiss));
     }
 
+    /**
+     * This method updates the AI's in-game stats
+     */
+    public void updateAIStats() {
+        AITotal.setText(String.valueOf(AIHit + AIMiss));
+        AIHitLabel.setText(String.valueOf(AIHit));
+        AIMissLabel.setText(String.valueOf(AIMiss));
+    }
+
+    /**
+     * This method checks if the game is over. If it is, it calls the endPage method from the GamePage class
+     */
     public void checkGameOver() {
         if (userSunk == 5) {
-            System.out.println("Player wins");
+            System.out.println();
             gameOver = true;
             game.initializeEndPage(true, userSunk);
+            MusicSound.playBells();
         }
         else if (AISunk == 5) {
             System.out.println("AI wins");
             gameOver = true;
             game.initializeEndPage(false, userSunk);
+            MusicSound.playHorn();
         }
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getX() >= 793 && e.getY() >= 170) {
             int x = (e.getX() - 793) / 61; //x coordinate (1-10)
             int y = (e.getY() - 170) / 61; //y coordinate (1-10)
-            if (x <= 10 && y <= 10 && !gameOver) userHit(x, y);
+            if (x <= 10 && y <= 10 && !gameOver) {
+                try {
+                    userShot(x, y);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
     @Override

@@ -56,7 +56,7 @@ public class Menu extends JDialog implements MouseListener {
     JLabel vIndicator; //text for volume indicator
     JLabel nameDisplay; //label to display the name of the user
 
-    JComponent curOpen;
+    JComponent curOpen; //keeps track of the current opened window
 
     public User user; //name of current user
     public Leaderboard leader;

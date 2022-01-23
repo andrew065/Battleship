@@ -27,9 +27,8 @@ public class MusicSound {
 
     /**
      * The procedure type method continuously plays background music.
-     * @return false if the music failed to play.
      */
-    public static boolean importSounds() {
+    public static void importSounds() {
         try {
             // music SFX
             File music = new File("MusicSounds/BackgroundMusic.wav");
@@ -53,10 +52,8 @@ public class MusicSound {
                 missFiles[i] = new File("MusicSounds/miss" + i + ".wav");
             }
 
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -110,66 +107,38 @@ public class MusicSound {
      * Plays an audio file for a massive explosion.
      */
     public static void playSunk() {
-        try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(sunkFile);
-
-            clip.open(inputStream);
-            clip.start();
-
-            // volume
-            FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue() + 5.0f);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        playSound(sunkFile, (float) 5.0);
     }
 
     /**
      * Plays a tick noise. Useful for button hovers.
      */
     public static void playTick() {
-        try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(tickFile);
-            clip.open(inputStream);
-
-            // volume
-            FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue() + 5.0f);
-
-            clip.start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        playSound(tickFile, (float) 5.0);
     }
 
     /**
      * Plays a button pressing noise.
      */
     public static void playClick() {
-        try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(clickFile);
-            clip.open(inputStream);
-
-            // volume
-            FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue());
-
-            clip.start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        playSound(clickFile, (float) 0.0);
     }
 
     /**
      * Plays the sound of a ship horn.
      */
     public static void playHorn() {
+        playSound(hornFile, (float) 5.0);
+    }
+
+    /**
+     * Plays the sound of bells.
+     */
+    public static void playBells() {
+        playSound(bellsFile, (float) 5.0);
+    }
+
+    private static void playSound(File hornFile, float gainVal) {
         try {
             Clip clip = AudioSystem.getClip();
             AudioInputStream inputStream = AudioSystem.getAudioInputStream(hornFile);
@@ -177,29 +146,10 @@ public class MusicSound {
 
             // volume
             FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue() + 5.0f);
+            control.setValue(gainControl.getValue() + gainVal);
 
             clip.start();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Plays the sound of bells.
-     */
-    public static void playBells() {
-        try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(bellsFile);
-            clip.open(inputStream);
-
-            // volume
-            FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue() + 5.0f);
-
-            clip.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
