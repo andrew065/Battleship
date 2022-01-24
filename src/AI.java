@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * @author Eric K., Eric C., Derrick
+ * @description This AI class is used for returning the next shots to be fired and sets the AI ship positions.
+ */
 public class AI {
     public static int[][] shootGrid = new int[10][10]; // grid to contain hits and misses and unknown squares
     static int[] currentCoor = {4, 4}; // int[] with current coordinates

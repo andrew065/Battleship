@@ -3,8 +3,18 @@ import java.awt.*;
 import java.io.File;
 import java.util.Enumeration;
 
+/**
+ * @author Eric K., Andrew L., Derrick, Eric C.
+ * @description: This class is used for launching the game and game orchestration purposes.
+ * @teacher: Ms. Andrighetti
+ */
 public class GameLauncher extends JFrame {
 
+    /**
+     * Main class which gets launched and launches the menus, music and font.
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         AI.setVisited();
 
@@ -14,6 +24,9 @@ public class GameLauncher extends JFrame {
         menuDirector();
     }
 
+    /**
+     *
+     */
     public static void menuDirector() {
         new GetUsername();
     }
