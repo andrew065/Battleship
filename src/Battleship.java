@@ -52,7 +52,11 @@ public class Battleship implements MouseListener {
         createMarkers(AIGrid, 793);
         addCounters();
 
-        AIShips = AI.randomPlaceShip(sLayer);
+        if(AI.difficulty != 2) {
+            AIShips = AI.randomPlaceShip(sLayer);
+        } else {
+            AIShips = AI.weightedPlaceShip(sLayer);
+        }
         GameSystem.exportShip(AIShips);
 
         prevHits = new ArrayList<>();
