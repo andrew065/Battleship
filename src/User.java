@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
- * @author Andrew Lian
+ * @author Andrew Lian, Derrick Ha
  */
 
 public class User {

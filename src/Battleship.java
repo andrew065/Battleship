@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * This class updates the game board and records stats and gets AI and user shots.
  * @author Andrew Lian, Eric K.
- * @description This class updates the game board and records stats and gets AI and user shots.
  */
 public class Battleship implements MouseListener {
     //marker grid to update user and AI hits
