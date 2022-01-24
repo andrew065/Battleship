@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
+ * This AI class is used for returning the next shots to be fired and sets the AI ship positions.
  * @author Eric K., Eric C., Derrick
- * @description This AI class is used for returning the next shots to be fired and sets the AI ship positions.
  */
 public class AI {
     public static int[][] shootGrid = new int[10][10]; // grid to contain hits and misses and unknown squares
@@ -455,6 +455,14 @@ public class AI {
                         append + (isVertical ? "_Rotated" : "") + ".png"));
                 shipObjs[shipI] = new Ship(panel, shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
 
+                // print ships to console
+                for (int[] ship : ships) {
+                    System.out.println(append + " coordinates: ");
+                    for (int i = 0; i < ship.length; i++) {
+
+                    }
+                }
+
                 // because submarine exists
                 if (shipI == 2) {
                     shipSize++;
@@ -465,4 +473,6 @@ public class AI {
 
         return shipObjs;
     }
+
+
 }
