@@ -5,7 +5,6 @@ import javax.swing.*;
  */
 
 public class Marker extends GameObject {
-    boolean hit = false;
     private JLabel marker = new JLabel(new ImageIcon("Images/Game/Transparent_Tile.png"));
 
     public Marker(JPanel layer, int x, int y) {
@@ -15,10 +14,7 @@ public class Marker extends GameObject {
         refresh();
     }
 
-    public void displayMarker(JLabel marker, boolean hit) {
-        layer.remove(this.marker);
-
-        this.hit = hit;
+    public void displayMarker(JLabel marker) {
         this.marker = marker;
         layer.add(this.marker);
         refresh();

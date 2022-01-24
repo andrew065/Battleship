@@ -43,14 +43,16 @@ public class User {
      * @param sunk - the number of ships sunk in a game
      * @param win - win/lose
      */
-    public void updateData(int sunk, boolean win) {
+    public void updateData(int sunk, boolean win) throws FileNotFoundException {
         data[0]++; //games
         data[1] += sunk; //sunk
 
         if (win) data[2]++; //win
         else data[3]++; //loss
 
+        //save data to file
         newUser = false;
+        saveData();
     }
 
     /**

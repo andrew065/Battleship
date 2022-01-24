@@ -196,7 +196,8 @@ public class Menu extends JDialog implements MouseListener {
     /**
      * This method displays the name of the users on the leaderboard
      */
-    public void loadLeaderboard() {
+    public void loadLeaderboard() throws FileNotFoundException {
+        leader.loadLeaderboard();
         int x = 600;
         int y = 275;
         for (int i = 0; i < leader.leaderboard.length; i++) {

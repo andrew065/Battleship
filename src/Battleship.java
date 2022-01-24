@@ -200,7 +200,7 @@ public class Battleship implements MouseListener {
         }
         //update the grid depending on a hit or miss
         if (hit) {
-            grid[x][y].displayMarker(new JLabel(new ImageIcon("Images/Game/Hit_Marker.png")), true);
+            grid[x][y].displayMarker(new JLabel(new ImageIcon("Images/Game/Hit_Marker.png")));
             if (user) userHit++; //increase user hit counter
             else { //update counters and trackers for AI
                 AIHit++;
@@ -209,7 +209,7 @@ public class Battleship implements MouseListener {
             if (!sunk) MusicSound.playFire(2); //sound effects
         }
         else {
-            grid[x][y].displayMarker(new JLabel(new ImageIcon("Images/Game/Miss_Marker.png")), false);
+            grid[x][y].displayMarker(new JLabel(new ImageIcon("Images/Game/Miss_Marker.png")));
             if (user) userMiss++;
             else { //update counters and trackers for AI
                 AIMiss++;
@@ -217,6 +217,7 @@ public class Battleship implements MouseListener {
             }
             MusicSound.playFire(1);
         }
+        System.out.println(x + "," + y);
     }
 
     /**
@@ -242,13 +243,11 @@ public class Battleship implements MouseListener {
      */
     public void checkGameOver() throws FileNotFoundException {
         if (userSunk == 5) { //if user wins display win page and win sound effect
-            System.out.println();
             gameOver = true;
             game.initializeEndPage(true, userSunk);
             MusicSound.playBells();
         }
         else if (AISunk == 5) { //if user loses display lose page and lose sound effect
-            System.out.println("AI wins");
             gameOver = true;
             game.initializeEndPage(false, userSunk);
             MusicSound.playHorn();
@@ -258,7 +257,7 @@ public class Battleship implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getX() >= 793 && e.getY() >= 170) { //checks if the user clicked within the AI grid
-            int x = (int) Math.floor((e.getX() - 793) / 61.0); //x coordinate (1-10)
+            int x = (e.getX() - 793) / 61; //x coordinate (1-10)
             int y = (int) Math.floor((e.getY() - 170) / 61.0); //y coordinate (1-10)
             if (x <= 10 && y <= 10 && !gameOver) {
                 fireShots(x, y);

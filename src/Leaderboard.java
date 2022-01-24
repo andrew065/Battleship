@@ -38,7 +38,7 @@ public class Leaderboard {
         int thisUserWins = user.data[0];
 
         //arraylist for the leaders
-        ArrayList<String> leaders= new ArrayList<>();
+        ArrayList<String> leaders = new ArrayList<>();
         File file = new File("Files/Leaderboard.txt");
         Scanner LeaderboardScanner = new Scanner(file);
 
@@ -66,6 +66,9 @@ public class Leaderboard {
         PrintWriter p = new PrintWriter("Files/Leaderboard.txt");
         for(String s : leaders) p.println(s); //print the names of the users who should be on the leaderboard
         p.close(); //save changes
+
+        loadLeaderboard();
+        hasLeaderboard = true;
     }
 
     /**
