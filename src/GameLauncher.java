@@ -4,9 +4,10 @@ import java.io.File;
 import java.util.Enumeration;
 
 /**
+ *
+ * This class is used for launching the game and game orchestration purposes.
  * @author Eric K., Andrew L., Derrick, Eric C.
- * @description: This class is used for launching the game and game orchestration purposes.
- * @teacher: Ms. Andrighetti
+ * @teacher Ms. Andrighetti
  */
 public class GameLauncher extends JFrame {
 
