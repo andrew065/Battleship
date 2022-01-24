@@ -1,5 +1,5 @@
 /**
- * Primary handler of game processes: ship placement, hit/miss/sunk markers, tallying final scores (win/loss) (NOT IMPLEMENTED YET).
+ * Primary handler of game processes: ship placement, hit/miss/sunk markers, tallying final scores (win/loss).
  * X, Y coordinates start from the top left corner, not from the bottom left.
  * @author Derrick Ha, Eric Cao
  */

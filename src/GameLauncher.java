@@ -25,12 +25,16 @@ public class GameLauncher extends JFrame {
     }
 
     /**
-     *
+     * Makes GetUsername object to open login screen and get username.
      */
     public static void menuDirector() {
         new GetUsername();
     }
 
+    /**
+     * Sets custom font across the program
+     * @param f FontUIResource which is the specific font to set
+     */
     public static void setUIFont (javax.swing.plaf.FontUIResource f){
         Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
