@@ -19,6 +19,9 @@ public class GetUsername extends JDialog implements ActionListener {
     JButton confirmationButton = new JButton(); // okay button
     public JFrame loginFrame = new JFrame();
 
+    /**
+     * Sets up and displays GUI
+     */
     public GetUsername() {
         loginFrame.setUndecorated(true);// hide top bars of the dialog
         loginFrame.setBackground(new Color(0, 0, 0, 0));// set dialog background transparent
@@ -74,8 +77,12 @@ public class GetUsername extends JDialog implements ActionListener {
         confirmationButton.addActionListener(this);// add ActionListener to the OK Button
     }
 
+    /**
+     * Listens for user to click ok button
+     * @param e
+     */
     @Override
-    public void actionPerformed(ActionEvent e) {// listens for when user click ok button
+    public void actionPerformed(ActionEvent e) {
         String username = GetUsername.loginText.getText();// get username from text field
         if(username.length() > 0 && !username.equals("Please enter a username")) { // if username is valid
             loginFrame.setVisible(false);
