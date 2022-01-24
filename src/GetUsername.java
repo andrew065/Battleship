@@ -23,17 +23,18 @@ public class GetUsername extends JDialog implements ActionListener {
      * Sets up and displays GUI
      */
     public GetUsername() {
-        loginFrame.setUndecorated(true);// hide top bars of the dialog
-        loginFrame.setBackground(new Color(0, 0, 0, 0));// set dialog background transparent
-        loginFrame.setResizable(false);// avoid user to change the size of dialog
-        loginFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);// set action: dispose after login
+        loginFrame.setUndecorated(true);// hide top bars of frame
+        loginFrame.setBackground(new Color(0, 0, 0, 0));// set background transparent
+        loginFrame.setResizable(false);
+
+        loginFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);// after login, make sure it closes
         loginFrame.setSize(500, 250);// set size of login interface
 
         JLabel bgi = new JLabel(new ImageIcon("Images/Login/BattleshipLogin.png")); // background for login frame
         bgi.setBounds(0, 0, 500, 250);
-        loginFrame.setLocationRelativeTo(null);// display dialog at center of the screen
+        loginFrame.setLocationRelativeTo(null);
 
-        loginFrame.setVisible(true);// display login dialog
+        loginFrame.setVisible(true);// make login dialog visible
 
         loginText.setBounds(300, 140, 175, 25);// set login text field
         loginText.setBackground(new Color(173, 216, 230));
@@ -42,14 +43,19 @@ public class GetUsername extends JDialog implements ActionListener {
         loginText.setHorizontalAlignment(SwingConstants.CENTER);
 
         loginFrame.add(loginText);
-        loginText.addMouseListener(new MouseListener() {// MouseListener for login text field
+
+        loginText.addMouseListener(new MouseListener() {// when login text field is changed
+            /**
+             * When login text field is clicked
+             * @param e
+             */
             @Override
-            public void mouseClicked(MouseEvent e) {// hide the text already there on first click
-                if (firstHideClick) {
+            public void mouseClicked(MouseEvent e) {
+                if (firstHideClick) { // if it is first click on text field, delete existing text
                     loginText.setText("");
                     firstHideClick = false;
-                } // end if
-            }// end method
+                }
+            }
 
             @Override
             public void mouseEntered(MouseEvent e) {}
@@ -59,7 +65,7 @@ public class GetUsername extends JDialog implements ActionListener {
             public void mousePressed(MouseEvent e) {}
             @Override
             public void mouseReleased(MouseEvent e) {}
-        });// end MouseListener
+        });
 
         confirmationButton.setBounds(370, 174, 55, 20);// set OK Button
         confirmationButton.setBorder(new LineBorder(new Color(224, 255, 255)));
@@ -72,9 +78,9 @@ public class GetUsername extends JDialog implements ActionListener {
         loginFrame.add(confirmationButton);
         loginFrame.add(bgi);// add background image
         loginFrame.setVisible(true);// display login interface
-        loginFrame.repaint();// refresh the interface
+        loginFrame.repaint();// refresh
 
-        confirmationButton.addActionListener(this);// add ActionListener to the OK Button
+        confirmationButton.addActionListener(this);// add ActionListener to the okay Button
     }
 
     /**
