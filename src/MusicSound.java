@@ -7,16 +7,17 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
 /**
- * Handles music & SFX.
+ * Handles music & SFX found within the game.
+ * @author Eric K., Eric C., Andrew
  */
 public class MusicSound {
-    public static FloatControl gainControl;
+    public static FloatControl gainControl; // general volume of background music
 
     // types of clips
     public static Clip musicClip;
 
-    private static final File[] hitFiles = new File[4];
-    private static final File[] missFiles = new File[4];
+    private static final File[] hitFiles = new File[4]; // all hit SFX (to assign later)
+    private static final File[] missFiles = new File[4]; // all miss SFX
     private static final File sunkFile = new File("MusicSounds/sunk.wav");
     private static final File hornFile = new File("MusicSounds/shiphorn.wav");
     private static final File clickFile = new File("MusicSounds/click.wav");
@@ -30,7 +31,7 @@ public class MusicSound {
      */
     public static void importSounds() {
         try {
-            // music SFX
+            // get/play music SFX
             File music = new File("MusicSounds/BackgroundMusic.wav");
             musicClip = AudioSystem.getClip();
 
@@ -38,16 +39,16 @@ public class MusicSound {
             musicClip.open(myAudioInputStream);
             // gain
             gainControl = (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-20.0f); // Reduce volume by 10 decibels.
+            gainControl.setValue(-20.0f); // Reduce volume by 10 decibels
 
             playMusic();
 
-            // hit SFX
+            // get hit SFX files
             for (int i = 0; i < 4; i++) {
                 hitFiles[i] = new File("MusicSounds/hit" + i + ".wav");
             }
 
-            // miss SFX
+            // get miss SFX
             for (int i = 0; i < 4; i++) {
                 missFiles[i] = new File("MusicSounds/miss" + i + ".wav");
             }
@@ -72,12 +73,10 @@ public class MusicSound {
      */
     public static void playFire(int status) {
         try {
-            Clip clip = AudioSystem.getClip();
             File[] files = missFiles;
-            if (status == 2) {
+            if (status == 2) { // if it's a hit use hit sounds
                 files = hitFiles;
             }
-
             // get random file from 0 to 3
             Random rand = new Random();
             int suffix = rand.nextInt(4);
@@ -85,14 +84,7 @@ public class MusicSound {
                 suffix += (suffix == 3) ? -1 : 1;
             }
 
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(files[suffix]);
-            clip.open(inputStream);
-
-            // volume
-            FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue() + 5.0f);
-
-            clip.start();
+            playSound(files[suffix], 5f); // call method to play sound from file
 
             if ((status == 2) && (rand.nextInt(10) < 3)) { // 0% chance of playing the sound of bells when hit
                 playBells();
@@ -136,15 +128,20 @@ public class MusicSound {
         playSound(bellsFile,5.0f);
     }
 
-    private static void playSound(File hornFile, float gainVal) {
+    /**
+     * Creates a new clip based on sound file; plays the clip based on volume given.
+     * @param soundFile the file to play a sound from.
+     * @param gainVal the difference from the master volume.
+     */
+    private static void playSound(File soundFile, float gainVal) {
         try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(hornFile);
+            Clip clip = AudioSystem.getClip(); // create new clip every time so multiple of the same sound can play at once
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundFile);
             clip.open(inputStream);
 
             // volume
-            FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue(gainControl.getValue() + gainVal);
+            FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN); // get volume control
+            control.setValue(gainControl.getValue() + gainVal); // connect volume to background music volume (master) + difference
 
             clip.start();
 
