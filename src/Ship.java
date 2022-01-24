@@ -114,7 +114,7 @@ public class Ship extends GameObject {
      */
     public int[][] getPosition(int xBuffer) {
         int x1 = (int) Math.floor((x - xBuffer) / 61.0); //find leftmost x coordinate and convert to 1-10
-        int y1 = (int) Math.floor((y - 170) / 61.0); //find topmost y coordinate and convert to 1-10
+        int y1 = (int) Math.floor((y - 170 + 5) / 61.0); //find topmost y coordinate and convert to 1-10
 
         if (horizontal) { //gets the horizontal position
             for (int[] coords : position) Arrays.fill(coords, y1);
