@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author Andrew Lian
+ * @author Andrew Lian, Eric K.
+ * @description This class is used for displaying all the GUI elements for the game and for some gameplay functions such as placing ships.
  */
 
 public class GamePage extends JDialog implements KeyListener, MouseListener {
@@ -244,6 +245,9 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         frame.add(markers, Integer.valueOf(5));
         new Battleship(this, markers, shipsPage, userShips, userStart);
         AI.difficulty = diff;
+        if(diff == 2) {
+            AI.addStartCoor();
+        }
     }
 
     /**
