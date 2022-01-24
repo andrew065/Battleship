@@ -321,7 +321,7 @@ public class Menu extends JDialog implements MouseListener {
      * This method will initialize the game page to start a game of battleship
      */
     public void openGame() {
-        new GamePage(this, user);
+        new GamePage(this, user, leader);
         hideMenu();
     }
 

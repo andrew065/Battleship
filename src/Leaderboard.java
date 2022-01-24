@@ -25,19 +25,10 @@ public class Leaderboard {
         }
     }
 
-    //run after every game
-    public void updateLeaderboard(boolean hasUserWon, boolean[] isAiShipSunk) throws FileNotFoundException {
-        user.loadData();
-        int cnt = 0;
-        for(int i = 0; i < isAiShipSunk.length; i++) {
-            if(isAiShipSunk[i]) cnt++;
-        }
-        user.updateData(hasUserWon ? 5 : cnt, hasUserWon);
+    public void updateLeaderboard() throws FileNotFoundException {
+        int thisUserWins = user.data[0];
 
-        Scanner currentUserScanner = new Scanner("Players/" + user.username + ".txt");
-        int thisUserWins = currentUserScanner.nextInt();
-
-        ArrayList<String> leaders= new ArrayList<String>();
+        ArrayList<String> leaders= new ArrayList<>();
         File file = new File("Files/Leaderboard.txt");
         Scanner LeaderboardScanner = new Scanner(file);
         int LeaderboardNum = 0;
@@ -51,7 +42,7 @@ public class Leaderboard {
         if(LeaderboardNum != 0) {
             for (int i = 0; i < leaders.size(); i++) {
                 String cur = leaders.get(i);
-                File userFile = new File("Users/" + cur + ".txt");
+                File userFile = new File("Files/Players/" + cur + ".txt");
                 Scanner sc = new Scanner(userFile);
                 int numGames = sc.nextInt();
                 if (numGames < thisUserWins)
