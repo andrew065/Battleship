@@ -44,12 +44,25 @@ public class AI {
      */
     public static int[] easy() {
         int[] hitCoor = new int[2]; // coordinate which will be returned
-        hitCoor[0] = (int) (Math.random() * 10); // generate rand x coordinate
-        hitCoor[1] = (int) (Math.random() * 10); // generate rand y coordinate
-        while(shootGrid[hitCoor[1]][hitCoor[0]] == 1 || shootGrid[hitCoor[1]][hitCoor[0]] == 2) { // while coordinate is already hit
+        int loopCount = 0;
+        retry: do {
+            if (loopCount > 10) {
+                for (int r = 0; r < shootGrid.length; r++) {
+                    for (int c = 0; c < shootGrid[r].length; c++) {
+                        if (shootGrid[r][c] == 0) {
+                            hitCoor[0] = r;
+                            hitCoor[1] = c;
+                            break retry;
+                        }
+                    }
+                }
+            } else {
+                loopCount++;
+            }
+
             hitCoor[0] = (int) (Math.random() * 10); // generate new rand x coordinate
             hitCoor[1] = (int) (Math.random() * 10); // generate new rand y coordinate
-        }
+        } while (shootGrid[hitCoor[1]][hitCoor[0]] == 1 || shootGrid[hitCoor[1]][hitCoor[0]] == 2); // while coordinate is already hit;
         return hitCoor; // return coordinate
     }
 
@@ -454,14 +467,6 @@ public class AI {
                 JLabel shipLabel = new JLabel(new ImageIcon("Images/Ships/" +
                         append + (isVertical ? "_Rotated" : "") + ".png"));
                 shipObjs[shipI] = new Ship(panel, shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
-
-                // print ships to console
-                for (int[] ship : ships) {
-                    System.out.println(append + " coordinates: ");
-                    for (int i = 0; i < ship.length; i++) {
-
-                    }
-                }
 
                 // because submarine exists
                 if (shipI == 2) {
