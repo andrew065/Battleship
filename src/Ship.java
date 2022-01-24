@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.util.Arrays;
 
 /**
- * @author Andrew Lian, Eric K.
+ * @author Andrew Lian, Eric K., Derrick Ha
  * @description This class is for ships and all the different functions related to them when placing and in gameplay and uses OBJECT INHERITANCE by extending GameObject.
  */
 

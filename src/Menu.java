@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 /**
- * @author Andrew Lian
+ * @author Andrew Lian, Derrick Ha
  */
 
 public class Menu extends JDialog implements MouseListener {
