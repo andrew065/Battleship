@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Random;
 public class AI {
     public static int[][] shootGrid = new int[10][10]; // grid to contain hits and misses and unknown squares
     static int[] currentCoor = {4, 4}; // int[] with current coordinates
-    static ArrayList<int[]> visitedCoor = new ArrayList<>(); // arraylist of visited coordinates for intial generation of coordinates
+    static ArrayList<int[]> visitedCoor = new ArrayList<>(); // arraylist of visited coordinates for initial generation of coordinates
     static ArrayList<int[]> coorToVisit = new ArrayList<>(); // list of coordinates surrounding a hit coordinate which will have to be hit next
     static int currentShootCoor = 0; // checks where in the process of the list of predefined coordinates it is
     static ArrayList<int[]> everyVisitedPoint = new ArrayList<>(); // list of every coordinate visited including predefined ones
@@ -44,25 +45,10 @@ public class AI {
      */
     public static int[] easy() {
         int[] hitCoor = new int[2]; // coordinate which will be returned
-        int loopCount = 0;
-        retry: do {
-            if (loopCount > 10) { // iteration timeout after 10 loops: pick the most top left corner of the grid
-                for (int r = 0; r < shootGrid.length; r++) {
-                    for (int c = 0; c < shootGrid[r].length; c++) {
-                        if (shootGrid[r][c] == 0) {
-                            hitCoor[0] = r;
-                            hitCoor[1] = c;
-                            break retry; // checking if need to retry is not necessary
-                        }
-                    }
-                }
-            } else {
-                loopCount++;
-            }
-
+        do {
             hitCoor[0] = (int) (Math.random() * 10); // generate new rand x coordinate
             hitCoor[1] = (int) (Math.random() * 10); // generate new rand y coordinate
-        } while (shootGrid[hitCoor[1]][hitCoor[0]] == 1 || shootGrid[hitCoor[1]][hitCoor[0]] == 2); // while coordinate is already hit;
+        } while (shootGrid[hitCoor[1]][hitCoor[0]] != 0); // while coordinate is already hit;
         return hitCoor; // return coordinate
     }
 
@@ -485,6 +471,4 @@ public class AI {
 
         return shipObjs;
     }
-
-
 }
