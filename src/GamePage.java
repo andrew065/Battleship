@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Andrew Lian
@@ -17,9 +18,18 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     //JPanels for different displays
     JPanel background;
     JPanel shipsPage;
+    JPanel coinTossPage;
     JPanel difficulty;
     JPanel markers;
     JPanel endPage;
+
+    //initializing coin toss sprites
+    JLabel tossButton = new JLabel(new ImageIcon("Images/Game/Toss_Coin_Button.png"));
+    JLabel tossSel = new JLabel(new ImageIcon("Images/Game/Toss_Coin_Highlight.png"));
+    JLabel userStarts = new JLabel(new ImageIcon("Images/Game/User_Starts.png"));
+    JLabel aiStarts = new JLabel(new ImageIcon("Images/Game/AI_Starts.png"));
+    JLabel tossing = new JLabel(new ImageIcon("Images/Game/Tossing.png"));
+    JLabel tossBg = new JLabel(new ImageIcon("Images/Game/Toss_Coin_Bg.png"));
 
     //initializing ai difficulty sprites
     JLabel easy = new JLabel(new ImageIcon("Images/Game/1_Easy.png"));
@@ -64,6 +74,8 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     Menu menu;
     User user;
 
+    public boolean userStart = true;
+
     public GamePage(Menu menu, User user) {
         this.menu = menu;
         this.user = user;
@@ -76,8 +88,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
 
         //initialize game components
         initializeBackground();
-        initializeShipsPage();
-        addShip();
+        initializeCoinToss();
 
         //frame settings
         frame.setSize(1459, 821);
@@ -111,7 +122,9 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         shipsPage.setLayout(null);
         shipsPage.setOpaque(false);
 
-        frame.add(shipsPage, Integer.valueOf(2));
+        addShip();
+
+        frame.add(shipsPage, Integer.valueOf(3));
     }
 
     /**
@@ -144,6 +157,59 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         return true; //return true if all values are new and not overlapping
     }
 
+    public void initializeCoinToss() {
+        coinTossPage = new JPanel();
+        coinTossPage.setSize(1459, 821);
+        coinTossPage.setLayout(null);
+        coinTossPage.setOpaque(false);
+
+        GameSystem.addElement(coinTossPage, tossButton, 537, 385, this);
+        GameSystem.addElement(coinTossPage, tossSel, 522, 370);
+        tossSel.setVisible(false);
+
+        GameSystem.addElement(coinTossPage, tossBg, 494, 270);
+
+        GameSystem.addElement(coinTossPage, tossing, 494, 270);
+        GameSystem.addElement(coinTossPage, userStarts, 494, 270);
+        GameSystem.addElement(coinTossPage, aiStarts, 494, 270);
+        tossing.setVisible(false);
+        userStarts.setVisible(false);
+        aiStarts.setVisible(false);
+
+        frame.add(coinTossPage, Integer.valueOf(2));
+    }
+
+    public void tossCoin() {
+        coinTossPage.remove(tossButton);
+        coinTossPage.remove(tossSel);
+        coinTossPage.remove(tossBg);
+        tossing.setVisible(true);
+
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(700);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            tossing.setVisible(false);
+            if (new Random().nextBoolean()) userStarts.setVisible(true);
+            else {
+                aiStarts.setVisible(true);
+                userStart = false;
+            }
+
+            try {
+                Thread.sleep(700);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            coinTossPage.setVisible(false);
+            initializeShipsPage();
+        });
+        thread.start();
+    }
+
     /**
      * This method creates buttons and displays it on the current frame to get the users desired AI difficulty
      */
@@ -163,7 +229,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         }
         GameSystem.addElement(difficulty, aiDiffBg, 454, 218);
 
-        frame.add(difficulty, Integer.valueOf(3));
+        frame.add(difficulty, Integer.valueOf(4));
     }
 
     /**
@@ -175,8 +241,8 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         markers.setLayout(null);
         markers.setOpaque(false);
 
-        frame.add(markers, Integer.valueOf(4));
-        new Battleship(this, markers, shipsPage, userShips);
+        frame.add(markers, Integer.valueOf(5));
+        new Battleship(this, markers, shipsPage, userShips, userStart);
         AI.difficulty = diff;
     }
 
@@ -200,7 +266,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         if (won) GameSystem.addElement(endPage, win, 0, 0);
         else GameSystem.addElement(endPage, lose, 0, 0);
 
-        frame.add(endPage, Integer.valueOf(5));
+        frame.add(endPage, Integer.valueOf(6));
     }
 
     /**
@@ -266,6 +332,9 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
             if (e.getComponent() == menuButton) {
                 returnToMenu();
             }
+            else if (e.getComponent() == tossButton) {
+                tossCoin();
+            }
             else {
                 int index = buttons.indexOf((JLabel) e.getComponent()); //get ai difficulty
                 difficulty.setVisible(false);
@@ -279,6 +348,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     public void mouseEntered(MouseEvent e) {
         try {
             if (e.getComponent() == menuButton) menuSel.setVisible(true);
+            else if (e.getComponent() == tossButton) tossSel.setVisible(true);
             else {
                 int index = buttons.indexOf((JLabel) e.getComponent());
                 selection.get(index).setVisible(true);
@@ -290,6 +360,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     public void mouseExited(MouseEvent e) {
         try {
             if (e.getComponent() == menuButton) menuSel.setVisible(false);
+            else if (e.getComponent() == tossButton) tossSel.setVisible(false);
             else {
                 int index = buttons.indexOf((JLabel) e.getComponent());
                 selection.get(index).setVisible(false);

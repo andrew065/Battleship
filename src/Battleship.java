@@ -22,6 +22,9 @@ public class Battleship implements MouseListener {
     private int userMiss = 0;
     private int AIMiss = 0;
 
+    private final boolean userStart;
+    private boolean aiTurn;
+
     private boolean gameOver = false;
 
     private final JPanel mLayer;
@@ -40,11 +43,12 @@ public class Battleship implements MouseListener {
 
     public GamePage game;
 
-    public Battleship(GamePage game, JPanel mLayer, JPanel sLayer, Ship[] userShips) throws FileNotFoundException {
+    public Battleship(GamePage game, JPanel mLayer, JPanel sLayer, Ship[] userShips, boolean userStart) throws FileNotFoundException {
         this.mLayer = mLayer;
         this.mLayer.addMouseListener(this);
         this.userShips = userShips;
         this.game = game;
+        this.userStart = userStart;
 
         GameSystem.createTime(mLayer);
 
@@ -56,6 +60,7 @@ public class Battleship implements MouseListener {
         GameSystem.exportShip(AIShips);
 
         prevHits = new ArrayList<>();
+        if (!userStart) AIShot();
     }
 
     /**
@@ -92,6 +97,17 @@ public class Battleship implements MouseListener {
         mLayer.repaint();
     }
 
+    public void fireShots(int x, int y) {
+        if (userStart) {
+            userShot(x, y);
+        }
+        else {
+            if (!aiTurn) {
+                userShot(x, y);
+            }
+        }
+    }
+
     /**
      * This method checks if the user's shot is valid, and then updates the board and get a hit from the AI
      * @param x - x coordinate of user's shot
@@ -121,6 +137,7 @@ public class Battleship implements MouseListener {
      */
     public void AIShot() {
         Thread thread = new Thread(() -> {
+            aiTurn = true;
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -129,6 +146,7 @@ public class Battleship implements MouseListener {
             int[] AICoord = AI.getShot(); //get AI hit
             checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
             updateAIStats(); //update the AI's stats
+            aiTurn = false;
             checkGameOver(); //check if game is over
         });
         thread.start(); //start the thread
@@ -226,10 +244,10 @@ public class Battleship implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getX() >= 793 && e.getY() >= 170) {
-            int x = (e.getX() - 793) / 61; //x coordinate (1-10)
-            int y = (e.getY() - 170) / 61; //y coordinate (1-10)
+            int x = (int) Math.floor((e.getX() - 793) / 61.0); //x coordinate (1-10)
+            int y = (int) Math.floor((e.getY() - 170) / 61.0); //y coordinate (1-10)
             if (x <= 10 && y <= 10 && !gameOver) {
-                userShot(x, y);
+                fireShots(x, y);
             }
         }
     }
