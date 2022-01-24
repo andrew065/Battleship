@@ -79,12 +79,12 @@ public class GetUsername extends JDialog implements ActionListener {
             login.dispose();
             User user = null;
             try {
-                user = new User(username);
+                user = new User(username); //try to create a new user with the username that they have set
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
             try {
-                new Menu(user);
+                new Menu(user); //create a menu for the user
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -93,6 +93,7 @@ public class GetUsername extends JDialog implements ActionListener {
         }
     }
 
+    //if username is not valid
     public static void userErrorMessage() {
         JFrame jFrame = new JFrame();
         JOptionPane.showMessageDialog(jFrame, "Please enter a valid username.");
