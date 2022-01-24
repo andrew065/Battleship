@@ -11,24 +11,27 @@ import java.util.List;
  * @description This class updates the game board and records stats and gets AI and user shots.
  */
 public class Battleship implements MouseListener {
+    //marker grid to update user and AI hits
     private final Marker[][] AIGrid = new Marker[10][10];
     private final Marker[][] userGrid = new Marker[10][10];
 
+    //counters for user and AI
     private int userSunk = 0;
     private int AISunk = 0;
-
     private int userHit = 0;
     private int AIHit = 0;
     private int userMiss = 0;
     private int AIMiss = 0;
 
+    //turn-based tracking
     private final boolean userStart;
     private boolean aiTurn;
 
-    private boolean gameOver = false;
+    private boolean gameOver = false; //boolean to track whether game has ended or not
 
-    private final JPanel mLayer;
+    private final JPanel mLayer; //JPanel for markers and in-game counters
 
+    //labels to display user and AI counters
     private JLabel userTotal;
     private JLabel AITotal;
     private JLabel userHitLabel;
@@ -36,39 +39,43 @@ public class Battleship implements MouseListener {
     private JLabel userMissLabel;
     private JLabel AIMissLabel;
 
+    //arrays containing location of user and AI ships
     public Ship[] AIShips;
     public Ship[] userShips;
 
-    public List<int[]> prevHits;
+    public List<int[]> prevHits; //tracks user's hits to ensure no repeats
 
-    public GamePage game;
+    public GamePage game; //instance of game class to call methods
 
     public Battleship(GamePage game, JPanel mLayer, JPanel sLayer, Ship[] userShips, boolean userStart) throws FileNotFoundException {
+        //initializing self variables
         this.mLayer = mLayer;
         this.mLayer.addMouseListener(this);
         this.userShips = userShips;
         this.game = game;
         this.userStart = userStart;
 
-        GameSystem.createTime(mLayer);
+        GameSystem.createTime(mLayer); //adds timer
 
+        //creates and adds markers & counters to panel
         createMarkers(userGrid, 63);
         createMarkers(AIGrid, 793);
         addCounters();
 
+        //placement of AI ships depending on difficulty
         if(AI.difficulty != 2) {
             AIShips = AI.randomPlaceShip(sLayer);
         } else {
             AIShips = AI.weightedPlaceShip(sLayer);
         }
-        GameSystem.exportShip(AIShips);
+        GameSystem.exportShip(AIShips); //exports AI ship location to file
 
-        prevHits = new ArrayList<>();
-        if (!userStart) AIShot();
+        prevHits = new ArrayList<>(); //initialize arraylist to track user hits
+        if (!userStart) AIShot(); //if AI goes first, fire shot from AI
     }
 
     /**
-     * This method creates the hit/miss markers for both the AI and user
+     * This method creates the hit/miss markers for both the AI and user and stores them in a 2D array
      * @param grid - the grid belonging to AI/User
      * @param xBuff - x buffer
      */
@@ -101,15 +108,14 @@ public class Battleship implements MouseListener {
         mLayer.repaint();
     }
 
+    /**
+     * This method fires a shot if the user clicks and factors in whether the user/AI goes first
+     * @param x - x coordinate of user click (1-10)
+     * @param y - y coordinate of user click (1-10)
+     */
     public void fireShots(int x, int y) {
-        if (userStart) {
-            userShot(x, y);
-        }
-        else {
-            if (!aiTurn) {
-                userShot(x, y);
-            }
-        }
+        if (userStart) userShot(x, y);
+        else if (!aiTurn) userShot(x, y);
     }
 
     /**
@@ -127,7 +133,7 @@ public class Battleship implements MouseListener {
                 break;
             }
         }
-
+        //checks if the clicked coordinate has not been clicked before
         if (unique) {
             prevHits.add(co);
             checkHit(AIShips, AIGrid, x, y, 793, true); //check user's hit
@@ -140,6 +146,7 @@ public class Battleship implements MouseListener {
      * This method gets the AI's shot and updates the grid on a separate thread 1 second after the user shoots
      */
     public void AIShot() {
+        //runs AI shot on a new thread to avoid interruptions
         Thread thread = new Thread(() -> {
             aiTurn = true;
             try {
@@ -151,7 +158,11 @@ public class Battleship implements MouseListener {
             checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
             updateAIStats(); //update the AI's stats
             aiTurn = false;
-            checkGameOver(); //check if game is over
+            try {
+                checkGameOver(); //check if game is over
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         });
         thread.start(); //start the thread
     }
@@ -166,15 +177,16 @@ public class Battleship implements MouseListener {
      * @param user - boolean indicating if the shot is from user/AI
      */
     public void checkHit(Ship[] ships, Marker[][] grid, int x, int y, int buff, boolean user) {
-        boolean hit = false;
+        boolean hit = false; //tracker for a hit
         boolean sunk = false;
 
         for (Ship s : ships) {
             for (int[] co : s.getPosition(buff)) {
                 if (co[0] == x && co[1] == y) {
                     hit = true;
-                    s.hits++;
+                    s.hits++; //increases the hit counter of the ship
 
+                    //checks if the ship has sunk by comparing num hits to the length of the ship
                     if (s.hits == s.length) {
                         s.sunk();
                         sunk = true; //for sound effects
@@ -186,19 +198,20 @@ public class Battleship implements MouseListener {
                 }
             }
         }
+        //update the grid depending on a hit or miss
         if (hit) {
             grid[x][y].displayMarker(new JLabel(new ImageIcon("Images/Game/Hit_Marker.png")), true);
-            if (user) userHit++;
-            else {
+            if (user) userHit++; //increase user hit counter
+            else { //update counters and trackers for AI
                 AIHit++;
                 AI.shootGrid[y][x] = 2;
             }
-            if (!sunk) MusicSound.playFire(2);
+            if (!sunk) MusicSound.playFire(2); //sound effects
         }
         else {
             grid[x][y].displayMarker(new JLabel(new ImageIcon("Images/Game/Miss_Marker.png")), false);
             if (user) userMiss++;
-            else {
+            else { //update counters and trackers for AI
                 AIMiss++;
                 AI.shootGrid[y][x] = 1;
             }
@@ -213,9 +226,6 @@ public class Battleship implements MouseListener {
         userTotal.setText(String.valueOf(userHit + userMiss));
         userHitLabel.setText(String.valueOf(userHit));
         userMissLabel.setText(String.valueOf(userMiss));
-        AITotal.setText(String.valueOf(AIHit + AIMiss));
-        AIHitLabel.setText(String.valueOf(AIHit));
-        AIMissLabel.setText(String.valueOf(AIMiss));
     }
 
     /**
@@ -230,14 +240,14 @@ public class Battleship implements MouseListener {
     /**
      * This method checks if the game is over. If it is, it calls the endPage method from the GamePage class
      */
-    public void checkGameOver() {
-        if (userSunk == 5) {
+    public void checkGameOver() throws FileNotFoundException {
+        if (userSunk == 5) { //if user wins display win page and win sound effect
             System.out.println();
             gameOver = true;
             game.initializeEndPage(true, userSunk);
             MusicSound.playBells();
         }
-        else if (AISunk == 5) {
+        else if (AISunk == 5) { //if user loses display lose page and lose sound effect
             System.out.println("AI wins");
             gameOver = true;
             game.initializeEndPage(false, userSunk);
@@ -247,7 +257,7 @@ public class Battleship implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getX() >= 793 && e.getY() >= 170) {
+        if (e.getX() >= 793 && e.getY() >= 170) { //checks if the user clicked within the AI grid
             int x = (int) Math.floor((e.getX() - 793) / 61.0); //x coordinate (1-10)
             int y = (int) Math.floor((e.getY() - 170) / 61.0); //y coordinate (1-10)
             if (x <= 10 && y <= 10 && !gameOver) {

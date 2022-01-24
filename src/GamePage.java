@@ -41,8 +41,9 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     JLabel diffSel3 = new JLabel(new ImageIcon("Images/Game/AI_Selection.png"));
     JLabel aiDiffBg = new JLabel(new ImageIcon("Images/Game/AI_Difficulty_Bg.png"));
 
-    List<JLabel> buttons = Arrays.asList(easy, med, hard);
-    List<JLabel> selection = Arrays.asList(diffSel1, diffSel2, diffSel3);
+    //list of buttons for difficulty selection
+    List<JLabel> buttons = Arrays.asList(easy, med, hard); //buttons
+    List<JLabel> selection = Arrays.asList(diffSel1, diffSel2, diffSel3); //button highlights
 
     //initializing background/game icons & sprites
     JLabel bg = new JLabel(new ImageIcon("Images/Game/Game_Page.png"));
@@ -72,14 +73,16 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     int curShip = 0;
     boolean allPlaced = false;
 
-    Menu menu;
-    User user;
+    Menu menu; //instance of menu to run methods in the menu
+    User user; //instance of user to update user info
+    Leaderboard leader;
 
     public boolean userStart = true;
 
-    public GamePage(Menu menu, User user) {
+    public GamePage(Menu menu, User user, Leaderboard leader) {
         this.menu = menu;
         this.user = user;
+        this.leader = leader;
         frame = getLayeredPane(); //initialize frame
 
         //frame settings
@@ -101,7 +104,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
     }
 
     /**
-     * This method initializes the background of the game
+     * This method initializes the background of the game and adds the background components to that panel
      */
     public void initializeBackground() {
         background = new JPanel();
@@ -111,7 +114,7 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
 
         GameSystem.addElement(background, bg, 0, 0);
 
-        frame.add(background, Integer.valueOf(1));
+        frame.add(background, Integer.valueOf(1)); //first layer in frame
     }
 
     /**
@@ -123,9 +126,9 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         shipsPage.setLayout(null);
         shipsPage.setOpaque(false);
 
-        addShip();
+        addShip(); //add the first ship for the user to start placing
 
-        frame.add(shipsPage, Integer.valueOf(3));
+        frame.add(shipsPage, Integer.valueOf(3)); //third layer in frame
     }
 
     /**
@@ -158,6 +161,9 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         return true; //return true if all values are new and not overlapping
     }
 
+    /**
+     * This method initializes the coin toss panel and adds the components to it
+     */
     public void initializeCoinToss() {
         coinTossPage = new JPanel();
         coinTossPage.setSize(1459, 821);
@@ -168,25 +174,21 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
         GameSystem.addElement(coinTossPage, tossSel, 522, 370);
         tossSel.setVisible(false);
 
-        GameSystem.addElement(coinTossPage, tossBg, 494, 270);
+        GameSystem.addElement(coinTossPage, tossBg, 494, 270); //toss page background
 
-        GameSystem.addElement(coinTossPage, tossing, 494, 270);
-        GameSystem.addElement(coinTossPage, userStarts, 494, 270);
-        GameSystem.addElement(coinTossPage, aiStarts, 494, 270);
-        tossing.setVisible(false);
-        userStarts.setVisible(false);
-        aiStarts.setVisible(false);
-
-        frame.add(coinTossPage, Integer.valueOf(2));
+        frame.add(coinTossPage, Integer.valueOf(2)); //second layer in frame
     }
 
+    /**
+     * This method simulates a coin toss and displays whether the user or AI starts shooting first
+     */
     public void tossCoin() {
-        coinTossPage.remove(tossButton);
-        coinTossPage.remove(tossSel);
-        coinTossPage.remove(tossBg);
-        tossing.setVisible(true);
+        coinTossPage.removeAll(); //remove previous components
+        GameSystem.addElement(coinTossPage, tossing, 494, 270);
 
+        //run coin toss on new thread to prevent lagging
         Thread thread = new Thread(() -> {
+            //pause thread to simulate coin toss
             try {
                 Thread.sleep(700);
             } catch (InterruptedException e) {
@@ -194,12 +196,13 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
             }
 
             tossing.setVisible(false);
-            if (new Random().nextBoolean()) userStarts.setVisible(true);
+            if (new Random().nextBoolean()) GameSystem.addElement(coinTossPage, userStarts, 494, 270);
             else {
-                aiStarts.setVisible(true);
+                GameSystem.addElement(coinTossPage, aiStarts, 494, 270);
                 userStart = false;
             }
 
+            //pauses thread to allow user to read the updated info
             try {
                 Thread.sleep(700);
             } catch (InterruptedException e) {
@@ -254,9 +257,10 @@ public class GamePage extends JDialog implements KeyListener, MouseListener {
      * This method initializes the end page
      * @param won - boolean indicating a win/loss from the user
      */
-    public void initializeEndPage(boolean won, int sunk) {
+    public void initializeEndPage(boolean won, int sunk) throws FileNotFoundException {
         GameSystem.stopTime();
         user.updateData(sunk, won);
+        leader.updateLeaderboard();
 
         endPage = new JPanel();
         endPage.setSize(1459, 821);

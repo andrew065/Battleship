@@ -29,7 +29,7 @@ public class User {
      * @throws FileNotFoundException - file could not exist
      */
     public void loadData() throws FileNotFoundException {
-        if (!newUser) {
+        if (!newUser) { //checks if user has stored info
             Scanner scan = new Scanner(user);
 
             for (int i = 0; i < data.length; i++) {
