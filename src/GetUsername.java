@@ -8,26 +8,29 @@ import java.io.FileNotFoundException;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+/**
+ * @author Eric K.
+ * @description Shows the login dialog and prompts for the user's username.
+ */
 public class GetUsername extends JDialog implements ActionListener {
-    private Boolean firstClick = true; // first click boolean for hiding instructions
+    private Boolean firstHideClick = true; // for hiding existing text once clicked
 
-    static JTextField loginText = new JTextField("Please enter a username"); // text-field for input of username
-    JButton okButton = new JButton(); // OK button to confirm username login
-    public JFrame login = new JFrame();
+    static JTextField loginText = new JTextField("Please enter a username"); // text field for user to enter name
+    JButton confirmationButton = new JButton(); // okay button
+    public JFrame loginFrame = new JFrame();
 
     public GetUsername() {
-        login.setUndecorated(true);// hide top bars of the dialog
-        login.setBackground(new Color(0, 0, 0, 0));// set dialog background transparent
-        login.setResizable(false);// avoid user to change the size of dialog
-        login.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);// set action: dispose after login
-        login.setSize(500, 250);// set size of login interface
+        loginFrame.setUndecorated(true);// hide top bars of the dialog
+        loginFrame.setBackground(new Color(0, 0, 0, 0));// set dialog background transparent
+        loginFrame.setResizable(false);// avoid user to change the size of dialog
+        loginFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);// set action: dispose after login
+        loginFrame.setSize(500, 250);// set size of login interface
 
-        // background image of login interface
-        JLabel bgi = new JLabel(new ImageIcon("Images/Login/BattleshipLogin.png"));
-        bgi.setBounds(0, 0, 500, 250);// set background image
-        login.setLocationRelativeTo(null);// display dialog at center of the screen to attract attention
+        JLabel bgi = new JLabel(new ImageIcon("Images/Login/BattleshipLogin.png")); // background for login frame
+        bgi.setBounds(0, 0, 500, 250);
+        loginFrame.setLocationRelativeTo(null);// display dialog at center of the screen
 
-        login.setVisible(true);// display login dialog
+        loginFrame.setVisible(true);// display login dialog
 
         loginText.setBounds(300, 140, 175, 25);// set login text field
         loginText.setBackground(new Color(173, 216, 230));
@@ -35,13 +38,13 @@ public class GetUsername extends JDialog implements ActionListener {
         loginText.setForeground(Color.BLACK);
         loginText.setHorizontalAlignment(SwingConstants.CENTER);
 
-        login.add(loginText);
+        loginFrame.add(loginText);
         loginText.addMouseListener(new MouseListener() {// MouseListener for login text field
             @Override
-            public void mouseClicked(MouseEvent e) {// hide the instruction on first click
-                if (firstClick) {
+            public void mouseClicked(MouseEvent e) {// hide the text already there on first click
+                if (firstHideClick) {
                     loginText.setText("");
-                    firstClick = false;
+                    firstHideClick = false;
                 } // end if
             }// end method
 
@@ -55,44 +58,47 @@ public class GetUsername extends JDialog implements ActionListener {
             public void mouseReleased(MouseEvent e) {}
         });// end MouseListener
 
-        okButton.setBounds(370, 174, 55, 20);// set OK Button
-        okButton.setBorder(new LineBorder(new Color(224, 255, 255)));
-        okButton.setBackground(new Color(224, 255, 255));
-        okButton.setText("Confirm");
-        okButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        okButton.setVerticalTextPosition(SwingConstants.CENTER);
-        okButton.setMargin(new Insets(0,-30, 0,-30));
+        confirmationButton.setBounds(370, 174, 55, 20);// set OK Button
+        confirmationButton.setBorder(new LineBorder(new Color(224, 255, 255)));
+        confirmationButton.setBackground(new Color(224, 255, 255));
+        confirmationButton.setText("Confirm");
+        confirmationButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        confirmationButton.setVerticalTextPosition(SwingConstants.CENTER);
+        confirmationButton.setMargin(new Insets(0,-30, 0,-30));
 
-        login.add(okButton);
-        login.add(bgi);// add background image
-        login.setVisible(true);// display login interface
-        login.repaint();// refresh the interface
+        loginFrame.add(confirmationButton);
+        loginFrame.add(bgi);// add background image
+        loginFrame.setVisible(true);// display login interface
+        loginFrame.repaint();// refresh the interface
 
-        okButton.addActionListener(this);// add ActionListener to the OK Button
+        confirmationButton.addActionListener(this);// add ActionListener to the OK Button
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {// ActionListener for login operations
-        String username = GetUsername.loginText.getText();// get and write username to file
-        if(username.length() > 0 && !username.equals("Please enter a username")) {
-            login.setVisible(false);
-            login.dispose();
+    public void actionPerformed(ActionEvent e) {// listens for when user click ok button
+        String username = GetUsername.loginText.getText();// get username from text field
+        if(username.length() > 0 && !username.equals("Please enter a username")) { // if username is valid
+            loginFrame.setVisible(false);
+            loginFrame.dispose();
             User user = null;
-            try {
+            try { // creates a new user from username provided
                 user = new User(username);
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
-            try {
+            try { // creates a new menu object for user
                 new Menu(user);
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
-        } else {
+        } else { // if invalid name, show error message
             userErrorMessage();
         }
     }
 
+    /**
+     * Used to show error message to user when invalid name is entered.
+     */
     public static void userErrorMessage() {
         JFrame jFrame = new JFrame();
         JOptionPane.showMessageDialog(jFrame, "Please enter a valid username.");
