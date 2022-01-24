@@ -46,13 +46,13 @@ public class AI {
         int[] hitCoor = new int[2]; // coordinate which will be returned
         int loopCount = 0;
         retry: do {
-            if (loopCount > 10) {
+            if (loopCount > 10) { // iteration timeout after 10 loops: pick the most top left corner of the grid
                 for (int r = 0; r < shootGrid.length; r++) {
                     for (int c = 0; c < shootGrid[r].length; c++) {
                         if (shootGrid[r][c] == 0) {
                             hitCoor[0] = r;
                             hitCoor[1] = c;
-                            break retry;
+                            break retry; // checking if need to retry is not necessary
                         }
                     }
                 }
@@ -91,7 +91,7 @@ public class AI {
 
     /**
      * Hard difficulty AI that shoots strategically until it hits a ship, then it zeros in on the ship
-     * @return
+     * @return the coordinate on the grid that has been hit.
      */
     public static int[] hard() {
         if(shootGrid[currentCoor[1]][currentCoor[0]] == 2) { // if last shot was a hit
@@ -259,30 +259,33 @@ public class AI {
 
     /**
      * Places 5 ships randomly & returns integer values based on it.
+     * @param panel the panel to associate the ship object to.
+     * @return the ship objects in an array.
      */
     public static Ship[] randomPlaceShip(JPanel panel) {
         Random rand = new Random(System.currentTimeMillis());
 
         boolean[][] marked = new boolean[10][10]; // places where other ships can't be placed
 
-        Ship[] shipObjs = new Ship[5];
+        Ship[] shipObjs = new Ship[5]; // for the ship objects (biggest ship to smallest ship in increasing index)
 
-        int[][] ships = new int[5][10];
+        int[][] ships = new int[5][10]; // for ship coordinates; separate from objects
         for (int[] ship : ships) {
-            Arrays.fill(ship, -2);
+            Arrays.fill(ship, -2); // set default values within ship coordinates to sentinel value
         }
 
         boolean isRetry;
-        int shipSize = 5; // index in ships
-        for (int shipI = 0; shipI < 5; shipI++) {
+        int shipSize = 5;
+        for (int shipI = 0; shipI < 5; shipI++) { // the size & type of ship changes every iteration
             repeat:
-            do {
+            do { // repeat if ship is in conditions to retry
                 isRetry = false;
 
+                // generate coordinates
                 ships[shipI][0] = rand.nextInt(10); // even number is row number
                 ships[shipI][1] = rand.nextInt(10); // odd number is column number
 
-                boolean isVertical = rand.nextBoolean();
+                boolean isVertical = rand.nextBoolean(); // is the ship vertical?
 
                 if (isVertical) {
                     for (int i = 2; i < shipSize * 2; i += 2) { // fill vertically
@@ -308,29 +311,30 @@ public class AI {
                     }
                 }
 
-                // record as marked
+                // record on marked grid
                 for (int i = 0; i < shipSize * 2; i += 2) {
                     marked[ships[shipI][i]][ships[shipI][i + 1]] = true;
 
-                    if (isVertical) { // make buffer for the ship's long sides
-                        if (ships[shipI][i] + 1 < 10) {
-                            marked[ships[shipI][i] + 1][ships[shipI][i + 1]] = true;
+                    // make buffer for the ship's long sides (ships can't be side by side)
+                    if (isVertical) {
+                        if (ships[shipI][i] + 1 < 10) { // check for out of bounds
+                            marked[ships[shipI][i] + 1][ships[shipI][i + 1]] = true; // ship bottom-side
                         }
                         if (ships[shipI][i] - 1 >= 0) {
-                            marked[ships[shipI][i] - 1][ships[shipI][i + 1]] = true;
+                            marked[ships[shipI][i] - 1][ships[shipI][i + 1]] = true; // top-side
                         }
                     } else {
                         if (ships[shipI][i + 1] + 1 < 10) { // check for out of bounds
-                            marked[ships[shipI][i]][ships[shipI][i + 1] + 1] = true;
+                            marked[ships[shipI][i]][ships[shipI][i + 1] + 1] = true; // right-side
                         }
                         if (ships[shipI][i + 1] - 1 >= 0) {
-                            marked[ships[shipI][i]][ships[shipI][i + 1] - 1] = true;
+                            marked[ships[shipI][i]][ships[shipI][i + 1] - 1] = true; // left-side
                         }
                     }
                 }
 
                 // create ship object
-                String append = switch (shipI) {
+                String append = switch (shipI) { // the name of the ship image found in Images
                     case 0: yield "Aircraft_Carrier";
                     case 1: yield "Battleship";
                     case 2: yield "Cruiser";
@@ -342,10 +346,10 @@ public class AI {
                 };
                 JLabel shipLabel = new JLabel(new ImageIcon("Images/Ships/" +
                         append + (isVertical ? "_Rotated" : "") + ".png"));
+                // add new ship object to array accordingly
                 shipObjs[shipI] = new Ship(panel, shipLabel, ships[shipI][0], ships[shipI][1], shipSize, !isVertical);
-                // change JPanel soon
 
-                // because submarine exists
+                // if this is the 3rd ship, keep the same ship size for the next ship (submarine)
                 if (shipI == 2) {
                     shipSize++;
                 }
@@ -360,33 +364,35 @@ public class AI {
 
     /**
      * Places ships randomly & returns integer values based on it.
-     * Weighted placing: destroyer is near the middle & the others are near the border.
+     * Uses weighted placing: destroyer is near the middle & the others are near the border.
+     * @param panel the panel to associate the ship object to.
+     * @return the ship objects in an array.
      */
     public static Ship[] weightedPlaceShip(JPanel panel) {
         Random rand = new Random(System.currentTimeMillis());
 
         boolean[][] marked = new boolean[10][10]; // places where other ships can't be placed
 
-        Ship[] shipObjs = new Ship[5];
+        Ship[] shipObjs = new Ship[5]; // for ship objects (biggest to smalles in increasing index)
 
-        int[][] ships = new int[5][10];
+        int[][] ships = new int[5][10]; // ship coordinates; separate from ship object
         for (int[] ship : ships) {
-            Arrays.fill(ship, -2);
+            Arrays.fill(ship, -2); // fill with sentinel value
         }
 
         boolean isRetry;
         int shipSize = 5; // index in ships
         for (int shipI = 0; shipI < 5; shipI++) {
             repeat:
-            do {
+            do { // repeat if ship is on conditions to retry
                 isRetry = false;
 
-                // generate near-border coordinates
+                // generate coordinates
                 int rowCoord;
                 int columnCoord;
                 boolean isVertical;
-                if (shipI != 4) {
-                    rowCoord = rand.nextInt(10);
+                if (shipI != 4) { // generate near-border coordinates only for non-destroyers
+                    rowCoord = rand.nextInt(10); // get a random row
                     if ((rowCoord >= 1) && (rowCoord <= 8)) { // case 1: middle row (restrict to left/right side)
                         isVertical = false;
                         columnCoord = (rand.nextBoolean()) ? rand.nextInt(2) : rand.nextInt(2) + 8;
@@ -431,8 +437,9 @@ public class AI {
                 for (int i = 0; i < shipSize * 2; i += 2) {
                     marked[ships[shipI][i]][ships[shipI][i + 1]] = true;
 
-                    if (isVertical) { // make buffer for the ship's long sides
-                        if (ships[shipI][i] + 1 < 10) {
+                    // make buffer for the ship's long sides
+                    if (isVertical) {
+                        if (ships[shipI][i] + 1 < 10) { // check if out of bounds
                             marked[ships[shipI][i] + 1][ships[shipI][i + 1]] = true;
                         }
                         if (ships[shipI][i] - 1 >= 0) {
