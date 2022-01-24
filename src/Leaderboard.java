@@ -51,6 +51,7 @@ public class Leaderboard {
         }
         PrintWriter p = new PrintWriter("Files/Leaderboard.txt");
         for(String s : leaders) p.println(s);
+        p.close();
     }
 
     public void loadLeaderboard () throws FileNotFoundException {
