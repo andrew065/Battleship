@@ -215,13 +215,14 @@ public class Battleship implements MouseListener {
         for (Ship s : userShips) {
             int matching = 0;
             for (int[] co : s.getPosition(55)) {
-                if (coords.contains(co)) matching++;
+                for (int[] coord : coords) if (Arrays.equals(coord, co)) matching++;
             }
-
+            matchingTotal += matching;
+            System.out.println("M:" + matching + ", T:" + matchingTotal + ", L:" + s.length);
             if (matching == s.length && matchingTotal > s.length) return s.getPosition(55); //coords contain 1 sunk + coordinates of another ship
-            else if (matching == s.length) return s.getPosition(55); //coords matches ship position
+            else if (matching == s.length && matchingTotal == s.length) return s.getPosition(55); //coords matches ship position
         }
-        return null; //coords is spread across multiple ships
+        return null; //coords are spread across multiple ships
     }
 
     /**

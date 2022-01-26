@@ -476,11 +476,9 @@ public class AI {
     public static List<Integer> directions = new ArrayList<>() {{add(1); add(2); add(3); add(4);}};
 
     public static int[] hard2() {
-        for (List<int[]> ints : queue) System.out.println(Arrays.deepToString(ints.toArray()));
-
         if (queue.isEmpty()) {
             List<int[]> current = new ArrayList<>();
-            List<Integer> dirs = directions;
+            List<Integer> dirs = new ArrayList<>(directions);
             int[] co;
 
             do {
@@ -522,16 +520,23 @@ public class AI {
                 }
                 if (dirs.isEmpty()) {
                     int[][] shipPos = Battleship.checkSunk(current);
+                    System.out.println("Pos: " + Arrays.deepToString(shipPos) + "\n");
                     if (shipPos != null) {
-                        for (int[] co : shipPos) {
-                            if (!current.contains(co)) {
+                        for (int[] coord : current) {
+                            boolean isSunk = false;
+                            for (int[] co : shipPos) if (Arrays.equals(coord, co)) {
+                                isSunk = true;
+                                break;
+                            }
+                            if (!isSunk) {
                                 List<int[]> newCoords = new ArrayList<>();
-                                newCoords.add(co);
+                                newCoords.add(coord);
 
                                 queue.add(newCoords);
-                                dirQueue.add(directions);
+                                dirQueue.add(new ArrayList<>(directions));
                             }
                         }
+
                         minVals.remove(Integer.valueOf(shipPos.length));
                     }
                     else {
@@ -540,60 +545,87 @@ public class AI {
                             newCoords.add(co);
 
                             queue.add(newCoords);
-                            dirQueue.add(directions);
+                            dirQueue.add(new ArrayList<>(directions));
                         }
                     }
                     queue.remove(current);
                     dirQueue.remove(dirs);
-                    hard2();
+                    for (List<int[]> co : queue) System.out.print(Arrays.deepToString(co.toArray()) + ", ");
+                    System.out.println();
+                    return hard2();
                 }
 
-                hunt2(lastShot, dirs);
-                int[] next = nextShotFromDirs(current.get(current.size() - 1), dirs.get(0));
-                current.add(next);
+                hunt2(current, dirs);
+                if (dirs.size() == 0) return hard2();
+                else {
+                    int[] next = nextShotFromDirs(current.get(current.size() - 1), dirs.get(0));
+                    current.add(next);
 
-                System.out.println(Arrays.toString(next) + "," + dirQueue.get(0));
-                return next;
+                    System.out.println("Cur:" + Arrays.deepToString(current.toArray()) + ", Dir:" + dirQueue.get(0));
+                    return next;
+                }
+            }
+        }
+    }
+
+    public static void hunt2(List<int[]> cur, List<Integer> dirs) {
+        if (dirs.size() == 2) {
+            if (deadEnd(cur.get(cur.size() - 1), dirs.get(0))) {
+                dirs.remove(0);
+                Collections.swap(cur, 0, cur.size() - 1);
+            }
+            return;
+        }
+        for (int i = 0; i < dirs.size(); i++) {
+            if (getEmptySpaceLength(cur.get(cur.size() - 1), dirs.get(i)) < minVals.get(0)) {
+                dirs.remove(i);
+                i--;
+            }
+        }
+    }
+
+    public static void hunt2(int[] co, List<Integer> dirs) {
+        for (int i = 0; i < dirs.size(); i++) {
+            if (getEmptySpaceLength(co, dirs.get(i)) < minVals.get(0)) {
+                dirs.remove(i);
+                i--;
             }
         }
     }
 
     public static int getEmptySpaceLength(int[] co, int dir) {
-        int total = 0;
+        int total = 1;
 
         if (dir == 1) { //up
             for (int i = co[1] - 1; i >= 0; i--) {
-                if (shootGrid[co[0]][i] == 0) total++;
-                else if (shootGrid[co[0]][i] == 1) break;
+                if (shootGrid[i][co[0]] == 0) total++;
+                else break;
             }
         }
         else if (dir == 3) { //down
             for (int i = co[1] + 1; i < 10; i++) {
-                if (shootGrid[co[0]][i] == 0) total++;
-                else if (shootGrid[co[0]][i] == 1) break;
+                if (shootGrid[i][co[0]] == 0) total++;
+                else break;
             }
         }
         else if (dir == 2) { //left
             for (int i = co[0] - 1; i >= 0; i--) {
-                if (shootGrid[i][co[1]] == 0) total++;
-                else if (shootGrid[i][co[1]] == 1) break;
+                if (shootGrid[co[1]][i] == 0) total++;
+                else break;
             }
         }
         else if (dir == 4) { //right
             for (int i = co[0] + 1; i < 10; i++) {
-                if (shootGrid[i][co[1]] == 0) total++;
-                else if (shootGrid[i][co[1]] == 1) break;
+                if (shootGrid[co[1]][i] == 0) total++;
+                else break;
             }
         }
         return total;
     }
 
-    public static void hunt2(int[] co, List<Integer> dirs) {
-        for (int i = 0; i < dirs.size(); i++) {
-            if (getEmptySpaceLength(co, dirs.get(0)) < minVals.get(0)) {
-                dirs.remove(dirs.get(0));
-            }
-        }
+    public static boolean deadEnd(int[] co, int dir) {
+        int[] next = nextShotFromDirs(co, dir);
+        return next[0] == -1 || next[0] == 10 || next[1] == -1 || next[1] == 10 || shootGrid[next[1]][next[0]] != 0;
     }
 
     public static int[] nextShotFromDirs(int[] co, int dir) {
