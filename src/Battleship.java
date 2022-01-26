@@ -147,13 +147,6 @@ public class Battleship implements MouseListener {
      */
     public void AIShot() {
         //runs AI shot on a new thread to avoid interruptions
-        Thread thread = new Thread(() -> {
-            aiTurn = true;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             int[] AICoord = AI.getShot(); //get AI hit
             checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
             updateAIStats(); //update the AI's stats
@@ -163,8 +156,6 @@ public class Battleship implements MouseListener {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        });
-        thread.start(); //start the thread
     }
 
     /**
@@ -217,7 +208,6 @@ public class Battleship implements MouseListener {
             }
             MusicSound.playFire(1);
         }
-        System.out.println(x + "," + y);
     }
 
     public static int[][] checkSunk(List<int[]> coords) {

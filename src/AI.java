@@ -469,23 +469,24 @@ public class AI {
         return shipObjs;
     }
 
-    public static List<Integer> minVals = Collections.synchronizedList(Arrays.asList(2, 3, 3, 4, 5));
-    public static List<List<int[]>> queue = Collections.synchronizedList(new ArrayList<>());
-    public static List<List<Integer>> dirQueue = Collections.synchronizedList(new ArrayList<>());
+    public static List<Integer> minVals = new ArrayList<>() {{add(2); add(3); add(3); add(4); add(5);}};
+    public static List<List<int[]>> queue = new ArrayList<>();
+    public static List<List<Integer>> dirQueue = new ArrayList<>();
+
+    public static List<Integer> directions = new ArrayList<>() {{add(1); add(2); add(3); add(4);}};
 
     public static int[] hard2() {
         for (List<int[]> ints : queue) System.out.println(Arrays.deepToString(ints.toArray()));
 
         if (queue.isEmpty()) {
-            List<int[]> current = Collections.synchronizedList(new ArrayList<>());
-            List<Integer> dirs = Collections.synchronizedList(Arrays.asList(1, 2, 3, 4, 4));
+            List<int[]> current = new ArrayList<>();
+            List<Integer> dirs = directions;
             int[] co;
 
             do {
                 co = easy();
-                hunt(co, dirs);
-            } while (dirs.size() >= 1);
-            System.out.println(dirs);
+                hunt2(co, dirs);
+            } while (dirs.size() == 0);
 
             current.add(co);
             queue.add(current);
@@ -497,7 +498,7 @@ public class AI {
 
             if (shootGrid[current.get(0)[1]][current.get(0)[0]] == 1) { //if first shot is a miss
                 queue.remove(current);
-                dirQueue.remove(queue.indexOf(current));
+                dirQueue.remove(0);
                 return hard2();
             }
             else {
@@ -511,15 +512,14 @@ public class AI {
                 }
                 else if (current.size() == 2) {
                     if (current.get(0)[0] == current.get(1)[0]) { //check if vertical
-                        dirs.remove(2);
-                        dirs.remove(4);
+                        dirs.remove(Integer.valueOf(2));
+                        dirs.remove(Integer.valueOf(4));
                     }
                     else { //horizontal
-                        dirs.remove(1);
-                        dirs.remove(3);
+                        dirs.remove(Integer.valueOf(1));
+                        dirs.remove(Integer.valueOf(3));
                     }
                 }
-                hunt(lastShot, dirs);
                 if (dirs.isEmpty()) {
                     int[][] shipPos = Battleship.checkSunk(current);
                     if (shipPos != null) {
@@ -529,7 +529,7 @@ public class AI {
                                 newCoords.add(co);
 
                                 queue.add(newCoords);
-                                dirQueue.add(Arrays.asList(1, 2, 3, 4));
+                                dirQueue.add(directions);
                             }
                         }
                         minVals.remove(Integer.valueOf(shipPos.length));
@@ -540,7 +540,7 @@ public class AI {
                             newCoords.add(co);
 
                             queue.add(newCoords);
-                            dirQueue.add(Arrays.asList(1, 2, 3, 4));
+                            dirQueue.add(directions);
                         }
                     }
                     queue.remove(current);
@@ -548,8 +548,11 @@ public class AI {
                     hard2();
                 }
 
+                hunt2(lastShot, dirs);
                 int[] next = nextShotFromDirs(current.get(current.size() - 1), dirs.get(0));
                 current.add(next);
+
+                System.out.println(Arrays.toString(next) + "," + dirQueue.get(0));
                 return next;
             }
         }
@@ -585,18 +588,18 @@ public class AI {
         return total;
     }
 
-    public static void hunt(int[] co, List<Integer> dirs) {
-        for (int x : dirs) {
-            if (getEmptySpaceLength(co, x) < minVals.get(0)) {
-                dirs.remove(x);
+    public static void hunt2(int[] co, List<Integer> dirs) {
+        for (int i = 0; i < dirs.size(); i++) {
+            if (getEmptySpaceLength(co, dirs.get(0)) < minVals.get(0)) {
+                dirs.remove(dirs.get(0));
             }
         }
     }
 
     public static int[] nextShotFromDirs(int[] co, int dir) {
-        if (dir == 1) return new int[] {co[0], co[1] + 1};
+        if (dir == 1) return new int[] {co[0], co[1] - 1};
         else if (dir == 2) return new int[] {co[0] - 1, co[1]};
-        else if (dir == 3) return new int[] {co[0], co[1] - 1};
+        else if (dir == 3) return new int[] {co[0], co[1] + 1};
         else return new int[] {co[0] + 1, co[1]};
     }
 }
