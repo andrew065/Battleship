@@ -40,8 +40,8 @@ public class Battleship implements MouseListener {
     private JLabel AIMissLabel;
 
     //arrays containing location of user and AI ships
-    public Ship[] AIShips;
-    public Ship[] userShips;
+    public static Ship[] AIShips;
+    public static Ship[] userShips;
 
     public List<int[]> prevHits; //tracks user's hits to ensure no repeats
 
@@ -51,9 +51,9 @@ public class Battleship implements MouseListener {
         //initializing self variables
         this.mLayer = mLayer;
         this.mLayer.addMouseListener(this);
-        this.userShips = userShips;
         this.game = game;
         this.userStart = userStart;
+        Battleship.userShips = userShips;
 
         GameSystem.createTime(mLayer); //adds timer
 
@@ -218,6 +218,20 @@ public class Battleship implements MouseListener {
             MusicSound.playFire(1);
         }
         System.out.println(x + "," + y);
+    }
+
+    public static int[][] checkSunk(List<int[]> coords) {
+        int matchingTotal = 0;
+        for (Ship s : userShips) {
+            int matching = 0;
+            for (int[] co : s.getPosition(55)) {
+                if (coords.contains(co)) matching++;
+            }
+
+            if (matching == s.length && matchingTotal > s.length) return s.getPosition(55); //coords contain 1 sunk + coordinates of another ship
+            else if (matching == s.length) return s.getPosition(55); //coords matches ship position
+        }
+        return null; //coords is spread across multiple ships
     }
 
     /**
