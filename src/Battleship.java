@@ -62,6 +62,7 @@ public class Battleship implements MouseListener {
         createMarkers(AIGrid, 793);
         addCounters();
 
+        AI.reset(); //reset ai
         //placement of AI ships depending on difficulty
         if(AI.difficulty != 2) {
             AIShips = AI.randomPlaceShip(sLayer);
@@ -147,6 +148,7 @@ public class Battleship implements MouseListener {
      */
     public void AIShot() {
         //runs AI shot on a new thread to avoid interruptions
+        Thread thread = new Thread(() -> {
             int[] AICoord = AI.getShot(); //get AI hit
             checkHit(userShips, userGrid, AICoord[0], AICoord[1], 55, false); //check AI hit
             updateAIStats(); //update the AI's stats
@@ -156,6 +158,8 @@ public class Battleship implements MouseListener {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+        });
+        thread.start();
     }
 
     /**
@@ -218,7 +222,6 @@ public class Battleship implements MouseListener {
                 for (int[] coord : coords) if (Arrays.equals(coord, co)) matching++;
             }
             matchingTotal += matching;
-            System.out.println("M:" + matching + ", T:" + matchingTotal + ", L:" + s.length);
             if (matching == s.length && matchingTotal > s.length) return s.getPosition(55); //coords contain 1 sunk + coordinates of another ship
             else if (matching == s.length && matchingTotal == s.length) return s.getPosition(55); //coords matches ship position
         }

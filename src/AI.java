@@ -505,10 +505,9 @@ public class AI {
 
                 if (shootGrid[lastShot[1]][lastShot[0]] == 1) { //if last shot was a miss
                     current.remove(lastShot);
-                    dirs.remove(0);
                     return hard2();
                 }
-                else if (current.size() == 2) {
+                if (current.size() == 2) {
                     if (current.get(0)[0] == current.get(1)[0]) { //check if vertical
                         dirs.remove(Integer.valueOf(2));
                         dirs.remove(Integer.valueOf(4));
@@ -517,6 +516,7 @@ public class AI {
                         dirs.remove(Integer.valueOf(1));
                         dirs.remove(Integer.valueOf(3));
                     }
+                    System.out.println("Direction isolated");
                 }
                 if (dirs.isEmpty()) {
                     int[][] shipPos = Battleship.checkSunk(current);
@@ -570,56 +570,66 @@ public class AI {
 
     public static void hunt2(List<int[]> cur, List<Integer> dirs) {
         if (dirs.size() == 2) {
+            System.out.println(Arrays.toString(cur.get(cur.size() - 1)) + " Dead-end" + deadEnd(cur.get(cur.size() - 1), dirs.get(0)));
             if (deadEnd(cur.get(cur.size() - 1), dirs.get(0))) {
-                dirs.remove(0);
                 Collections.swap(cur, 0, cur.size() - 1);
+                dirs.remove(0);
+                System.out.println("Swapped");
             }
-            return;
         }
         for (int i = 0; i < dirs.size(); i++) {
-            if (getEmptySpaceLength(cur.get(cur.size() - 1), dirs.get(i)) < minVals.get(0)) {
+            int emptySpace = getEmptySpaceLength(cur, cur.get(cur.size() - 1), dirs.get(i));
+            int emptySpaceOpp = getEmptySpaceLength(cur, cur.get(cur.size() - 1), dirs.get(i) > 2? dirs.get(i) - 2: dirs.get(i) + 2);
+            if (emptySpace == 1 || emptySpace + emptySpaceOpp + cur.size() - 1 < minVals.get(0)) {
+                System.out.println("no more path in dir:" + dirs.get(i));
                 dirs.remove(i);
                 i--;
             }
+
         }
     }
 
     public static void hunt2(int[] co, List<Integer> dirs) {
         for (int i = 0; i < dirs.size(); i++) {
-            if (getEmptySpaceLength(co, dirs.get(i)) < minVals.get(0)) {
+            if (getEmptySpaceLength(null, co, dirs.get(i)) < minVals.get(0)) {
                 dirs.remove(i);
                 i--;
             }
         }
     }
 
-    public static int getEmptySpaceLength(int[] co, int dir) {
+    public static int getEmptySpaceLength(List<int[]> cur, int[] co, int dir) {
         int total = 1;
 
         if (dir == 1) { //up
             for (int i = co[1] - 1; i >= 0; i--) {
                 if (shootGrid[i][co[0]] == 0) total++;
-                else break;
+                else if (shootGrid[i][co[0]] == 1) break;
+                else if (cur != null) if (!cur.contains(new int[] {i, co[0]})) break;
             }
         }
         else if (dir == 3) { //down
             for (int i = co[1] + 1; i < 10; i++) {
                 if (shootGrid[i][co[0]] == 0) total++;
-                else break;
+                else if (shootGrid[i][co[0]] == 1) break;
+                else if (cur != null) if (!cur.contains(new int[] {i, co[0]})) break;
             }
         }
         else if (dir == 2) { //left
             for (int i = co[0] - 1; i >= 0; i--) {
                 if (shootGrid[co[1]][i] == 0) total++;
-                else break;
+                else if (shootGrid[co[1]][i] == 1) break;
+                else if (cur != null) if (!cur.contains(new int[] {co[1], i})) break;
             }
         }
         else if (dir == 4) { //right
             for (int i = co[0] + 1; i < 10; i++) {
                 if (shootGrid[co[1]][i] == 0) total++;
-                else break;
+                else if (shootGrid[co[1]][i] == 1) break;
+                else if (cur != null) if (!cur.contains(new int[] {co[1], i})) break;
             }
         }
+        System.out.println(total);
         return total;
     }
 
@@ -633,5 +643,12 @@ public class AI {
         else if (dir == 2) return new int[] {co[0] - 1, co[1]};
         else if (dir == 3) return new int[] {co[0], co[1] + 1};
         else return new int[] {co[0] + 1, co[1]};
+    }
+
+    public static void reset() {
+        minVals = new ArrayList<>() {{add(2); add(3); add(3); add(4); add(5);}};
+        queue = new ArrayList<>();
+        dirQueue =  new ArrayList<>();
+        shootGrid = new int[10][10];
     }
 }
