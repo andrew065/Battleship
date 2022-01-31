@@ -505,7 +505,6 @@ public class AI {
 
                 if (shootGrid[lastShot[1]][lastShot[0]] == 1) { //if last shot was a miss
                     current.remove(lastShot);
-                    return hard2();
                 }
                 if (current.size() == 2) {
                     if (current.get(0)[0] == current.get(1)[0]) { //check if vertical
@@ -581,7 +580,7 @@ public class AI {
             int emptySpace = getEmptySpaceLength(cur, cur.get(cur.size() - 1), dirs.get(i));
             int emptySpaceOpp = getEmptySpaceLength(cur, cur.get(cur.size() - 1), dirs.get(i) > 2? dirs.get(i) - 2: dirs.get(i) + 2);
             if (emptySpace == 1 || emptySpace + emptySpaceOpp + cur.size() - 1 < minVals.get(0)) {
-                System.out.println("no more path in dir:" + dirs.get(i));
+                System.out.println("no more path in dir:" + dirs.get(i) + ", " + emptySpace + ", " + emptySpaceOpp);
                 dirs.remove(i);
                 i--;
             }
@@ -605,40 +604,47 @@ public class AI {
             for (int i = co[1] - 1; i >= 0; i--) {
                 if (shootGrid[i][co[0]] == 0) total++;
                 else if (shootGrid[i][co[0]] == 1) break;
-                else if (cur != null) if (!cur.contains(new int[] {i, co[0]})) break;
+                else if (isCurShip(cur, new int[] {i, co[0]}, i)) break;
             }
         }
         else if (dir == 3) { //down
             for (int i = co[1] + 1; i < 10; i++) {
                 if (shootGrid[i][co[0]] == 0) total++;
                 else if (shootGrid[i][co[0]] == 1) break;
-                else if (cur != null) if (!cur.contains(new int[] {i, co[0]})) break;
+                else if (isCurShip(cur, new int[] {i, co[0]}, i)) break;
             }
         }
         else if (dir == 2) { //left
             for (int i = co[0] - 1; i >= 0; i--) {
                 if (shootGrid[co[1]][i] == 0) total++;
                 else if (shootGrid[co[1]][i] == 1) break;
-                else if (cur != null) if (!cur.contains(new int[] {co[1], i})) break;
+                else if (isCurShip(cur, new int[] {co[1], i}, i)) break;
             }
         }
         else if (dir == 4) { //right
             for (int i = co[0] + 1; i < 10; i++) {
                 if (shootGrid[co[1]][i] == 0) total++;
                 else if (shootGrid[co[1]][i] == 1) break;
-                else if (cur != null) if (!cur.contains(new int[] {co[1], i})) break;
+                else if (isCurShip(cur, new int[] {co[1], i}, i)) break;
             }
         }
         System.out.println(total);
         return total;
     }
 
-    public static boolean deadEnd(int[] co, int dir) {
+    private static boolean isCurShip(List<int[]> cur, int[] co, int i) {
+        if (cur != null && shootGrid[i][co[0]] == 2) {
+            for (int[] coord : cur) if (!Arrays.equals(coord, co)) return true;
+        }
+        return false;
+    }
+
+    private static boolean deadEnd(int[] co, int dir) {
         int[] next = nextShotFromDirs(co, dir);
         return next[0] == -1 || next[0] == 10 || next[1] == -1 || next[1] == 10 || shootGrid[next[1]][next[0]] != 0;
     }
 
-    public static int[] nextShotFromDirs(int[] co, int dir) {
+    private static int[] nextShotFromDirs(int[] co, int dir) {
         if (dir == 1) return new int[] {co[0], co[1] - 1};
         else if (dir == 2) return new int[] {co[0] - 1, co[1]};
         else if (dir == 3) return new int[] {co[0], co[1] + 1};
