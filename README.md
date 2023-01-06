@@ -1,2 +1,2 @@
 # Battleship
-Fully Functinoal Battleship Game
+Fully Functional Battleship Game
